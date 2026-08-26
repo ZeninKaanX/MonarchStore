@@ -1,8 +1,20 @@
 # Uygulama Kontrol Listesi
 
-- [ ] GitHub Pages için bağımsız Monarch Store HTML dosyasını `index.html` olarak ana dala eklemek.
-- [ ] htmlXYZ deposunda GitHub Pages yayınını etkinleştirmek.
-- [ ] GitHub Pages canlı adresini doğrulamak ve kullanıcıya iletmek.
+- [x] `astralissaga.xyz` alan adının Natro yönlendirmesine neden olan DNS veya web yönlendirme kaynağını tespit etmek. _(Yayılım sürecindeki eski DNS önbelleği; yetkili Natro DNS’i ve genel çözümleyiciler artık GitHub Pages’in dört A kaydını döndürüyor.)_
+- [x] GitHub Pages’e yönelimi engelleyen Natro ayarını veya eski DNS kaydını düzeltmek. _(Ek panel değişikliği gerekmedi; etkin yetkili kayıtlar GitHub Pages’e doğru.)_
+- [ ] Alan adının MonarchStore GitHub Pages sitesine ve HTTPS’e doğru yönlendiğini doğrulamak.
+
+- [x] GitHub deposunu `htmlXYZ` adından `MonarchStore` adına değiştirmek.
+- [x] Yeni GitHub Pages adresi ile özel alan adı ayarının devamlılığını doğrulamak.
+- [ ] Yeni depo bağlantısını kullanıcıya iletmek.
+
+- [x] `astralissaga.xyz` alan adını GitHub Pages ayarına eklemek.
+- [ ] Gerekli DNS kayıtlarını doğrulamak ve alan adının yayın durumunu kontrol etmek.
+- [ ] Özel alan adı bağlantı sonucunu kullanıcıya iletmek.
+
+- [x] GitHub Pages için bağımsız Monarch Store HTML dosyasını `index.html` olarak ana dala eklemek.
+- [x] htmlXYZ deposunda GitHub Pages yayınını etkinleştirmek.
+- [x] GitHub Pages canlı adresini doğrulamak ve kullanıcıya iletmek.
 
 - [x] Mevcut Monarch Store sayfasını bağımsız bir HTML dosyası olarak hazırlamak.
 - [x] HTML dosyasındaki görsel, video ve Discord bağlantılarını doğrulamak.

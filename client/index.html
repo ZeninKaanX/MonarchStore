@@ -29,6 +29,11 @@
       .logo .mascot { width: 58px; height: 58px; margin-left: -79px; object-fit: cover; object-position: center; background: #fff; mix-blend-mode: normal; }
       .links { display: flex; align-items: center; gap: 24px; color: #536071; font-size: 13px; font-weight: 700; }
       .links a:hover { color: var(--blue); }
+      .nav-actions { display: flex; align-items: center; gap: 9px; }
+      .login { min-height: 38px; display: inline-flex; align-items: center; justify-content: center; padding: 0 12px; border: 1px solid #5865f2; color: #fff; background: #5865f2; font-size: 11px; font-weight: 800; white-space: nowrap; transition: background .18s, transform .18s; }
+      .login:hover { background: #4651c8; }
+      .login:active { transform: scale(.98); }
+      .login.is-signed-in { border-color: #b8c2cd; color: #344454; background: #fff; }
       .cart { min-width: 108px; min-height: 38px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid #c8d0da; color: #263442; background: #fff; font: 700 11px "Space Mono", monospace; letter-spacing: .04em; }
       .cart strong { min-width: 18px; height: 18px; display: grid; place-items: center; border-radius: 50%; color: #fff; background: var(--blue); font-size: 10px; }
 
@@ -105,7 +110,9 @@
         .logo img { width: 145px; height: 42px; }
         .logo .mascot { width: 45px; height: 45px; margin-left: -65px; }
         .links { display: none; }
-        .cart { min-width: 77px; min-height: 35px; font-size: 0; }
+        .nav-actions { gap: 6px; }
+        .login { min-height: 35px; padding: 0 9px; font-size: 10px; }
+        .cart { min-width: 54px; min-height: 35px; font-size: 0; }
         .cart strong { font-size: 10px; }
         .hero { min-height: 390px; background-position: 60% center; }
         .hero::before { background: linear-gradient(90deg, rgba(9,18,29,.91), rgba(9,18,29,.58)), linear-gradient(0deg, rgba(103,17,29,.3), transparent 36%); }
@@ -130,7 +137,7 @@
       <nav class="container nav" aria-label="Ana menü">
         <a class="logo" href="#ana" aria-label="Monarch Store ana sayfa"><img src="/manus-storage/monarch-wordmark-transparent_4d0bf283.png" alt="Monarch Store logosu" /><img class="mascot" src="/manus-storage/monarch-mascot-source_c9118b5d.jpg" alt="Monarch Store anime karakteri" /></a>
         <div class="links"><a href="#botlar">Botlar</a><a href="#urunler">Minecraft Ürünleri</a><a href="#iletisim">İletişim</a></div>
-        <button class="cart" id="cartButton" type="button" aria-label="Sepet">SEPET <strong id="cartCount">0</strong></button>
+        <div class="nav-actions"><a class="login" id="discordLogin" href="/api/auth/discord">Discord ile giriş</a><button class="cart" id="cartButton" type="button" aria-label="Sepet">SEPET <strong id="cartCount">0</strong></button></div>
       </nav>
     </header>
 
@@ -185,11 +192,29 @@
       const toast = document.querySelector('#toast');
       const toastTitle = document.querySelector('#toastTitle');
       const toastText = document.querySelector('#toastText');
+      const discordLogin = document.querySelector('#discordLogin');
       let cart = 0;
       let toastTimer;
       const notify = (title, text) => { toastTitle.textContent = title; toastText.textContent = text; toast.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('show'), 2800); };
       document.querySelectorAll('.buy').forEach((button) => button.addEventListener('click', () => notify('Discord yönlendirmesi', 'Satın alma talebi için Discord açılıyor.')));
       document.querySelector('#cartButton').addEventListener('click', () => notify('Sepet', cart ? `${cart} ürün talep listene eklendi.` : 'Sepetinde henüz ürün yok.'));
+      const discordResult = new URLSearchParams(window.location.search).get('discord');
+      if (discordResult === 'connected') {
+        notify('Discord ile giriş yapıldı', 'Hesabın Monarch Store oturumuna bağlandı.');
+        window.history.replaceState({}, '', window.location.pathname + window.location.hash);
+      } else if (discordResult === 'error') {
+        notify('Discord girişi tamamlanamadı', 'Lütfen tekrar dene veya daha sonra yeniden dene.');
+        window.history.replaceState({}, '', window.location.pathname + window.location.hash);
+      }
+      fetch('/api/auth/discord/me', { credentials: 'same-origin' })
+        .then((response) => response.ok ? response.json() : { authenticated: false })
+        .then((account) => {
+          if (!account.authenticated) return;
+          discordLogin.textContent = 'Çıkış: ' + account.name;
+          discordLogin.href = '/api/auth/discord/logout';
+          discordLogin.classList.add('is-signed-in');
+        })
+        .catch(() => {});
     </script>
   </body>
 </html>

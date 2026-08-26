@@ -1,5 +1,15 @@
 # Uygulama Kontrol Listesi
 
+- [ ] Discord Developer Portal’daki canlı geri dönüş adresini doğrulamak. _(Kimlik bilgileri güvenli proje ayarlarına eklendi ve client-credentials testiyle doğrulandı; canlı callback adresi yayınlanan sunucu alan adı bağlandığında portala eklenecek.)_
+- [x] Sunucuda CSRF korumalı Discord OAuth başlangıç ve callback akışını uygulamak.
+- [x] Discord kullanıcısını güvenli oturumla eşleyip oturum sonlandırma akışını eklemek.
+- [x] Mağaza arayüzüne erişilebilir “Discord ile giriş” kontrolünü ve giriş durumunu yerleştirmek.
+- [ ] Discord girişini canlı alan adıyla doğrulayıp yayın mimarisini güncellemek.
+
+- [ ] Kullanıcının gördüğü Natro park sayfasının hangi DNS önbelleği veya aktif Natro park ayarından geldiğini kesinleştirmek.
+- [ ] Natro panelindeki park/yönlendirme ayarını veya çakışan DNS kaydını kaldırarak kök alan adını yalnızca GitHub Pages’e yönlendirmek.
+- [ ] Kullanıcı cihazında HTTP erişiminin Monarch Store’u açtığını, HTTPS sertifikası hazır olduğunda da güvenli erişimin çalıştığını yeniden doğrulamak.
+
 - [x] `astralissaga.xyz` alan adının Natro yönlendirmesine neden olan DNS veya web yönlendirme kaynağını tespit etmek. _(Yayılım sürecindeki eski DNS önbelleği; yetkili Natro DNS’i ve genel çözümleyiciler artık GitHub Pages’in dört A kaydını döndürüyor.)_
 - [x] GitHub Pages’e yönelimi engelleyen Natro ayarını veya eski DNS kaydını düzeltmek. _(Ek panel değişikliği gerekmedi; etkin yetkili kayıtlar GitHub Pages’e doğru.)_
 - [ ] Alan adının MonarchStore GitHub Pages sitesine ve HTTPS’e doğru yönlendiğini doğrulamak.

@@ -1,5 +1,13 @@
 # Uygulama Kontrol Listesi
 
+- [x] Anime karakter varlığındaki kareli fonu kaldırarak gerçek alpha kanallı PNG elde etmek.
+- [x] Maskot yüklenirken görünen görsel alanı, başlık zeminiyle uyumlu hâle getirmek.
+
+- [x] Anime karakter görselinin arka planını kaldırarak transparan PNG olarak hazırlamak.
+- [x] Anime karakteri Monarch Store logosunun yanına yerleştirmek.
+- [x] Discord davet bağlantısını görünür bir katılım alanına bağlamak.
+- [x] Marka alanını ve Discord yönlendirmesini masaüstü ile mobilde doğrulamak.
+
 - [x] AFK, Miner ve Farmer için referans kompozisyona uygun üç ayrı ürün görseli oluşturmak.
 - [x] Monarch Store kelime logosunu transparan arka planla hazırlamak.
 - [x] Yeni görselleri her bot kartına ve logo alanlarına yerleştirmek.

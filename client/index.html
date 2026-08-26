@@ -23,10 +23,11 @@
       .topline .container { display: flex; justify-content: space-between; }
       .status { display: inline-flex; align-items: center; gap: 7px; }
       .status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #8ccf9b; }
-      header { position: sticky; z-index: 10; top: 0; border-bottom: 1px solid var(--line); background: rgba(255,255,255,.94); backdrop-filter: blur(12px); }
+      header { position: sticky; z-index: 10; top: 0; border-bottom: 1px solid var(--line); background: #f8f8f8; backdrop-filter: blur(12px); }
       .nav { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
-      .logo { display: flex; align-items: center; min-width: 188px; }
+      .logo { display: flex; align-items: center; min-width: 238px; gap: 5px; }
       .logo img { display: block; width: 174px; height: 53px; object-fit: contain; object-position: left center; }
+      .logo .mascot { width: 56px; height: 56px; object-fit: cover; object-position: center; mix-blend-mode: multiply; transform: scale(1.28); }
       .links { display: flex; align-items: center; gap: 24px; color: #536071; font-size: 13px; font-weight: 700; }
       .links a:hover { color: var(--blue); }
       .cart { min-width: 108px; min-height: 38px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid #c8d0da; color: #263442; background: #fff; font: 700 11px "Space Mono", monospace; letter-spacing: .04em; }
@@ -43,6 +44,8 @@
       .button { min-height: 46px; display: inline-flex; align-items: center; justify-content: center; padding: 0 18px; border: 1px solid var(--blue); color: #fff; background: var(--blue); font-size: 13px; font-weight: 800; transition: background .18s, transform .18s; }
       .button:hover { background: var(--blue-dark); }
       .button:active { transform: scale(.98); }
+      .button.secondary { margin-left: 8px; border-color: rgba(255,255,255,.66); color: #fff; background: rgba(8,18,27,.38); }
+      .button.secondary:hover { border-color: #fff; background: rgba(8,18,27,.66); }
       .robot-panel { position: relative; min-height: 365px; overflow: hidden; border: 1px solid rgba(220,234,244,.5); background: linear-gradient(145deg, rgba(11,22,33,.58), rgba(6,12,19,.3)), url("/manus-storage/monarch-robot-background_9a25e64d.jpg") center/cover; box-shadow: 0 18px 42px rgba(0,0,0,.18); }
       .robot-panel::before { content: ""; position: absolute; z-index: 1; inset: 0; pointer-events: none; background: linear-gradient(0deg, rgba(7,14,22,.74), transparent 44%), repeating-linear-gradient(0deg, transparent 0, transparent 5px, rgba(214,235,247,.04) 6px); }
       .robot-label { position: absolute; z-index: 3; top: 14px; left: 15px; padding: 6px 8px; border: 1px solid rgba(229,242,249,.38); color: #e5f3fb; background: rgba(9,19,30,.56); font: 700 9px "Space Mono", monospace; letter-spacing: .07em; }
@@ -78,6 +81,14 @@
       .note-card p { margin: 7px 0 0; color: #607181; font-size: 13px; }
       .item-list { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
       .item-list span { padding: 8px 10px; border: 1px solid #ccdae2; background: #fff; color: #435565; font: 700 10px "Space Mono", monospace; }
+      .discord-section { padding: 0 0 28px; }
+      .discord-card { display: flex; align-items: center; justify-content: space-between; gap: 28px; padding: 22px 28px; border: 1px solid #d8e3eb; color: #274155; background: #fff; }
+      .discord-card .eyebrow { margin-bottom: 6px; }
+      .discord-card h2 { font-size: 24px; }
+      .discord-card p { margin: 6px 0 0; color: #687283; font-size: 13px; }
+      .discord-button { min-width: 162px; min-height: 42px; display: inline-flex; align-items: center; justify-content: center; color: #fff; background: #5865f2; font-size: 12px; font-weight: 800; transition: background .18s, transform .18s; }
+      .discord-button:hover { background: #4651c8; }
+      .discord-button:active { transform: scale(.98); }
 
       footer { border-top: 1px solid var(--line); background: #fff; }
       .footer { min-height: 90px; display: flex; align-items: center; justify-content: space-between; gap: 20px; color: var(--muted); font-size: 11px; }
@@ -91,8 +102,9 @@
         .container { width: min(100% - 30px, 1120px); }
         .topline .container span:last-child { display: none; }
         .nav { min-height: 67px; }
-        .logo { min-width: 145px; }
+        .logo { min-width: 194px; gap: 2px; }
         .logo img { width: 145px; height: 42px; }
+        .logo .mascot { width: 43px; height: 43px; }
         .links { display: none; }
         .cart { min-width: 77px; min-height: 35px; font-size: 0; }
         .cart strong { font-size: 10px; }
@@ -107,6 +119,8 @@
         .product-image { height: min(94vw, 360px); }
         .note-card { grid-template-columns: 1fr; gap: 19px; padding: 23px; }
         .item-list { justify-content: flex-start; }
+        .discord-card { display: grid; justify-content: stretch; gap: 17px; padding: 22px; }
+        .discord-button { width: 100%; }
         .footer { min-height: 104px; flex-direction: column; justify-content: center; align-items: flex-start; }
       }
     </style>
@@ -115,7 +129,7 @@
     <div class="topline"><div class="container"><span class="status">Monarch Store açık</span><span>Minecraft ürünleri · Discord üzerinden destek</span></div></div>
     <header>
       <nav class="container nav" aria-label="Ana menü">
-        <a class="logo" href="#ana" aria-label="Monarch Store ana sayfa"><img src="/manus-storage/monarch-wordmark-transparent_4d0bf283.png" alt="Monarch Store logosu" /></a>
+        <a class="logo" href="#ana" aria-label="Monarch Store ana sayfa"><img src="/manus-storage/monarch-wordmark-transparent_4d0bf283.png" alt="Monarch Store logosu" /><img class="mascot" src="/manus-storage/monarch-mascot-source_c9118b5d.jpg" alt="Monarch Store anime karakteri" /></a>
         <div class="links"><a href="#botlar">Botlar</a><a href="#urunler">Minecraft Ürünleri</a><a href="#iletisim">İletişim</a></div>
         <button class="cart" id="cartButton" type="button" aria-label="Sepet">SEPET <strong id="cartCount">0</strong></button>
       </nav>
@@ -128,7 +142,7 @@
             <span class="tag">Monarch Store</span>
             <h1 id="hero-title">Minecraft dünyan için<br />ihtiyacın olanlar.</h1>
             <p>Botlar, oyun içi ürünler ve sunucu ihtiyaçları için sade bir mağaza. İstediğin ürünü seç, talebini hızlıca oluştur.</p>
-            <a class="button" href="#botlar">Botları incele</a>
+            <a class="button" href="#botlar">Botları incele</a><a class="button secondary" href="https://discord.gg/e5zJaTSypd" target="_blank" rel="noreferrer">Discord'a katıl</a>
           </div>
           <aside class="robot-panel" aria-label="Etkileşimli üç boyutlu robot alanı">
             <span class="robot-label">ROBOT / AKTİF</span>
@@ -162,9 +176,10 @@
       <section class="container store-note" id="urunler" aria-labelledby="store-title">
         <div class="note-card"><div><p class="eyebrow">Yakında mağazada</p><h2 id="store-title">Minecraft oyun içi ürünleri</h2><p>Mağazaya eklenmesini planladığın ürünleri bu alanda düzenli şekilde gösterebiliriz.</p></div><div class="item-list" aria-label="Planlanan ürün türleri"><span>VIP Paketleri</span><span>Kasa Anahtarları</span><span>Spawnerlar</span><span>Coin Paketleri</span></div></div>
       </section>
+      <section class="container discord-section" aria-labelledby="discord-title"><div class="discord-card"><div><p class="eyebrow">Topluluk ve destek</p><h2 id="discord-title">Monarch Store Discord</h2><p>Duyurular, destek ve sipariş iletişimi için Discord topluluğumuza katıl.</p></div><a class="discord-button" href="https://discord.gg/e5zJaTSypd" target="_blank" rel="noreferrer">Discord'a katıl ↗</a></div></section>
     </main>
 
-    <footer id="iletisim"><div class="container footer"><img src="/manus-storage/monarch-wordmark-transparent_4d0bf283.png" alt="Monarch Store logosu" /><span>Monarch Store · Discord üzerinden bize ulaşabilirsin.</span></div></footer>
+    <footer id="iletisim"><div class="container footer"><img src="/manus-storage/monarch-wordmark-transparent_4d0bf283.png" alt="Monarch Store logosu" /><span><a href="https://discord.gg/e5zJaTSypd" target="_blank" rel="noreferrer">Monarch Store Discord</a> · Discord üzerinden bize ulaşabilirsin.</span></div></footer>
     <div class="toast" id="toast" role="status" aria-live="polite"><b id="toastTitle">Sepete eklendi</b><span id="toastText"></span></div>
     <script>
       const cartCount = document.querySelector('#cartCount');

@@ -1,5 +1,17 @@
 # Uygulama Kontrol Listesi
 
+- [x] Discord ile giriş düğmesini ve OAuth sunucu yönlendirmelerini kaldırmak.
+- [x] Discord topluluk bağlantılarını ve mağaza görünümünü doğrulamak.
+- [ ] Kararlı sürümü htmlXYZ GitHub deposuna aktarmak.
+
+- [ ] Discord Developer Portal’da canlı alan adı için `/api/auth/discord/callback` Redirect URI’sini yapılandırmak.
+- [ ] Discord OAuth girişini tarayıcıda uçtan uca doğrulamak.
+- [ ] Doğrulanan Discord OAuth değişikliklerini htmlXYZ deposuna son hâliyle aktarmak.
+
+- [x] Sağlanan Discord OAuth kimlik bilgilerini güvenli proje ayarlarına eklemek.
+- [x] Gerçek Discord OAuth giriş ve callback akışını uygulamak.
+- [ ] Discord girişini doğrulayıp htmlXYZ GitHub deposuna son değişiklikleri aktarmak.
+
 - [x] Discord OAuth girişinin ihtiyaç duyduğu uygulama kimlik bilgilerini ve proje yeteneklerini doğrulamak.
 - [x] GitHub hesabı erişimini ve htmlXYZ depo oluşturma yetkisini doğrulamak.
 - [ ] Discord giriş seçeneğini eklemek ve GitHub deposuna güvenli biçimde aktarmak.

@@ -29,9 +29,6 @@
       .logo .mascot { width: 58px; height: 58px; margin-left: -79px; object-fit: cover; object-position: center; background: #fff; mix-blend-mode: normal; }
       .links { display: flex; align-items: center; gap: 24px; color: #536071; font-size: 13px; font-weight: 700; }
       .links a:hover { color: var(--blue); }
-      .nav-actions { display: flex; align-items: center; gap: 9px; }
-      .discord-login { min-height: 38px; display: inline-flex; align-items: center; justify-content: center; padding: 0 12px; border: 1px solid #5865f2; color: #4651c8; background: #fff; font-size: 11px; font-weight: 800; transition: color .18s, background .18s; }
-      .discord-login:hover { color: #fff; background: #5865f2; }
       .cart { min-width: 108px; min-height: 38px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid #c8d0da; color: #263442; background: #fff; font: 700 11px "Space Mono", monospace; letter-spacing: .04em; }
       .cart strong { min-width: 18px; height: 18px; display: grid; place-items: center; border-radius: 50%; color: #fff; background: var(--blue); font-size: 10px; }
 
@@ -108,8 +105,6 @@
         .logo img { width: 145px; height: 42px; }
         .logo .mascot { width: 45px; height: 45px; margin-left: -65px; }
         .links { display: none; }
-        .discord-login { min-width: 35px; width: 35px; padding: 0; font-size: 0; }
-        .discord-login::after { content: "D"; font: 800 12px "Space Mono", monospace; }
         .cart { min-width: 77px; min-height: 35px; font-size: 0; }
         .cart strong { font-size: 10px; }
         .hero { min-height: 390px; background-position: 60% center; }
@@ -135,7 +130,7 @@
       <nav class="container nav" aria-label="Ana menü">
         <a class="logo" href="#ana" aria-label="Monarch Store ana sayfa"><img src="/manus-storage/monarch-wordmark-transparent_4d0bf283.png" alt="Monarch Store logosu" /><img class="mascot" src="/manus-storage/monarch-mascot-source_c9118b5d.jpg" alt="Monarch Store anime karakteri" /></a>
         <div class="links"><a href="#botlar">Botlar</a><a href="#urunler">Minecraft Ürünleri</a><a href="#iletisim">İletişim</a></div>
-        <div class="nav-actions"><button class="discord-login" id="discordLogin" type="button">Discord ile giriş</button><button class="cart" id="cartButton" type="button" aria-label="Sepet">SEPET <strong id="cartCount">0</strong></button></div>
+        <button class="cart" id="cartButton" type="button" aria-label="Sepet">SEPET <strong id="cartCount">0</strong></button>
       </nav>
     </header>
 
@@ -194,7 +189,6 @@
       let toastTimer;
       const notify = (title, text) => { toastTitle.textContent = title; toastText.textContent = text; toast.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('show'), 2800); };
       document.querySelectorAll('.buy').forEach((button) => button.addEventListener('click', () => notify('Discord yönlendirmesi', 'Satın alma talebi için Discord açılıyor.')));
-      document.querySelector('#discordLogin').addEventListener('click', () => notify('Discord ile giriş', 'Discord OAuth ayarları tamamlandığında giriş akışı etkinleşecek.'));
       document.querySelector('#cartButton').addEventListener('click', () => notify('Sepet', cart ? `${cart} ürün talep listene eklendi.` : 'Sepetinde henüz ürün yok.'));
     </script>
   </body>

@@ -4,23 +4,23 @@
 - [x] Discord topluluk bağlantılarını ve mağaza görünümünü doğrulamak.
 - [x] Kararlı sürümü htmlXYZ GitHub deposuna aktarmak.
 
-- [ ] Discord Developer Portal’da canlı alan adı için `/api/auth/discord/callback` Redirect URI’sini yapılandırmak.
-- [ ] Discord OAuth girişini tarayıcıda uçtan uca doğrulamak.
-- [ ] Doğrulanan Discord OAuth değişikliklerini htmlXYZ deposuna son hâliyle aktarmak.
+- [ ] Discord Developer Portal’da canlı alan adı için `/api/auth/discord/callback` Redirect URI’sini yapılandırmak. _(Kapsam dışı: kullanıcı OAuth akışını kaldırdı.)_
+- [ ] Discord OAuth girişini tarayıcıda uçtan uca doğrulamak. _(Kapsam dışı: kullanıcı OAuth akışını kaldırdı.)_
+- [ ] Doğrulanan Discord OAuth değişikliklerini htmlXYZ deposuna son hâliyle aktarmak. _(Kapsam dışı: kullanıcı OAuth akışını kaldırdı.)_
 
 - [x] Sağlanan Discord OAuth kimlik bilgilerini güvenli proje ayarlarına eklemek.
 - [x] Gerçek Discord OAuth giriş ve callback akışını uygulamak.
-- [ ] Discord girişini doğrulayıp htmlXYZ GitHub deposuna son değişiklikleri aktarmak.
+- [ ] Discord girişini doğrulayıp htmlXYZ GitHub deposuna son değişiklikleri aktarmak. _(Kapsam dışı: kullanıcı OAuth akışını kaldırdı.)_
 
 - [x] Discord OAuth girişinin ihtiyaç duyduğu uygulama kimlik bilgilerini ve proje yeteneklerini doğrulamak.
 - [x] GitHub hesabı erişimini ve htmlXYZ depo oluşturma yetkisini doğrulamak.
-- [ ] Discord giriş seçeneğini eklemek ve GitHub deposuna güvenli biçimde aktarmak.
+- [ ] Discord giriş seçeneğini eklemek ve GitHub deposuna güvenli biçimde aktarmak. _(Kapsam dışı: kullanıcı OAuth akışını kaldırdı.)_
 
-- [ ] Anime karakterini merkez alan kısa hareketli hero sahnesini hazırlamak.
+- [ ] Anime karakterini merkez alan kısa hareketli hero sahnesini hazırlamak. _(Kullanıcı isteğiyle yarına ertelendi.)_
 
-- [ ] Paylaşılan anime karakteri merkezli, daha uzun hareketli hero videosunu üretmek.
-- [ ] Robot videosunu kaldırıp yeni anime videosunu hero paneline yerleştirmek.
-- [ ] Anime karakterli hero panelini masaüstü ve mobilde doğrulamak.
+- [ ] Paylaşılan anime karakteri merkezli, daha uzun hareketli hero videosunu üretmek. _(Kullanıcı isteğiyle yarına ertelendi.)_
+- [ ] Robot videosunu kaldırıp yeni anime videosunu hero paneline yerleştirmek. _(Kullanıcı isteğiyle yarına ertelendi.)_
+- [ ] Anime karakterli hero panelini masaüstü ve mobilde doğrulamak. _(Kullanıcı isteğiyle yarına ertelendi.)_
 
 - [x] Monarch temasına uyumlu insansı 3B robotun hareketli kısa sahnesini üretmek.
 - [x] Hareketli robot sahnesini hero paneline döngülü video olarak eklemek.
@@ -58,10 +58,10 @@
 - [x] Monarch kelime logosunu başlıkta görünür biçimde kullanmak.
 - [x] AFK, Miner ve Farmer kartlarının üçünü de aynı kullanıcı görseliyle sadeleştirmek.
 - [x] Ürün dilini Minecraft içi ürün satışına uyarlamak ve dekoratif öğeleri azaltmak.
-- [ ] Güncellenen tek HTML sayfasını masaüstü ve mobilde doğrulamak.
+- [x] Güncellenen tek HTML sayfasını masaüstü ve mobilde doğrulamak.
 
 - [x] Spline bileşenini ve izleme ışığı efektini Monarch Store bileşen yapısına uyarlamak.
 - [x] 3B sahneyi ek bağımlılık gerektirmeyen bir HTML web bileşeni olarak yerleştirmek.
 - [x] Spline sahnesini ana görev paneline, performansı koruyacak şekilde yerleştirmek.
 - [x] Referans görselleri, oluşturulan varlıkları ve mağaza etkileşimlerini tek HTML çıktısında birleştirmek.
-- [ ] Masaüstü ve mobil görünümde tasarımı doğrulamak; son HTML dosyasını hazırlamak.
+- [x] Masaüstü ve mobil görünümde tasarımı doğrulamak; son HTML dosyasını hazırlamak.

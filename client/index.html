@@ -1,26 +1,477 @@
 <!doctype html>
-<html lang="en">
-
+<html lang="tr">
   <head>
+    <!-- Monarch Store style reminder: Komuta Odası Arşivi — koyu metalik yüzeyler, Polar Arc vurgusu, kesik köşeli görev panelleri ve ölçülü taktiksel hareket. -->
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-    <title>Monarch Store</title>    
-    <!-- THIS IS THE START OF A COMMENT BLOCK, BLOCK TO BE DELETED: Google Fonts here, example:
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <meta name="theme-color" content="#0a1018" />
+    <meta name="description" content="Monarch Store — oyun düzenini arka planda tutan taktiksel otomasyon araçları." />
+    <title>Monarch Store — Operasyon Merkezi</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    THIS IS THE END OF A COMMENT BLOCK, BLOCK TO BE DELETED -->
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Rajdhani:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.69/build/spline-viewer.js"></script>
+    <style>
+      :root {
+        --ink: #081017;
+        --ink-raised: #101a24;
+        --ink-soft: #172431;
+        --line: rgba(178, 214, 237, 0.18);
+        --line-strong: rgba(178, 214, 237, 0.36);
+        --paper: #eaf3f8;
+        --muted: #9baec0;
+        --polar: #76c9ff;
+        --polar-bright: #c2ebff;
+        --growth: #a8cd86;
+        --amber: #ffca7c;
+        --danger: #f07f89;
+        --font-display: "Rajdhani", sans-serif;
+        --font-body: "Manrope", sans-serif;
+        --font-mono: "Space Mono", monospace;
+        --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        overflow-x: hidden;
+        color: var(--paper);
+        background: var(--ink);
+        font-family: var(--font-body);
+      }
+      button, a { font: inherit; }
+      button, a { -webkit-tap-highlight-color: transparent; }
+      button { cursor: pointer; }
+      a { color: inherit; text-decoration: none; }
+      ::selection { background: rgba(118, 201, 255, 0.32); color: #fff; }
+
+      .page-shell {
+        min-height: 100vh;
+        isolation: isolate;
+        background:
+          radial-gradient(circle at 84% 12%, rgba(49, 115, 158, 0.18), transparent 23rem),
+          radial-gradient(circle at 12% 62%, rgba(67, 119, 91, 0.1), transparent 24rem),
+          var(--ink);
+      }
+      .page-shell::before {
+        content: "";
+        position: fixed;
+        z-index: -2;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.34;
+        background-image: linear-gradient(rgba(157, 203, 232, 0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(157, 203, 232, 0.045) 1px, transparent 1px);
+        background-size: 40px 40px;
+        mask-image: linear-gradient(to bottom, black 0%, transparent 83%);
+      }
+      .page-shell::after {
+        content: "";
+        position: fixed;
+        z-index: 20;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.18;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.28'/%3E%3C/svg%3E");
+        mix-blend-mode: soft-light;
+      }
+
+      .utility-bar {
+        min-height: 36px;
+        padding: 8px clamp(20px, 5vw, 74px);
+        display: flex;
+        justify-content: space-between;
+        gap: 18px;
+        align-items: center;
+        border-bottom: 1px solid rgba(180, 212, 233, 0.12);
+        color: #b9c9d6;
+        background: rgba(2, 7, 12, 0.58);
+        font: 10px/1.2 var(--font-mono);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .signal { display: inline-flex; align-items: center; gap: 8px; }
+      .signal i { width: 7px; height: 7px; border-radius: 50%; background: var(--growth); box-shadow: 0 0 0 4px rgba(168, 205, 134, 0.1); }
+      .utility-right { display: flex; gap: 22px; }
+      .utility-right strong { color: var(--polar-bright); font-weight: 700; }
+
+      .nav-wrap {
+        position: sticky;
+        top: 0;
+        z-index: 15;
+        transition: background 220ms var(--ease-out), border-color 220ms var(--ease-out), backdrop-filter 220ms var(--ease-out);
+        border-bottom: 1px solid transparent;
+      }
+      .nav-wrap.scrolled { background: rgba(8, 16, 23, 0.88); backdrop-filter: blur(17px); border-color: var(--line); }
+      .nav {
+        width: min(1390px, calc(100% - 40px));
+        min-height: 82px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        gap: 28px;
+      }
+      .brand { display: inline-flex; align-items: center; justify-self: start; gap: 11px; }
+      .brand-mark { width: 39px; height: 39px; object-fit: contain; filter: drop-shadow(0 0 16px rgba(118, 201, 255, 0.25)); }
+      .brand-name { display: grid; line-height: 0.88; }
+      .brand-name b { font: 700 26px var(--font-display); letter-spacing: 0.072em; }
+      .brand-name span { margin-top: 5px; padding-left: 2px; color: var(--muted); font: 700 8px var(--font-mono); letter-spacing: 0.53em; }
+      .nav-links { display: flex; align-items: center; gap: clamp(15px, 2.2vw, 36px); color: #c1d0dc; font: 700 12px var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; }
+      .nav-links a { position: relative; padding: 8px 0; }
+      .nav-links a::after { content: ""; position: absolute; right: 0; bottom: 2px; left: 0; height: 1px; transform: scaleX(0); transform-origin: right; background: var(--polar); transition: transform 220ms var(--ease-out); }
+      .nav-links a:hover::after, .nav-links a:focus-visible::after { transform: scaleX(1); transform-origin: left; }
+      .nav-controls { display: flex; justify-content: flex-end; gap: 10px; }
+      .icon-button, .menu-button { width: 42px; height: 42px; display: grid; place-items: center; border: 1px solid var(--line); background: rgba(22, 36, 49, 0.46); color: var(--paper); transition: border-color 170ms var(--ease-out), background 170ms var(--ease-out), transform 170ms var(--ease-out); }
+      .icon-button:hover, .menu-button:hover { border-color: var(--polar); background: rgba(46, 96, 131, 0.34); }
+      .icon-button:active, .menu-button:active, .button:active { transform: scale(0.97); }
+      .cart { position: relative; }
+      .cart-count { position: absolute; top: -6px; right: -5px; min-width: 18px; height: 18px; display: grid; place-items: center; border-radius: 50%; color: #061018; background: var(--polar); font: 700 10px var(--font-mono); }
+      .menu-button { display: none; }
+
+      .hero {
+        position: relative;
+        min-height: min(735px, calc(100vh - 118px));
+        overflow: hidden;
+        border-bottom: 1px solid var(--line);
+      }
+      .hero-backdrop { position: absolute; z-index: -1; inset: 0; background: #09131d url("/manus-storage/monarch-command-hero_8ce71373.jpg") center/cover no-repeat; opacity: 0.8; }
+      .hero-backdrop::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, #081017 3%, rgba(8, 16, 23, 0.9) 30%, rgba(8, 16, 23, 0.35) 67%, rgba(8, 16, 23, 0.5)), linear-gradient(0deg, #081017 0%, transparent 38%); }
+      .hero-backdrop::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(118, 201, 255, 0.08) 1px, transparent 1px), linear-gradient(rgba(118, 201, 255, 0.08) 1px, transparent 1px); background-size: 78px 78px; mask-image: linear-gradient(90deg, rgba(0,0,0,0.9), transparent 63%); }
+      .hero-inner { width: min(1390px, calc(100% - 40px)); min-height: inherit; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 0.93fr) minmax(410px, 0.82fr); align-items: center; gap: clamp(35px, 7vw, 116px); padding: 70px 0 58px; }
+      .eyebrow { display: flex; align-items: center; gap: 11px; margin: 0 0 20px; color: var(--polar-bright); font: 700 10px var(--font-mono); letter-spacing: 0.15em; text-transform: uppercase; }
+      .eyebrow::before { content: ""; width: 30px; height: 1px; background: var(--polar); box-shadow: 0 0 12px var(--polar); }
+      .hero h1 { max-width: 700px; margin: 0; font: 700 clamp(56px, 7vw, 108px)/0.82 var(--font-display); letter-spacing: -0.048em; text-transform: uppercase; text-wrap: balance; }
+      .hero h1 em { color: var(--polar); font-style: normal; text-shadow: 0 0 32px rgba(118, 201, 255, 0.2); }
+      .hero-copy { max-width: 490px; margin: 27px 0 31px; color: #bbcad6; font-size: 15px; line-height: 1.8; }
+      .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; }
+      .button { min-height: 51px; display: inline-flex; align-items: center; justify-content: center; gap: 11px; padding: 0 19px; border: 1px solid var(--line-strong); color: var(--paper); background: rgba(15, 28, 40, 0.72); font: 700 11px var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; transition: transform 170ms var(--ease-out), color 170ms var(--ease-out), border-color 170ms var(--ease-out), background 170ms var(--ease-out); }
+      .button.primary { color: #07121a; border-color: var(--polar); background: var(--polar); }
+      .button.primary:hover { color: #fff; border-color: var(--polar-bright); background: #4baae4; box-shadow: 0 0 28px rgba(118, 201, 255, 0.24); }
+      .button.ghost:hover { border-color: var(--polar); background: rgba(67, 122, 155, 0.24); }
+      .arrow { font-size: 18px; line-height: 0; transition: transform 170ms var(--ease-out); }
+      .button:hover .arrow { transform: translateX(4px); }
+      .hero-stats { display: flex; gap: clamp(18px, 3vw, 42px); margin-top: 54px; padding-top: 20px; border-top: 1px solid var(--line); }
+      .stat { display: grid; gap: 6px; }
+      .stat b { font: 700 21px var(--font-display); letter-spacing: 0.035em; }
+      .stat span { color: var(--muted); font: 9px var(--font-mono); letter-spacing: 0.1em; text-transform: uppercase; }
+
+      .mission-panel {
+        position: relative;
+        min-height: 467px;
+        overflow: hidden;
+        clip-path: polygon(0 22px, 22px 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%);
+        border: 1px solid rgba(182, 222, 245, 0.38);
+        background: rgba(7, 16, 25, 0.67);
+        box-shadow: 0 28px 76px rgba(0, 0, 0, 0.28), inset 0 0 64px rgba(118, 201, 255, 0.05);
+        isolation: isolate;
+      }
+      .mission-panel::before { content: ""; position: absolute; z-index: 2; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(118, 201, 255, 0.06), transparent 19%, transparent 86%, rgba(118, 201, 255, 0.06)), repeating-linear-gradient(0deg, transparent 0, transparent 4px, rgba(190, 226, 248, 0.018) 5px); }
+      .mission-panel::after { content: ""; position: absolute; z-index: 3; top: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, var(--polar), transparent); transform: translateX(-100%); animation: scan 5.4s linear infinite; }
+      @keyframes scan { 35%, 100% { transform: translateX(100%); } }
+      .panel-meta { position: absolute; z-index: 5; top: 19px; right: 20px; left: 20px; display: flex; justify-content: space-between; color: #a7c8dc; font: 9px var(--font-mono); letter-spacing: 0.09em; }
+      .panel-meta .live { color: var(--growth); }
+      .panel-meta .live::before { content: "●"; margin-right: 6px; font-size: 8px; }
+      .scene-wrap { position: absolute; inset: 0; overflow: hidden; }
+      spline-viewer { position: absolute; z-index: 1; top: -28px; right: -110px; width: calc(100% + 170px); height: calc(100% + 58px); opacity: 0.88; filter: saturate(0.64) hue-rotate(162deg) contrast(1.14); }
+      .scene-fallback { position: absolute; inset: 0; background: radial-gradient(circle at 67% 48%, rgba(101, 194, 249, 0.28), transparent 9rem), linear-gradient(145deg, transparent, rgba(8,16,23,0.74)), url("/manus-storage/monarch-product-reference_3773ed30.jpg") center/cover; opacity: 0.46; mix-blend-mode: screen; }
+      .mission-copy { position: absolute; z-index: 5; right: 24px; bottom: 23px; left: 24px; display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
+      .mission-copy strong { display: block; margin-bottom: 4px; font: 700 17px var(--font-display); letter-spacing: 0.05em; text-transform: uppercase; }
+      .mission-copy span { display: block; color: #b0c0cd; font: 9px var(--font-mono); letter-spacing: 0.08em; }
+      .pulse-ring { width: 42px; height: 42px; flex: 0 0 auto; display: grid; place-items: center; border: 1px solid rgba(118, 201, 255, 0.7); border-radius: 50%; color: var(--polar); background: rgba(118, 201, 255, 0.1); box-shadow: 0 0 0 10px rgba(118, 201, 255, 0.06); }
+
+      .section { width: min(1390px, calc(100% - 40px)); margin: 0 auto; }
+      .section-head { display: flex; align-items: end; justify-content: space-between; gap: 30px; padding: 116px 0 38px; }
+      .section-kicker { margin: 0 0 11px; color: var(--polar); font: 700 10px var(--font-mono); letter-spacing: 0.14em; text-transform: uppercase; }
+      h2 { max-width: 620px; margin: 0; font: 700 clamp(34px, 4.2vw, 61px)/0.85 var(--font-display); letter-spacing: -0.035em; text-transform: uppercase; }
+      .section-head > p { max-width: 370px; margin: 0; color: var(--muted); font-size: 13px; line-height: 1.75; }
+      .catalogue { padding-bottom: 105px; }
+      .product-grid { display: grid; grid-template-columns: 1.04fr 0.95fr 0.95fr; gap: 16px; }
+      .product {
+        position: relative;
+        min-height: 580px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 26px;
+        border: 1px solid var(--line);
+        background: var(--ink-raised);
+        clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 24px 100%, 0 calc(100% - 24px));
+        transition: transform 260ms var(--ease-out), border-color 260ms var(--ease-out), box-shadow 260ms var(--ease-out);
+        isolation: isolate;
+      }
+      .product:hover, .product:focus-within { z-index: 2; border-color: rgba(118, 201, 255, 0.72); transform: translateY(-7px); box-shadow: 0 22px 55px rgba(0, 0, 0, 0.34), 0 0 0 1px rgba(118, 201, 255, 0.12); }
+      .product:nth-child(2) { min-height: 630px; margin-top: -34px; }
+      .product::before { content: ""; position: absolute; z-index: -1; inset: 0; background: linear-gradient(0deg, #091018 3%, rgba(8, 16, 23, 0.86) 32%, rgba(8, 16, 23, 0.04) 73%), var(--product-image) center/cover no-repeat; transition: transform 450ms var(--ease-out), filter 300ms var(--ease-out); }
+      .product:hover::before { transform: scale(1.045); filter: saturate(1.15); }
+      .product:nth-child(1) { --product-image: url("/manus-storage/monarch-product-reference_3773ed30.jpg"); }
+      .product:nth-child(2) { --product-image: url("/manus-storage/monarch-mining-panel_7f207699.jpg"); }
+      .product:nth-child(3) { --product-image: url("/manus-storage/monarch-growth-panel_f344a406.jpg"); }
+      .product-top { position: absolute; z-index: 1; top: 18px; right: 18px; left: 18px; display: flex; align-items: center; justify-content: space-between; color: #d2ebfb; font: 9px var(--font-mono); letter-spacing: 0.08em; }
+      .product-top .product-status { color: var(--growth); }
+      .product-top .product-status::before { content: "●"; margin-right: 5px; font-size: 7px; }
+      .product-serial { color: rgba(231, 245, 255, 0.7); }
+      .product-body { position: relative; z-index: 1; }
+      .product-type { display: inline-flex; margin-bottom: 9px; padding: 5px 8px; border: 1px solid rgba(118, 201, 255, 0.34); color: var(--polar-bright); background: rgba(5, 15, 23, 0.55); font: 700 9px var(--font-mono); letter-spacing: 0.11em; text-transform: uppercase; }
+      .product h3 { max-width: 270px; margin: 0; font: 700 clamp(37px, 3.5vw, 53px)/0.78 var(--font-display); letter-spacing: -0.03em; text-transform: uppercase; }
+      .product p { max-width: 300px; margin: 15px 0 21px; color: #bbcbd6; font-size: 13px; line-height: 1.65; }
+      .product-bottom { display: flex; align-items: end; justify-content: space-between; gap: 12px; padding-top: 18px; border-top: 1px solid var(--line); }
+      .price small { display: block; margin-bottom: 4px; color: var(--muted); font: 9px var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; }
+      .price b { font: 700 27px var(--font-display); letter-spacing: 0.03em; }
+      .acquire { min-width: 112px; min-height: 39px; padding: 0 12px; border: 1px solid rgba(118, 201, 255, 0.55); color: var(--polar-bright); background: rgba(7, 21, 31, 0.68); font: 700 9px var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; transition: color 170ms var(--ease-out), background 170ms var(--ease-out); }
+      .acquire:hover { color: #061018; background: var(--polar); }
+
+      .intel-area { position: relative; overflow: hidden; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: rgba(10, 19, 28, 0.6); }
+      .intel-area::before { content: ""; position: absolute; width: 42rem; height: 42rem; top: -31rem; right: -13rem; border: 1px solid rgba(118, 201, 255, 0.13); border-radius: 50%; box-shadow: 0 0 0 60px rgba(118, 201, 255, 0.025), 0 0 0 120px rgba(118, 201, 255, 0.02); }
+      .intel { width: min(1390px, calc(100% - 40px)); margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; padding: 98px 0; }
+      .intel h2 { max-width: 480px; }
+      .intel-copy { max-width: 470px; color: #b7c6d2; font-size: 14px; line-height: 1.85; }
+      .intel-copy b { color: var(--polar-bright); }
+      .protocol-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin-top: 38px; border: 1px solid var(--line); background: var(--line); }
+      .protocol { min-height: 138px; padding: 16px; background: rgba(10, 19, 28, 0.9); }
+      .protocol-num { display: block; margin-bottom: 31px; color: var(--polar); font: 700 10px var(--font-mono); }
+      .protocol b { display: block; font: 700 19px var(--font-display); letter-spacing: 0.035em; text-transform: uppercase; }
+      .feed { position: relative; z-index: 1; padding: 24px; border: 1px solid var(--line-strong); background: linear-gradient(145deg, rgba(118, 201, 255, 0.08), rgba(8,16,23,0.72) 42%); clip-path: polygon(0 0, 100% 0, 100% calc(100% - 17px), calc(100% - 17px) 100%, 0 100%); }
+      .feed-head { display: flex; align-items: center; justify-content: space-between; padding-bottom: 16px; border-bottom: 1px solid var(--line); }
+      .feed-head strong { font: 700 19px var(--font-display); letter-spacing: 0.05em; text-transform: uppercase; }
+      .feed-head span { color: var(--growth); font: 9px var(--font-mono); letter-spacing: 0.1em; }
+      .feed-item { display: grid; grid-template-columns: 82px 1fr; gap: 16px; padding: 19px 0; border-bottom: 1px solid var(--line); }
+      .feed-item:last-child { padding-bottom: 0; border-bottom: 0; }
+      .feed-item time { color: #85abc4; font: 9px var(--font-mono); }
+      .feed-item p { margin: 0; color: #c1d0da; font-size: 12px; line-height: 1.65; }
+      .feed-item p b { color: var(--polar-bright); font-weight: 700; }
+
+      footer { width: min(1390px, calc(100% - 40px)); margin: 0 auto; padding: 34px 0 45px; display: flex; justify-content: space-between; align-items: end; gap: 30px; color: var(--muted); }
+      .footer-brand { display: flex; align-items: center; gap: 10px; color: #dceaf2; }
+      .footer-brand img { width: 28px; height: 28px; object-fit: contain; opacity: 0.82; }
+      .footer-brand span { font: 700 14px var(--font-display); letter-spacing: 0.1em; }
+      footer p { max-width: 400px; margin: 0; text-align: right; font: 9px/1.7 var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; }
+
+      .toast { position: fixed; z-index: 30; right: 24px; bottom: 24px; width: min(370px, calc(100% - 48px)); display: flex; align-items: start; gap: 13px; padding: 15px; pointer-events: none; opacity: 0; transform: translateY(14px); border: 1px solid rgba(118, 201, 255, 0.52); color: #e4f5ff; background: rgba(10, 24, 34, 0.94); box-shadow: 0 18px 48px rgba(0,0,0,0.32); transition: opacity 210ms var(--ease-out), transform 210ms var(--ease-out); }
+      .toast.show { opacity: 1; transform: translateY(0); }
+      .toast-mark { width: 28px; height: 28px; flex: 0 0 auto; display: grid; place-items: center; color: #061018; background: var(--polar); font-weight: 900; }
+      .toast b { display: block; margin-bottom: 3px; font: 700 11px var(--font-mono); letter-spacing: 0.07em; text-transform: uppercase; }
+      .toast span { color: #adc5d5; font-size: 11px; }
+
+      .mobile-panel { display: none; }
+      :focus-visible { outline: 2px solid var(--polar); outline-offset: 4px; }
+      @media (max-width: 900px) {
+        .nav { grid-template-columns: 1fr auto; min-height: 72px; }
+        .nav-links { display: none; }
+        .menu-button { display: grid; }
+        .mobile-panel { position: absolute; top: 72px; right: 20px; left: 20px; z-index: 10; display: grid; gap: 4px; padding: 12px; border: 1px solid var(--line-strong); pointer-events: none; opacity: 0; transform: translateY(-8px); background: rgba(9, 18, 26, 0.96); backdrop-filter: blur(17px); transition: opacity 170ms var(--ease-out), transform 170ms var(--ease-out); }
+        .mobile-panel.open { pointer-events: auto; opacity: 1; transform: translateY(0); }
+        .mobile-panel a { padding: 13px; color: #d2e0e9; font: 700 11px var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; }
+        .mobile-panel a:hover { color: var(--polar); background: rgba(118, 201, 255, 0.08); }
+        .hero { min-height: auto; }
+        .hero-inner { grid-template-columns: 1fr; padding-top: 75px; }
+        .hero h1 { max-width: 640px; }
+        .mission-panel { min-height: 420px; max-width: 650px; width: 100%; }
+        .product-grid { grid-template-columns: 1fr 1fr; }
+        .product:nth-child(1) { grid-column: span 2; min-height: 510px; }
+        .product:nth-child(2) { min-height: 510px; margin-top: 0; }
+        .intel { gap: 45px; }
+      }
+      @media (max-width: 610px) {
+        .utility-right { display: none; }
+        .utility-bar { padding-inline: 20px; }
+        .nav, .hero-inner, .section, .intel, footer { width: min(100% - 32px, 1390px); }
+        .nav-controls .icon-button:first-child { display: none; }
+        .hero-inner { gap: 42px; padding-top: 60px; padding-bottom: 45px; }
+        .hero h1 { font-size: clamp(50px, 15vw, 76px); }
+        .hero-copy { font-size: 13px; }
+        .hero-stats { gap: 18px; margin-top: 38px; }
+        .stat b { font-size: 19px; }
+        .stat span { font-size: 8px; }
+        .mission-panel { min-height: 385px; }
+        spline-viewer { right: -150px; width: calc(100% + 245px); }
+        .section-head { display: block; padding-top: 82px; padding-bottom: 28px; }
+        .section-head > p { margin-top: 18px; }
+        .product-grid { grid-template-columns: 1fr; }
+        .product, .product:nth-child(1), .product:nth-child(2) { min-height: 470px; grid-column: auto; }
+        .product:nth-child(2) { min-height: 520px; }
+        .intel { grid-template-columns: 1fr; gap: 38px; padding: 70px 0; }
+        .protocol-list { grid-template-columns: 1fr; }
+        .protocol { min-height: 98px; display: grid; grid-template-columns: 48px 1fr; align-items: center; gap: 10px; }
+        .protocol-num { margin: 0; }
+        .feed-item { grid-template-columns: 66px 1fr; }
+        footer { display: grid; gap: 15px; }
+        footer p { text-align: left; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html { scroll-behavior: auto; }
+        *, *::before, *::after { animation-duration: 1ms !important; animation-iteration-count: 1 !important; transition-duration: 1ms !important; }
+      }
+    </style>
   </head>
-
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-    <script
-      defer
-      src="%VITE_ANALYTICS_ENDPOINT%/umami"
-      data-website-id="%VITE_ANALYTICS_WEBSITE_ID%"></script>
-  </body>
+    <div class="page-shell">
+      <div class="utility-bar">
+        <span class="signal"><i></i> Ağ Durumu: Kararlı</span>
+        <div class="utility-right"><span>Sunucu: <strong>EU-TR/04</strong></span><span>Şifreleme: <strong>Etkin</strong></span></div>
+      </div>
 
+      <div class="nav-wrap" id="topbar">
+        <nav class="nav" aria-label="Ana menü">
+          <a class="brand" href="#ana" aria-label="Monarch Store ana sayfa">
+            <img class="brand-mark" src="/manus-storage/monarch-mark_3caa845f.png" alt="Monarch amblemi" />
+            <span class="brand-name"><b>MONARCH</b><span>STORE</span></span>
+          </a>
+          <div class="nav-links">
+            <a href="#operasyonlar">Operasyonlar</a>
+            <a href="#protokol">Protokol</a>
+            <a href="#kanal">Kanal</a>
+          </div>
+          <div class="nav-controls">
+            <button class="icon-button" type="button" id="searchButton" aria-label="Arama"><span aria-hidden="true">⌕</span></button>
+            <button class="icon-button cart" type="button" id="cartButton" aria-label="Envanter sepeti"><span aria-hidden="true">▣</span><span class="cart-count" id="cartCount">0</span></button>
+            <button class="menu-button" type="button" id="menuButton" aria-label="Menüyü aç" aria-expanded="false"><span aria-hidden="true">☰</span></button>
+          </div>
+          <div class="mobile-panel" id="mobilePanel">
+            <a href="#operasyonlar">Operasyonlar</a>
+            <a href="#protokol">Protokol</a>
+            <a href="#kanal">Kanal</a>
+          </div>
+        </nav>
+      </div>
+
+      <main id="ana">
+        <section class="hero" aria-labelledby="hero-title">
+          <div class="hero-backdrop"></div>
+          <div class="hero-inner">
+            <div>
+              <p class="eyebrow">İstasyon 01 / Otomasyon Bölümü</p>
+              <h1 id="hero-title">Saha düzenini<br /><em>arka planda</em> bırak.</h1>
+              <p class="hero-copy">Monarch operatörleri, kaynak akışından bölge gelişimine kadar tekrar eden görevleri sessizce üstlenir. Siz bir sonraki hamlenizi planlarken sistem çalışmaya devam eder.</p>
+              <div class="hero-actions">
+                <a class="button primary" href="#operasyonlar">Operatörü seç <span class="arrow">→</span></a>
+                <a class="button ghost" href="#protokol">Protokolü incele</a>
+              </div>
+              <div class="hero-stats" aria-label="Monarch hizmet istatistikleri">
+                <div class="stat"><b>03</b><span>Aktif Operatör</span></div>
+                <div class="stat"><b>24/7</b><span>Görev Devamlılığı</span></div>
+                <div class="stat"><b>EU-TR</b><span>İletişim Hattı</span></div>
+              </div>
+            </div>
+            <aside class="mission-panel" aria-label="Canlı görev simülasyonu">
+              <div class="panel-meta"><span>TACTICAL VIEW / 08.26</span><span class="live">SİMÜLASYON CANLI</span></div>
+              <div class="scene-wrap">
+                <div class="scene-fallback" aria-hidden="true"></div>
+                <!-- Shared 3D component adapted for standalone HTML: lazy viewer within a tactical card. -->
+                <spline-viewer loading-anim-type="spinner-small-dark" url="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode" aria-label="Etkileşimli üç boyutlu operasyon sahnesi"></spline-viewer>
+              </div>
+              <div class="mission-copy"><div><strong>Operasyon Haritası</strong><span>Üç boyutlu görünüm · sürükleyerek keşfedin</span></div><div class="pulse-ring" aria-hidden="true">⌁</div></div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="catalogue section" id="operasyonlar" aria-labelledby="catalogue-title">
+          <div class="section-head">
+            <div><p class="section-kicker">Katalog / 03 Erişilebilir Birim</p><h2 id="catalogue-title">Her görev için bir <span style="color: var(--polar)">operatör.</span></h2></div>
+            <p>Her araç, belirli bir döngüyü kontrol altında tutmak için tasarlandı. İhtiyacınız olan operasyonu seçin ve envanterinizi genişletin.</p>
+          </div>
+          <div class="product-grid">
+            <article class="product" data-product="AFK Bot" data-price="50 TL">
+              <div class="product-top"><span class="product-status">Hazır</span><span class="product-serial">MS-AFK/01</span></div>
+              <div class="product-body"><span class="product-type">Pasif Görev Aracı</span><h3>AFK<br />Bot</h3><p>Gündelik ritmi devam ettirirken varlığınızı koruyan sade saha arkadaşı.</p><div class="product-bottom"><div class="price"><small>Operasyon bedeli</small><b>50 TL</b></div><button class="acquire" type="button">Envantere al</button></div></div>
+            </article>
+            <article class="product" data-product="Miner Bot" data-price="180 TL">
+              <div class="product-top"><span class="product-status">Hazır</span><span class="product-serial">MS-MNR/02</span></div>
+              <div class="product-body"><span class="product-type">Kaynak Döngüsü</span><h3>Miner<br />Bot</h3><p>Kaynak sahalarını takip eden, seçili rotalarda istikrarlı döngü sağlayan işçi birim.</p><div class="product-bottom"><div class="price"><small>Operasyon bedeli</small><b>180 TL</b></div><button class="acquire" type="button">Envantere al</button></div></div>
+            </article>
+            <article class="product" data-product="Farmer Bot" data-price="390 TL">
+              <div class="product-top"><span class="product-status">Hazır</span><span class="product-serial">MS-FRM/03</span></div>
+              <div class="product-body"><span class="product-type">Bölge Gelişimi</span><h3>Farmer<br />Bot</h3><p>Büyüme rotanızı planlar; ekim, bakım ve bölgesel döngüleri yönetmenize yardım eder.</p><div class="product-bottom"><div class="price"><small>Operasyon bedeli</small><b>390 TL</b></div><button class="acquire" type="button">Envantere al</button></div></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="intel-area" id="protokol" aria-labelledby="protocol-title">
+          <div class="intel">
+            <div>
+              <p class="section-kicker">Protokol / Denetimli Çalışma</p>
+              <h2 id="protocol-title">Döngüyü devret.<br /><span style="color: var(--growth)">Kontrolü koru.</span></h2>
+              <p class="intel-copy">Monarch araçları, <b>seçili görevlere odaklanan</b> net komut zincirleri üzerinde çalışır. Kurulumu tamamladıktan sonra operasyonunuzu izleyebilir, gerektiğinde kontrolü tekrar devralabilirsiniz.</p>
+              <div class="protocol-list" aria-label="Monarch kullanım adımları">
+                <div class="protocol"><span class="protocol-num">01/</span><b>Birimi<br />belirle</b></div>
+                <div class="protocol"><span class="protocol-num">02/</span><b>Hattı<br />etkinleştir</b></div>
+                <div class="protocol"><span class="protocol-num">03/</span><b>Durumu<br />izle</b></div>
+              </div>
+            </div>
+            <div class="feed" id="kanal">
+              <div class="feed-head"><strong>Kanal İletileri</strong><span>● Eşzamanlı</span></div>
+              <div class="feed-item"><time>18:42:07</time><p><b>MONARCH/AFK</b> · Bekleme protokolü doğrulandı, sistem durumu kararlı.</p></div>
+              <div class="feed-item"><time>18:43:21</time><p><b>MONARCH/MINER</b> · Kaynak sahası dizilimi güncellendi. Yeni rota yüklendi.</p></div>
+              <div class="feed-item"><time>18:44:09</time><p><b>MONARCH/FARMER</b> · Bölge planı alındı. Büyüme işaretleri takip ediliyor.</p></div>
+              <div class="feed-item"><time>18:45:00</time><p><b>KONTROL MERKEZİ</b> · Biriminiz hazır. Bir sonraki görevi belirleyin.</p></div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <div class="footer-brand"><img src="/manus-storage/monarch-mark_3caa845f.png" alt="" /><span>MONARCH / STORE</span></div>
+        <p>Monarch Store Discord’da bizi bulun · Hizmet koşulları için kontrol merkeziyle iletişime geçin.</p>
+      </footer>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"><div class="toast-mark">✓</div><div><b id="toastTitle">Sistem bildirimi</b><span id="toastText">Komut işlendi.</span></div></div>
+
+    <script>
+      const $ = (selector) => document.querySelector(selector);
+      const nav = $('#topbar');
+      const toast = $('#toast');
+      const toastTitle = $('#toastTitle');
+      const toastText = $('#toastText');
+      const cartCount = $('#cartCount');
+      const mobilePanel = $('#mobilePanel');
+      const menuButton = $('#menuButton');
+      let count = 0;
+      let toastTimer;
+
+      const showToast = (title, text) => {
+        toastTitle.textContent = title;
+        toastText.textContent = text;
+        toast.classList.add('show');
+        window.clearTimeout(toastTimer);
+        toastTimer = window.setTimeout(() => toast.classList.remove('show'), 3200);
+      };
+
+      window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 18), { passive: true });
+
+      document.querySelectorAll('.acquire').forEach((button) => {
+        button.addEventListener('click', (event) => {
+          const product = event.currentTarget.closest('.product');
+          count += 1;
+          cartCount.textContent = count;
+          showToast('Birim envantere alındı', `${product.dataset.product} · ${product.dataset.price} için talep oluşturuldu.`);
+          event.currentTarget.textContent = 'Eklendi';
+          event.currentTarget.style.background = 'var(--polar)';
+          event.currentTarget.style.color = '#061018';
+          window.setTimeout(() => {
+            event.currentTarget.textContent = 'Envantere al';
+            event.currentTarget.style.background = '';
+            event.currentTarget.style.color = '';
+          }, 1400);
+        });
+      });
+
+      $('#cartButton').addEventListener('click', () => {
+        showToast('Envanter durumu', count ? `${count} operasyon birimi talep listesinde.` : 'Talep listesi şu an boş.');
+      });
+
+      $('#searchButton').addEventListener('click', () => {
+        document.querySelector('#operasyonlar').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        showToast('Katalog açıldı', 'Erişilebilir operasyon birimlerini inceliyorsunuz.');
+      });
+
+      menuButton.addEventListener('click', () => {
+        const open = mobilePanel.classList.toggle('open');
+        menuButton.setAttribute('aria-expanded', String(open));
+        menuButton.setAttribute('aria-label', open ? 'Menüyü kapat' : 'Menüyü aç');
+      });
+      mobilePanel.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => { mobilePanel.classList.remove('open'); menuButton.setAttribute('aria-expanded', 'false'); }));
+    </script>
+  </body>
 </html>

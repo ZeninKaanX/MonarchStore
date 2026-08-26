@@ -9,7 +9,7 @@
 - [ ] Yeni depo bağlantısını kullanıcıya iletmek.
 
 - [x] `astralissaga.xyz` alan adını GitHub Pages ayarına eklemek.
-- [ ] Gerekli DNS kayıtlarını doğrulamak ve alan adının yayın durumunu kontrol etmek.
+- [x] Gerekli DNS kayıtlarını doğrulamak ve alan adının yayın durumunu kontrol etmek.
 - [ ] Özel alan adı bağlantı sonucunu kullanıcıya iletmek.
 
 - [x] GitHub Pages için bağımsız Monarch Store HTML dosyasını `index.html` olarak ana dala eklemek.

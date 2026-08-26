@@ -26,7 +26,7 @@
       header { position: sticky; z-index: 10; top: 0; border-bottom: 1px solid var(--line); background: rgba(255,255,255,.94); backdrop-filter: blur(12px); }
       .nav { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
       .logo { display: flex; align-items: center; min-width: 188px; }
-      .logo img { display: block; width: 174px; height: 53px; object-fit: contain; object-position: left center; mix-blend-mode: multiply; }
+      .logo img { display: block; width: 174px; height: 53px; object-fit: contain; object-position: left center; }
       .links { display: flex; align-items: center; gap: 24px; color: #536071; font-size: 13px; font-weight: 700; }
       .links a:hover { color: var(--blue); }
       .cart { min-width: 108px; min-height: 38px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid #c8d0da; color: #263442; background: #fff; font: 700 11px "Space Mono", monospace; letter-spacing: .04em; }
@@ -81,7 +81,7 @@
 
       footer { border-top: 1px solid var(--line); background: #fff; }
       .footer { min-height: 90px; display: flex; align-items: center; justify-content: space-between; gap: 20px; color: var(--muted); font-size: 11px; }
-      .footer img { width: 102px; height: 32px; object-fit: contain; mix-blend-mode: multiply; }
+      .footer img { width: 102px; height: 32px; object-fit: contain; }
       .toast { position: fixed; z-index: 20; right: 22px; bottom: 22px; width: min(345px, calc(100% - 44px)); padding: 14px 16px; border: 1px solid #afd1e6; pointer-events: none; opacity: 0; transform: translateY(10px); color: #24445b; background: #f1f9fe; box-shadow: 0 15px 30px rgba(17,40,56,.14); font-size: 12px; transition: opacity .2s, transform .2s; }
       .toast.show { opacity: 1; transform: translateY(0); }
       .toast b { display: block; margin-bottom: 3px; }
@@ -115,7 +115,7 @@
     <div class="topline"><div class="container"><span class="status">Monarch Store açık</span><span>Minecraft ürünleri · Discord üzerinden destek</span></div></div>
     <header>
       <nav class="container nav" aria-label="Ana menü">
-        <a class="logo" href="#ana" aria-label="Monarch Store ana sayfa"><img src="/manus-storage/monarch-wordmark_7134107c.jpg" alt="Monarch Store logosu" /></a>
+        <a class="logo" href="#ana" aria-label="Monarch Store ana sayfa"><img src="/manus-storage/monarch-wordmark-transparent_4d0bf283.png" alt="Monarch Store logosu" /></a>
         <div class="links"><a href="#botlar">Botlar</a><a href="#urunler">Minecraft Ürünleri</a><a href="#iletisim">İletişim</a></div>
         <button class="cart" id="cartButton" type="button" aria-label="Sepet">SEPET <strong id="cartCount">0</strong></button>
       </nav>
@@ -145,15 +145,15 @@
         </div>
         <div class="bot-grid">
           <article class="product" data-product="AFK Bot" data-price="50 TL">
-            <div class="product-image"><img src="/manus-storage/monarch-product-reference_3773ed30.jpg" alt="Monarch Store AFK, Miner ve Farmer bot görseli" /><span>MS / AFK</span></div>
+            <div class="product-image"><img src="/manus-storage/monarch-afk-bot_7c0b48b6.jpg" alt="Monarch Store AFK Bot görseli" /><span>MS / AFK</span></div>
             <div class="product-main"><h3>AFK Bot</h3><p>Oyunda pasif kaldığın süre için pratik yardımcı bot seçeneği.</p><div class="product-row"><div class="price"><small>Fiyat</small><b>50 TL</b></div><button class="buy" type="button">Satın al</button></div></div>
           </article>
           <article class="product" data-product="Miner Bot" data-price="180 TL">
-            <div class="product-image"><img src="/manus-storage/monarch-product-reference_3773ed30.jpg" alt="Monarch Store AFK, Miner ve Farmer bot görseli" /><span>MS / MINER</span></div>
+            <div class="product-image"><img src="/manus-storage/monarch-miner-bot_f037b5a7.jpg" alt="Monarch Store Miner Bot görseli" /><span>MS / MINER</span></div>
             <div class="product-main"><h3>Miner Bot</h3><p>Kaynak döngüleri için hazırlanmış madencilik odaklı bot seçeneği.</p><div class="product-row"><div class="price"><small>Fiyat</small><b>180 TL</b></div><button class="buy" type="button">Satın al</button></div></div>
           </article>
           <article class="product" data-product="Farmer Bot" data-price="390 TL">
-            <div class="product-image"><img src="/manus-storage/monarch-product-reference_3773ed30.jpg" alt="Monarch Store AFK, Miner ve Farmer bot görseli" /><span>MS / FARMER</span></div>
+            <div class="product-image"><img src="/manus-storage/monarch-farmer-bot_00c4cb5f.jpg" alt="Monarch Store Farmer Bot görseli" /><span>MS / FARMER</span></div>
             <div class="product-main"><h3>Farmer Bot</h3><p>Çiftlik işlerini düzenli takip etmek isteyen oyuncular için bot seçeneği.</p><div class="product-row"><div class="price"><small>Fiyat</small><b>390 TL</b></div><button class="buy" type="button">Satın al</button></div></div>
           </article>
         </div>
@@ -164,7 +164,7 @@
       </section>
     </main>
 
-    <footer id="iletisim"><div class="container footer"><img src="/manus-storage/monarch-wordmark_7134107c.jpg" alt="Monarch Store logosu" /><span>Monarch Store · Discord üzerinden bize ulaşabilirsin.</span></div></footer>
+    <footer id="iletisim"><div class="container footer"><img src="/manus-storage/monarch-wordmark-transparent_4d0bf283.png" alt="Monarch Store logosu" /><span>Monarch Store · Discord üzerinden bize ulaşabilirsin.</span></div></footer>
     <div class="toast" id="toast" role="status" aria-live="polite"><b id="toastTitle">Sepete eklendi</b><span id="toastText"></span></div>
     <script>
       const cartCount = document.querySelector('#cartCount');

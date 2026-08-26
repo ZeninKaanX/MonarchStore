@@ -1,5 +1,10 @@
 # Uygulama Kontrol Listesi
 
+- [x] AFK, Miner ve Farmer için referans kompozisyona uygun üç ayrı ürün görseli oluşturmak.
+- [x] Monarch Store kelime logosunu transparan arka planla hazırlamak.
+- [x] Yeni görselleri her bot kartına ve logo alanlarına yerleştirmek.
+- [x] Ürün kartı ve logo güncellemesini masaüstü ve mobilde doğrulamak.
+
 - [x] Ana robot alanına sürüklenebilir etkileşimli 3B sahneyi yeniden eklemek.
 
 - [x] Robot alanındaki arka planı daha soğuk savaş atmosferi verecek şekilde düzenlemek.

@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <!-- Monarch Store style reminder: sade Minecraft ürün vitrini; açık zemin, koyu metin, gerçek logo, tek tip ürün görseli ve robot arka planı. -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <meta name="theme-color" content="#f6f7fa" />
+    <meta name="description" content="Monarch Store Minecraft ürünleri ve botları." />
+    <title>Monarch Store | Minecraft Ürünleri</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+    <style>
+      :root { --ink: #171b23; --muted: #687283; --paper: #f7f8fb; --line: #e6e9ee; --blue: #3e83b8; --blue-dark: #286791; --white: #ffffff; --green: #5e9c70; --shadow: 0 14px 35px rgba(23, 27, 35, 0.08); }
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body { margin: 0; color: var(--ink); background: linear-gradient(180deg, #f7f8fb 0%, #f2f4f7 100%); font-family: Manrope, sans-serif; }
+      a { color: inherit; text-decoration: none; }
+      button { font: inherit; cursor: pointer; }
+      .container { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
+      .topline { min-height: 32px; display: flex; align-items: center; justify-content: space-between; color: #d8e3eb; background: #1d2b38; font: 10px "Space Mono", monospace; letter-spacing: .06em; text-transform: uppercase; }
+      .topline .container { display: flex; justify-content: space-between; }
+      .status { display: inline-flex; align-items: center; gap: 7px; }
+      .status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #8ccf9b; }
+      header { position: sticky; z-index: 10; top: 0; border-bottom: 1px solid var(--line); background: #f8f8f8; backdrop-filter: blur(12px); }
+      .nav { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+      .logo { display: flex; align-items: center; min-width: 202px; gap: 0; }
+      .logo img { display: block; width: 174px; height: 53px; object-fit: contain; object-position: left center; }
+      .logo .mascot { width: 58px; height: 58px; margin-left: -79px; object-fit: cover; object-position: center; background: #fff; mix-blend-mode: normal; }
+      .links { display: flex; align-items: center; gap: 24px; color: #536071; font-size: 13px; font-weight: 700; }
+      .links a:hover { color: var(--blue); }
+      .cart { min-width: 108px; min-height: 38px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid #c8d0da; color: #263442; background: #fff; font: 700 11px "Space Mono", monospace; letter-spacing: .04em; }
+      .cart strong { min-width: 18px; height: 18px; display: grid; place-items: center; border-radius: 50%; color: #fff; background: var(--blue); font-size: 10px; }
+
+      .hero { position: relative; min-height: 470px; display: flex; align-items: center; overflow: hidden; color: #fff; background: #142333 url("https://files.manuscdn.com/user_upload_by_module/session_file/310519663457714638/pIWRFTzcnXtdZRCZ.jpg") center/cover no-repeat; }
+      .hero::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(9,18,29,.91) 0%, rgba(9,18,29,.78) 42%, rgba(9,18,29,.28) 100%), linear-gradient(0deg, rgba(103,17,29,.38) 0%, transparent 34%), linear-gradient(120deg, rgba(37,77,110,.22), transparent 56%); }
+      .hero::after { content: ""; position: absolute; right: 0; bottom: 0; left: 0; height: 3px; background: linear-gradient(90deg, #9f2834 0%, #c84a51 35%, rgba(200,74,81,0) 76%); }
+      .hero-layout { position: relative; display: grid; grid-template-columns: minmax(0, 545px) minmax(330px, 430px); justify-content: space-between; align-items: center; gap: 42px; padding: 48px 0; }
+      .hero-content { position: relative; max-width: 545px; padding: 18px 0; }
+      .tag { display: inline-flex; margin-bottom: 16px; padding: 6px 9px; border: 1px solid rgba(255,255,255,.45); color: #dce9f2; font: 700 10px "Space Mono", monospace; letter-spacing: .08em; text-transform: uppercase; }
+      h1 { margin: 0; font-size: clamp(38px, 5vw, 61px); line-height: .98; letter-spacing: -.055em; }
+      .hero p { max-width: 455px; margin: 20px 0 25px; color: #e0e8ee; font-size: 14px; line-height: 1.75; }
+      .button { min-height: 46px; display: inline-flex; align-items: center; justify-content: center; padding: 0 18px; border: 1px solid var(--blue); color: #fff; background: var(--blue); font-size: 13px; font-weight: 800; transition: background .18s, transform .18s; }
+      .button:hover { background: var(--blue-dark); }
+      .button:active { transform: scale(.98); }
+      .button.secondary { margin-left: 8px; border-color: rgba(255,255,255,.66); color: #fff; background: rgba(8,18,27,.38); }
+      .button.secondary:hover { border-color: #fff; background: rgba(8,18,27,.66); }
+      .robot-panel { position: relative; min-height: 365px; overflow: hidden; border: 1px solid rgba(220,234,244,.5); background: linear-gradient(145deg, rgba(11,22,33,.3), rgba(6,12,19,.15)), url("https://files.manuscdn.com/user_upload_by_module/session_file/310519663457714638/DmJELWXlaeyUwxBP.jpg") center/cover; box-shadow: 0 18px 42px rgba(0,0,0,.18); }
+      .robot-panel::before { content: ""; position: absolute; z-index: 1; inset: 0; pointer-events: none; background: linear-gradient(0deg, rgba(7,14,22,.74), transparent 44%), repeating-linear-gradient(0deg, transparent 0, transparent 5px, rgba(214,235,247,.04) 6px); }
+      .robot-video { position: absolute; z-index: 0; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+      .robot-label { position: absolute; z-index: 3; top: 14px; left: 15px; padding: 6px 8px; border: 1px solid rgba(229,242,249,.38); color: #e5f3fb; background: rgba(9,19,30,.56); font: 700 9px "Space Mono", monospace; letter-spacing: .07em; }
+      .robot-help { position: absolute; z-index: 3; right: 15px; bottom: 14px; left: 15px; padding-top: 11px; border-top: 1px solid rgba(224,241,250,.35); color: #e3eef4; font-size: 11px; }
+      .robot-help b { display: block; margin-bottom: 3px; color: #fff; font-size: 13px; }
+
+      section { padding: 70px 0; }
+      .section-head { display: flex; justify-content: space-between; align-items: end; gap: 28px; margin-bottom: 25px; }
+      .eyebrow { margin: 0 0 8px; color: var(--blue); font: 700 10px "Space Mono", monospace; letter-spacing: .08em; text-transform: uppercase; }
+      h2 { margin: 0; font-size: clamp(30px, 3.2vw, 42px); letter-spacing: -.045em; }
+      .section-head > p { max-width: 375px; margin: 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
+
+      .bot-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+      .product { overflow: hidden; border: 1px solid var(--line); background: var(--white); box-shadow: var(--shadow); }
+      .product-image { position: relative; height: 300px; overflow: hidden; background: #cdd7df; }
+      .product-image img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; transition: transform .35s ease; }
+      .product:hover .product-image img { transform: scale(1.025); }
+      .product-image span { position: absolute; top: 12px; left: 12px; padding: 6px 8px; color: #fff; background: rgba(25,31,40,.82); font: 700 9px "Space Mono", monospace; letter-spacing: .06em; }
+      .product-main { padding: 19px; }
+      .product h3 { margin: 0; font-size: 28px; letter-spacing: -.045em; }
+      .product p { min-height: 44px; margin: 9px 0 19px; color: var(--muted); font-size: 12px; line-height: 1.65; }
+      .product-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 14px; border-top: 1px solid var(--line); }
+      .price { display: grid; gap: 3px; }
+      .price small { color: var(--muted); font: 9px "Space Mono", monospace; text-transform: uppercase; }
+      .price b { font-size: 21px; }
+      .buy { min-height: 38px; display: inline-flex; align-items: center; justify-content: center; padding: 0 12px; border: 1px solid var(--blue); color: var(--blue); background: #fff; font-size: 11px; font-weight: 800; transition: color .18s, background .18s; }
+      .buy:hover { color: #fff; background: var(--blue); }
+
+      .store-note { padding: 0 0 75px; }
+      .note-card { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 35px; padding: 27px 30px; border: 1px solid #d9e2e8; color: #263442; background: #eef4f7; }
+      .note-card h2 { font-size: 25px; }
+      .note-card p { margin: 7px 0 0; color: #607181; font-size: 13px; }
+      .item-list { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+      .item-list span { padding: 8px 10px; border: 1px solid #ccdae2; background: #fff; color: #435565; font: 700 10px "Space Mono", monospace; }
+      .discord-section { padding: 0 0 28px; }
+      .discord-card { display: flex; align-items: center; justify-content: space-between; gap: 28px; padding: 22px 28px; border: 1px solid #d8e3eb; color: #274155; background: #fff; }
+      .discord-card .eyebrow { margin-bottom: 6px; }
+      .discord-card h2 { font-size: 24px; }
+      .discord-card p { margin: 6px 0 0; color: #687283; font-size: 13px; }
+      .discord-button { min-width: 162px; min-height: 42px; display: inline-flex; align-items: center; justify-content: center; color: #fff; background: #5865f2; font-size: 12px; font-weight: 800; transition: background .18s, transform .18s; }
+      .discord-button:hover { background: #4651c8; }
+      .discord-button:active { transform: scale(.98); }
+
+      footer { border-top: 1px solid var(--line); background: #fff; }
+      .footer { min-height: 90px; display: flex; align-items: center; justify-content: space-between; gap: 20px; color: var(--muted); font-size: 11px; }
+      .footer img { width: 102px; height: 32px; object-fit: contain; }
+      .toast { position: fixed; z-index: 20; right: 22px; bottom: 22px; width: min(345px, calc(100% - 44px)); padding: 14px 16px; border: 1px solid #afd1e6; pointer-events: none; opacity: 0; transform: translateY(10px); color: #24445b; background: #f1f9fe; box-shadow: 0 15px 30px rgba(17,40,56,.14); font-size: 12px; transition: opacity .2s, transform .2s; }
+      .toast.show { opacity: 1; transform: translateY(0); }
+      .toast b { display: block; margin-bottom: 3px; }
+      :focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+
+      @media (max-width: 720px) {
+        .container { width: min(100% - 30px, 1120px); }
+        .topline .container span:last-child { display: none; }
+        .nav { min-height: 67px; }
+        .logo { min-width: 168px; gap: 0; }
+        .logo img { width: 145px; height: 42px; }
+        .logo .mascot { width: 45px; height: 45px; margin-left: -65px; }
+        .links { display: none; }
+        .cart { min-width: 77px; min-height: 35px; font-size: 0; }
+        .cart strong { font-size: 10px; }
+        .hero { min-height: 390px; background-position: 60% center; }
+        .hero::before { background: linear-gradient(90deg, rgba(9,18,29,.91), rgba(9,18,29,.58)), linear-gradient(0deg, rgba(103,17,29,.3), transparent 36%); }
+        .hero-layout { grid-template-columns: 1fr; gap: 8px; padding: 38px 0 44px; }
+        .hero-content { padding: 16px 0; }
+        .robot-panel { min-height: 320px; }
+        .section-head { display: block; }
+        .section-head > p { margin-top: 12px; }
+        .bot-grid { grid-template-columns: 1fr; }
+        .product-image { height: min(94vw, 360px); }
+        .note-card { grid-template-columns: 1fr; gap: 19px; padding: 23px; }
+        .item-list { justify-content: flex-start; }
+        .discord-card { display: grid; justify-content: stretch; gap: 17px; padding: 22px; }
+        .discord-button { width: 100%; }
+        .footer { min-height: 104px; flex-direction: column; justify-content: center; align-items: flex-start; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="topline"><div class="container"><span class="status">Monarch Store açık</span><span>Minecraft ürünleri · Discord üzerinden destek</span></div></div>
+    <header>
+      <nav class="container nav" aria-label="Ana menü">
+        <a class="logo" href="#ana" aria-label="Monarch Store ana sayfa"><img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663457714638/oUTJFXXsgLapGxdp.png" alt="Monarch Store logosu" /><img class="mascot" src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663457714638/nOlbtPHbizNPlfut.jpg" alt="Monarch Store anime karakteri" /></a>
+        <div class="links"><a href="#botlar">Botlar</a><a href="#urunler">Minecraft Ürünleri</a><a href="#iletisim">İletişim</a></div>
+        <button class="cart" id="cartButton" type="button" aria-label="Sepet">SEPET <strong id="cartCount">0</strong></button>
+      </nav>
+    </header>
+
+    <main id="ana">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="container hero-layout">
+          <div class="hero-content">
+            <span class="tag">Monarch Store</span>
+            <h1 id="hero-title">Minecraft dünyan için<br />ihtiyacın olanlar.</h1>
+            <p>Botlar, oyun içi ürünler ve sunucu ihtiyaçları için sade bir mağaza. İstediğin ürünü seç, talebini hızlıca oluştur.</p>
+            <a class="button" href="#botlar">Botları incele</a><a class="button secondary" href="https://discord.gg/e5zJaTSypd" target="_blank" rel="noreferrer">Discord'a katıl</a>
+          </div>
+          <aside class="robot-panel" aria-label="Etkileşimli üç boyutlu robot alanı">
+            <span class="robot-label">ROBOT / AKTİF</span>
+            <video class="robot-video" autoplay muted loop playsinline preload="metadata" poster="https://files.manuscdn.com/user_upload_by_module/session_file/310519663457714638/DmJELWXlaeyUwxBP.jpg" aria-label="Hareketli insansı üç boyutlu robot"><source src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663457714638/oaWKbrQJfDZbsdro.mp4" type="video/mp4" /></video>
+            <div class="robot-help"><b>Hareketli 3B birim aktif</b>Monarch sahası için görevlendirildi.</div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="container" id="botlar" aria-labelledby="bot-title">
+        <div class="section-head">
+          <div><p class="eyebrow">Botlar</p><h2 id="bot-title">Otomasyon araçları</h2></div>
+          <p>AFK, kaynak ve çiftlik işlemlerinde yardımcı olacak bot seçeneklerini buradan inceleyebilirsin.</p>
+        </div>
+        <div class="bot-grid">
+          <article class="product" data-product="AFK Bot" data-price="50 TL">
+            <div class="product-image"><img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663457714638/dTrbZHbHfwFOvNdY.jpg" alt="Monarch Store AFK Bot görseli" /><span>MS / AFK</span></div>
+            <div class="product-main"><h3>AFK Bot</h3><p>Oyunda pasif kaldığın süre için pratik yardımcı bot seçeneği.</p><div class="product-row"><div class="price"><small>Fiyat</small><b>50 TL</b></div><a class="buy" href="https://discord.gg/e5zJaTSypd" target="_blank" rel="noreferrer">Discord'da satın al</a></div></div>
+          </article>
+          <article class="product" data-product="Miner Bot" data-price="180 TL">
+            <div class="product-image"><img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663457714638/WtmnGWNFHlHMPTwQ.jpg" alt="Monarch Store Miner Bot görseli" /><span>MS / MINER</span></div>
+            <div class="product-main"><h3>Miner Bot</h3><p>Kaynak döngüleri için hazırlanmış madencilik odaklı bot seçeneği.</p><div class="product-row"><div class="price"><small>Fiyat</small><b>180 TL</b></div><a class="buy" href="https://discord.gg/e5zJaTSypd" target="_blank" rel="noreferrer">Discord'da satın al</a></div></div>
+          </article>
+          <article class="product" data-product="Farmer Bot" data-price="390 TL">
+            <div class="product-image"><img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663457714638/XxUQofeWPlQiwGHk.jpg" alt="Monarch Store Farmer Bot görseli" /><span>MS / FARMER</span></div>
+            <div class="product-main"><h3>Farmer Bot</h3><p>Çiftlik işlerini düzenli takip etmek isteyen oyuncular için bot seçeneği.</p><div class="product-row"><div class="price"><small>Fiyat</small><b>390 TL</b></div><a class="buy" href="https://discord.gg/e5zJaTSypd" target="_blank" rel="noreferrer">Discord'da satın al</a></div></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="container store-note" id="urunler" aria-labelledby="store-title">
+        <div class="note-card"><div><p class="eyebrow">Yakında mağazada</p><h2 id="store-title">Minecraft oyun içi ürünleri</h2><p>Mağazaya eklenmesini planladığın ürünleri bu alanda düzenli şekilde gösterebiliriz.</p></div><div class="item-list" aria-label="Planlanan ürün türleri"><span>VIP Paketleri</span><span>Kasa Anahtarları</span><span>Spawnerlar</span><span>Coin Paketleri</span></div></div>
+      </section>
+      <section class="container discord-section" aria-labelledby="discord-title"><div class="discord-card"><div><p class="eyebrow">Topluluk ve destek</p><h2 id="discord-title">Monarch Store Discord</h2><p>Duyurular, destek ve sipariş iletişimi için Discord topluluğumuza katıl.</p></div><a class="discord-button" href="https://discord.gg/e5zJaTSypd" target="_blank" rel="noreferrer">Discord'a katıl ↗</a></div></section>
+    </main>
+
+    <footer id="iletisim"><div class="container footer"><img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663457714638/oUTJFXXsgLapGxdp.png" alt="Monarch Store logosu" /><span><a href="https://discord.gg/e5zJaTSypd" target="_blank" rel="noreferrer">Monarch Store Discord</a> · Discord üzerinden bize ulaşabilirsin.</span></div></footer>
+    <div class="toast" id="toast" role="status" aria-live="polite"><b id="toastTitle">Sepete eklendi</b><span id="toastText"></span></div>
+    <script>
+      const cartCount = document.querySelector('#cartCount');
+      const toast = document.querySelector('#toast');
+      const toastTitle = document.querySelector('#toastTitle');
+      const toastText = document.querySelector('#toastText');
+      let cart = 0;
+      let toastTimer;
+      const notify = (title, text) => { toastTitle.textContent = title; toastText.textContent = text; toast.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('show'), 2800); };
+      document.querySelectorAll('.buy').forEach((button) => button.addEventListener('click', () => notify('Discord yönlendirmesi', 'Satın alma talebi için Discord açılıyor.')));
+      document.querySelector('#cartButton').addEventListener('click', () => notify('Sepet', cart ? `${cart} ürün talep listene eklendi.` : 'Sepetinde henüz ürün yok.'));
+    </script>
+  </body>
+</html>

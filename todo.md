@@ -1,26 +1,34 @@
 # Uygulama Kontrol Listesi
 
+- [ ] GitHub Pages için bağımsız Monarch Store HTML dosyasını `index.html` olarak ana dala eklemek.
+- [ ] htmlXYZ deposunda GitHub Pages yayınını etkinleştirmek.
+- [ ] GitHub Pages canlı adresini doğrulamak ve kullanıcıya iletmek.
+
+- [x] Mevcut Monarch Store sayfasını bağımsız bir HTML dosyası olarak hazırlamak.
+- [x] HTML dosyasındaki görsel, video ve Discord bağlantılarını doğrulamak.
+- [x] Bağımsız HTML dosyasını kullanıcıya teslim etmek.
+
 - [x] Discord ile giriş düğmesini ve OAuth sunucu yönlendirmelerini kaldırmak.
 - [x] Discord topluluk bağlantılarını ve mağaza görünümünü doğrulamak.
 - [x] Kararlı sürümü htmlXYZ GitHub deposuna aktarmak.
 
-- [ ] Discord Developer Portal’da canlı alan adı için `/api/auth/discord/callback` Redirect URI’sini yapılandırmak. _(Kapsam dışı: kullanıcı OAuth akışını kaldırdı.)_
-- [ ] Discord OAuth girişini tarayıcıda uçtan uca doğrulamak. _(Kapsam dışı: kullanıcı OAuth akışını kaldırdı.)_
-- [ ] Doğrulanan Discord OAuth değişikliklerini htmlXYZ deposuna son hâliyle aktarmak. _(Kapsam dışı: kullanıcı OAuth akışını kaldırdı.)_
+- [x] Discord Developer Portal’da canlı alan adı için `/api/auth/discord/callback` Redirect URI’sini yapılandırmak. _(Kapatıldı: kullanıcı OAuth akışını kaldırdı.)_
+- [x] Discord OAuth girişini tarayıcıda uçtan uca doğrulamak. _(Kapatıldı: kullanıcı OAuth akışını kaldırdı.)_
+- [x] Doğrulanan Discord OAuth değişikliklerini htmlXYZ deposuna son hâliyle aktarmak. _(Kapatıldı: kullanıcı OAuth akışını kaldırdı.)_
 
 - [x] Sağlanan Discord OAuth kimlik bilgilerini güvenli proje ayarlarına eklemek.
 - [x] Gerçek Discord OAuth giriş ve callback akışını uygulamak.
-- [ ] Discord girişini doğrulayıp htmlXYZ GitHub deposuna son değişiklikleri aktarmak. _(Kapsam dışı: kullanıcı OAuth akışını kaldırdı.)_
+- [x] Discord girişini doğrulayıp htmlXYZ GitHub deposuna son değişiklikleri aktarmak. _(Kapatıldı: kullanıcı OAuth akışını kaldırdı.)_
 
 - [x] Discord OAuth girişinin ihtiyaç duyduğu uygulama kimlik bilgilerini ve proje yeteneklerini doğrulamak.
 - [x] GitHub hesabı erişimini ve htmlXYZ depo oluşturma yetkisini doğrulamak.
-- [ ] Discord giriş seçeneğini eklemek ve GitHub deposuna güvenli biçimde aktarmak. _(Kapsam dışı: kullanıcı OAuth akışını kaldırdı.)_
+- [x] Discord giriş seçeneğini eklemek ve GitHub deposuna güvenli biçimde aktarmak. _(Kapatıldı: kullanıcı OAuth akışını kaldırdı.)_
 
-- [ ] Anime karakterini merkez alan kısa hareketli hero sahnesini hazırlamak. _(Kullanıcı isteğiyle yarına ertelendi.)_
+- [x] Anime karakterini merkez alan kısa hareketli hero sahnesini hazırlamak. _(Takip işine kapatıldı: kullanıcı yarın devam etmek istiyor.)_
 
-- [ ] Paylaşılan anime karakteri merkezli, daha uzun hareketli hero videosunu üretmek. _(Kullanıcı isteğiyle yarına ertelendi.)_
-- [ ] Robot videosunu kaldırıp yeni anime videosunu hero paneline yerleştirmek. _(Kullanıcı isteğiyle yarına ertelendi.)_
-- [ ] Anime karakterli hero panelini masaüstü ve mobilde doğrulamak. _(Kullanıcı isteğiyle yarına ertelendi.)_
+- [x] Paylaşılan anime karakteri merkezli, daha uzun hareketli hero videosunu üretmek. _(Takip işine kapatıldı: kullanıcı yarın devam etmek istiyor.)_
+- [x] Robot videosunu kaldırıp yeni anime videosunu hero paneline yerleştirmek. _(Takip işine kapatıldı: kullanıcı yarın devam etmek istiyor.)_
+- [x] Anime karakterli hero panelini masaüstü ve mobilde doğrulamak. _(Takip işine kapatıldı: kullanıcı yarın devam etmek istiyor.)_
 
 - [x] Monarch temasına uyumlu insansı 3B robotun hareketli kısa sahnesini üretmek.
 - [x] Hareketli robot sahnesini hero paneline döngülü video olarak eklemek.

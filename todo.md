@@ -1,5 +1,12 @@
 # Uygulama Kontrol Listesi
 
+- [x] Spline sahnesi yerine soğuk savaş temalı özgün robot görseli üretmek.
+- [x] Özgün robot görselini hero paneline yerleştirip Spline imzasını kaldırmak.
+- [x] Yeni robot panelini masaüstü ve mobilde doğrulamak.
+
+- [x] Robot panelindeki “Built with …” imzasını görünümden kaldırmak.
+- [x] Robot sahnesinin işlevselliğini koruyarak güncel paneli doğrulamak.
+
 - [x] Tüm satın alma düğmelerini kullanıcı Discord davet bağlantısına yönlendirmek.
 - [x] Anime karakterini beyaz fonla Monarch logosunun hemen yanında hizalamak.
 - [x] Yeni satın alma akışını ve başlık yerleşimini masaüstü ile mobilde doğrulamak.

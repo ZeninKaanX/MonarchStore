@@ -29,6 +29,9 @@
       .logo .mascot { width: 58px; height: 58px; margin-left: -79px; object-fit: cover; object-position: center; background: #fff; mix-blend-mode: normal; }
       .links { display: flex; align-items: center; gap: 24px; color: #536071; font-size: 13px; font-weight: 700; }
       .links a:hover { color: var(--blue); }
+      .nav-actions { display: flex; align-items: center; gap: 9px; }
+      .discord-login { min-height: 38px; display: inline-flex; align-items: center; justify-content: center; padding: 0 12px; border: 1px solid #5865f2; color: #4651c8; background: #fff; font-size: 11px; font-weight: 800; transition: color .18s, background .18s; }
+      .discord-login:hover { color: #fff; background: #5865f2; }
       .cart { min-width: 108px; min-height: 38px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid #c8d0da; color: #263442; background: #fff; font: 700 11px "Space Mono", monospace; letter-spacing: .04em; }
       .cart strong { min-width: 18px; height: 18px; display: grid; place-items: center; border-radius: 50%; color: #fff; background: var(--blue); font-size: 10px; }
 
@@ -47,6 +50,7 @@
       .button.secondary:hover { border-color: #fff; background: rgba(8,18,27,.66); }
       .robot-panel { position: relative; min-height: 365px; overflow: hidden; border: 1px solid rgba(220,234,244,.5); background: linear-gradient(145deg, rgba(11,22,33,.3), rgba(6,12,19,.15)), url("/manus-storage/monarch-original-robot_48f445c4.jpg") center/cover; box-shadow: 0 18px 42px rgba(0,0,0,.18); }
       .robot-panel::before { content: ""; position: absolute; z-index: 1; inset: 0; pointer-events: none; background: linear-gradient(0deg, rgba(7,14,22,.74), transparent 44%), repeating-linear-gradient(0deg, transparent 0, transparent 5px, rgba(214,235,247,.04) 6px); }
+      .robot-video { position: absolute; z-index: 0; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
       .robot-label { position: absolute; z-index: 3; top: 14px; left: 15px; padding: 6px 8px; border: 1px solid rgba(229,242,249,.38); color: #e5f3fb; background: rgba(9,19,30,.56); font: 700 9px "Space Mono", monospace; letter-spacing: .07em; }
       .robot-help { position: absolute; z-index: 3; right: 15px; bottom: 14px; left: 15px; padding-top: 11px; border-top: 1px solid rgba(224,241,250,.35); color: #e3eef4; font-size: 11px; }
       .robot-help b { display: block; margin-bottom: 3px; color: #fff; font-size: 13px; }
@@ -104,6 +108,8 @@
         .logo img { width: 145px; height: 42px; }
         .logo .mascot { width: 45px; height: 45px; margin-left: -65px; }
         .links { display: none; }
+        .discord-login { min-width: 35px; width: 35px; padding: 0; font-size: 0; }
+        .discord-login::after { content: "D"; font: 800 12px "Space Mono", monospace; }
         .cart { min-width: 77px; min-height: 35px; font-size: 0; }
         .cart strong { font-size: 10px; }
         .hero { min-height: 390px; background-position: 60% center; }
@@ -129,7 +135,7 @@
       <nav class="container nav" aria-label="Ana menü">
         <a class="logo" href="#ana" aria-label="Monarch Store ana sayfa"><img src="/manus-storage/monarch-wordmark-transparent_4d0bf283.png" alt="Monarch Store logosu" /><img class="mascot" src="/manus-storage/monarch-mascot-source_c9118b5d.jpg" alt="Monarch Store anime karakteri" /></a>
         <div class="links"><a href="#botlar">Botlar</a><a href="#urunler">Minecraft Ürünleri</a><a href="#iletisim">İletişim</a></div>
-        <button class="cart" id="cartButton" type="button" aria-label="Sepet">SEPET <strong id="cartCount">0</strong></button>
+        <div class="nav-actions"><button class="discord-login" id="discordLogin" type="button">Discord ile giriş</button><button class="cart" id="cartButton" type="button" aria-label="Sepet">SEPET <strong id="cartCount">0</strong></button></div>
       </nav>
     </header>
 
@@ -144,7 +150,8 @@
           </div>
           <aside class="robot-panel" aria-label="Etkileşimli üç boyutlu robot alanı">
             <span class="robot-label">ROBOT / AKTİF</span>
-            <div class="robot-help"><b>Operasyon birimi hazır</b>Monarch sahası için görevlendirildi.</div>
+            <video class="robot-video" autoplay muted loop playsinline preload="metadata" poster="/manus-storage/monarch-original-robot_48f445c4.jpg" aria-label="Hareketli insansı üç boyutlu robot"><source src="/manus-storage/monarch-humanoid-robot_d5ed1f5d.mp4" type="video/mp4" /></video>
+            <div class="robot-help"><b>Hareketli 3B birim aktif</b>Monarch sahası için görevlendirildi.</div>
           </aside>
         </div>
       </section>
@@ -187,6 +194,7 @@
       let toastTimer;
       const notify = (title, text) => { toastTitle.textContent = title; toastText.textContent = text; toast.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('show'), 2800); };
       document.querySelectorAll('.buy').forEach((button) => button.addEventListener('click', () => notify('Discord yönlendirmesi', 'Satın alma talebi için Discord açılıyor.')));
+      document.querySelector('#discordLogin').addEventListener('click', () => notify('Discord ile giriş', 'Discord OAuth ayarları tamamlandığında giriş akışı etkinleşecek.'));
       document.querySelector('#cartButton').addEventListener('click', () => notify('Sepet', cart ? `${cart} ürün talep listene eklendi.` : 'Sepetinde henüz ürün yok.'));
     </script>
   </body>

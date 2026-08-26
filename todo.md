@@ -1,5 +1,19 @@
 # Uygulama Kontrol Listesi
 
+- [x] Discord OAuth girişinin ihtiyaç duyduğu uygulama kimlik bilgilerini ve proje yeteneklerini doğrulamak.
+- [x] GitHub hesabı erişimini ve htmlXYZ depo oluşturma yetkisini doğrulamak.
+- [ ] Discord giriş seçeneğini eklemek ve GitHub deposuna güvenli biçimde aktarmak.
+
+- [ ] Anime karakterini merkez alan kısa hareketli hero sahnesini hazırlamak.
+
+- [ ] Paylaşılan anime karakteri merkezli, daha uzun hareketli hero videosunu üretmek.
+- [ ] Robot videosunu kaldırıp yeni anime videosunu hero paneline yerleştirmek.
+- [ ] Anime karakterli hero panelini masaüstü ve mobilde doğrulamak.
+
+- [x] Monarch temasına uyumlu insansı 3B robotun hareketli kısa sahnesini üretmek.
+- [x] Hareketli robot sahnesini hero paneline döngülü video olarak eklemek.
+- [x] Hareketli robot panelini masaüstü ve mobilde doğrulamak.
+
 - [x] Spline sahnesi yerine soğuk savaş temalı özgün robot görseli üretmek.
 - [x] Özgün robot görselini hero paneline yerleştirip Spline imzasını kaldırmak.
 - [x] Yeni robot panelini masaüstü ve mobilde doğrulamak.

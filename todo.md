@@ -2,7 +2,7 @@
 
 - [x] Discord ile giriş düğmesini ve OAuth sunucu yönlendirmelerini kaldırmak.
 - [x] Discord topluluk bağlantılarını ve mağaza görünümünü doğrulamak.
-- [ ] Kararlı sürümü htmlXYZ GitHub deposuna aktarmak.
+- [x] Kararlı sürümü htmlXYZ GitHub deposuna aktarmak.
 
 - [ ] Discord Developer Portal’da canlı alan adı için `/api/auth/discord/callback` Redirect URI’sini yapılandırmak.
 - [ ] Discord OAuth girişini tarayıcıda uçtan uca doğrulamak.

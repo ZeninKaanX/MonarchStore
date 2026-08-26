@@ -1,10 +1,35 @@
 # Uygulama Kontrol Listesi
 
-- [ ] Discord Developer Portal’daki canlı geri dönüş adresini doğrulamak. _(Kimlik bilgileri güvenli proje ayarlarına eklendi ve client-credentials testiyle doğrulandı; canlı callback adresi yayınlanan sunucu alan adı bağlandığında portala eklenecek.)_
+- [x] Discord OAuth bağlantılarını GitHub Pages vitrinden kaldırmak.
+- [x] Tarayıcı yerel depolamasını kullanan hesap oluşturma, giriş ve çıkış arayüzünü eklemek.
+- [ ] Yerel hesap akışını masaüstü ve mobilde test edip GitHub Pages ana dalına aktarmak.
+
+- [x] Ücretsiz planla özel alan adı ve sunucu tarafı Discord OAuth destekleyen uygun harici barındırma seçeneğini belirlemek. _(Kapatıldı: kullanıcı harici barındırma/DNS taşımasıyla uğraşmak istemiyor.)_
+- [x] Seçilen ücretsiz barındırma için Discord OAuth sunucu paketini çalışır hâle getirmek. _(Kapatıldı: kullanıcı statik yerel hesap akışını seçti.)_
+- [x] astralissaga.xyz alan adını seçilen ücretsiz sunuculu yayına yönlendirmek ve Discord callback adresini güncellemek. _(Kapatıldı: alan adı GitHub Pages’te kalacak.)_
+
+- [x] Ücretsiz Manus yayın adresinde “Discord ile giriş” düğmesinin Discord yetkilendirme sayfasına açıldığını doğrulamak.
+- [x] Discord OAuth ücretsiz yayın adresinde çalışmazsa Manus OAuth bağımlılığını kaldırıp yerel hesap oluşturma/giriş yaklaşımını belirlemek.
+- [ ] Seçilen ücretsiz giriş yöntemini mağazada doğrulamak ve kullanıcıya çalışır bağlantıyı bildirmek.
+
+- [x] `astralissaga.xyz` alan adını Manus proje ayarlarındaki Domains bölümüne eklemek ve verilen doğrulama hedefini almak. _(Kapatıldı: ücretsiz planda özel alan adı bağlama mevcut değil.)_
+- [x] Natro’daki GitHub Pages A/CNAME kayıtlarını Manus’un doğrulama hedefiyle değiştirmek. _(Kapatıldı: alan adı GitHub Pages’te kalacak.)_
+- [x] `https://astralissaga.xyz/api/auth/discord/callback` adresini Discord Developer Portal’a eklemek. _(Kapatıldı: statik GitHub Pages sürümünde Discord OAuth kaldırıldı.)_
+- [x] `astralissaga.xyz` üzerinden mağaza ve Discord OAuth başlangıç rotasını HTTPS ile doğrulamak. _(Kapatıldı: statik GitHub Pages sürümünde Discord OAuth kaldırıldı.)_
+
+- [x] Canlı `/api/auth/discord` rotasının Discord yetkilendirme isteğini doğru callback URI ve CSRF state ile oluşturduğunu hesap girişi olmadan doğrulamak.
+- [x] Canlı callback rotasının geçersiz veya eksik state değerlerini güvenli biçimde reddettiğini doğrulamak.
+
+- [x] Yayınlanan Manus alan adında Discord OAuth başlangıç rotasının yanıt verdiğini doğrulamak.
+- [x] Discord Developer Portal’a `https://monarchshop-ns7bgnqa.manus.space/api/auth/discord/callback` canlı callback adresini eklemek.
+- [x] Canlı Discord girişinden sonra kullanıcı oturumunun Monarch Store’a döndüğünü doğrulamak. _(Kapatıldı: kullanıcı yerel hesap akışını seçti.)_
+- [x] `astralissaga.xyz` alan adını sunuculu yayına geçirip HTTPS ile nihai erişimi doğrulamak. _(Kapatıldı: alan adı GitHub Pages’te kalacak.)_
+
+- [x] Discord Developer Portal’daki canlı geri dönüş adresini doğrulamak. _(Kapatıldı: statik GitHub Pages sürümünde Discord OAuth kaldırıldı.)_
 - [x] Sunucuda CSRF korumalı Discord OAuth başlangıç ve callback akışını uygulamak.
 - [x] Discord kullanıcısını güvenli oturumla eşleyip oturum sonlandırma akışını eklemek.
 - [x] Mağaza arayüzüne erişilebilir “Discord ile giriş” kontrolünü ve giriş durumunu yerleştirmek.
-- [ ] Discord girişini canlı alan adıyla doğrulayıp yayın mimarisini güncellemek.
+- [x] Discord girişini canlı alan adıyla doğrulayıp yayın mimarisini güncellemek. _(Kapatıldı: kullanıcı statik yerel hesap akışını seçti.)_
 
 - [ ] Kullanıcının gördüğü Natro park sayfasının hangi DNS önbelleği veya aktif Natro park ayarından geldiğini kesinleştirmek.
 - [ ] Natro panelindeki park/yönlendirme ayarını veya çakışan DNS kaydını kaldırarak kök alan adını yalnızca GitHub Pages’e yönlendirmek.

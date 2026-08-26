@@ -25,9 +25,9 @@
       .status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #8ccf9b; }
       header { position: sticky; z-index: 10; top: 0; border-bottom: 1px solid var(--line); background: #f8f8f8; backdrop-filter: blur(12px); }
       .nav { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
-      .logo { display: flex; align-items: center; min-width: 238px; gap: 5px; }
+      .logo { display: flex; align-items: center; min-width: 202px; gap: 0; }
       .logo img { display: block; width: 174px; height: 53px; object-fit: contain; object-position: left center; }
-      .logo .mascot { width: 56px; height: 56px; object-fit: cover; object-position: center; mix-blend-mode: multiply; transform: scale(1.28); }
+      .logo .mascot { width: 58px; height: 58px; margin-left: -79px; object-fit: cover; object-position: center; background: #fff; mix-blend-mode: normal; }
       .links { display: flex; align-items: center; gap: 24px; color: #536071; font-size: 13px; font-weight: 700; }
       .links a:hover { color: var(--blue); }
       .cart { min-width: 108px; min-height: 38px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid #c8d0da; color: #263442; background: #fff; font: 700 11px "Space Mono", monospace; letter-spacing: .04em; }
@@ -72,7 +72,7 @@
       .price { display: grid; gap: 3px; }
       .price small { color: var(--muted); font: 9px "Space Mono", monospace; text-transform: uppercase; }
       .price b { font-size: 21px; }
-      .buy { min-height: 38px; padding: 0 12px; border: 1px solid var(--blue); color: var(--blue); background: #fff; font-size: 11px; font-weight: 800; transition: color .18s, background .18s; }
+      .buy { min-height: 38px; display: inline-flex; align-items: center; justify-content: center; padding: 0 12px; border: 1px solid var(--blue); color: var(--blue); background: #fff; font-size: 11px; font-weight: 800; transition: color .18s, background .18s; }
       .buy:hover { color: #fff; background: var(--blue); }
 
       .store-note { padding: 0 0 75px; }
@@ -102,9 +102,9 @@
         .container { width: min(100% - 30px, 1120px); }
         .topline .container span:last-child { display: none; }
         .nav { min-height: 67px; }
-        .logo { min-width: 194px; gap: 2px; }
+        .logo { min-width: 168px; gap: 0; }
         .logo img { width: 145px; height: 42px; }
-        .logo .mascot { width: 43px; height: 43px; }
+        .logo .mascot { width: 45px; height: 45px; margin-left: -65px; }
         .links { display: none; }
         .cart { min-width: 77px; min-height: 35px; font-size: 0; }
         .cart strong { font-size: 10px; }
@@ -160,15 +160,15 @@
         <div class="bot-grid">
           <article class="product" data-product="AFK Bot" data-price="50 TL">
             <div class="product-image"><img src="/manus-storage/monarch-afk-bot_7c0b48b6.jpg" alt="Monarch Store AFK Bot görseli" /><span>MS / AFK</span></div>
-            <div class="product-main"><h3>AFK Bot</h3><p>Oyunda pasif kaldığın süre için pratik yardımcı bot seçeneği.</p><div class="product-row"><div class="price"><small>Fiyat</small><b>50 TL</b></div><button class="buy" type="button">Satın al</button></div></div>
+            <div class="product-main"><h3>AFK Bot</h3><p>Oyunda pasif kaldığın süre için pratik yardımcı bot seçeneği.</p><div class="product-row"><div class="price"><small>Fiyat</small><b>50 TL</b></div><a class="buy" href="https://discord.gg/e5zJaTSypd" target="_blank" rel="noreferrer">Discord'da satın al</a></div></div>
           </article>
           <article class="product" data-product="Miner Bot" data-price="180 TL">
             <div class="product-image"><img src="/manus-storage/monarch-miner-bot_f037b5a7.jpg" alt="Monarch Store Miner Bot görseli" /><span>MS / MINER</span></div>
-            <div class="product-main"><h3>Miner Bot</h3><p>Kaynak döngüleri için hazırlanmış madencilik odaklı bot seçeneği.</p><div class="product-row"><div class="price"><small>Fiyat</small><b>180 TL</b></div><button class="buy" type="button">Satın al</button></div></div>
+            <div class="product-main"><h3>Miner Bot</h3><p>Kaynak döngüleri için hazırlanmış madencilik odaklı bot seçeneği.</p><div class="product-row"><div class="price"><small>Fiyat</small><b>180 TL</b></div><a class="buy" href="https://discord.gg/e5zJaTSypd" target="_blank" rel="noreferrer">Discord'da satın al</a></div></div>
           </article>
           <article class="product" data-product="Farmer Bot" data-price="390 TL">
             <div class="product-image"><img src="/manus-storage/monarch-farmer-bot_00c4cb5f.jpg" alt="Monarch Store Farmer Bot görseli" /><span>MS / FARMER</span></div>
-            <div class="product-main"><h3>Farmer Bot</h3><p>Çiftlik işlerini düzenli takip etmek isteyen oyuncular için bot seçeneği.</p><div class="product-row"><div class="price"><small>Fiyat</small><b>390 TL</b></div><button class="buy" type="button">Satın al</button></div></div>
+            <div class="product-main"><h3>Farmer Bot</h3><p>Çiftlik işlerini düzenli takip etmek isteyen oyuncular için bot seçeneği.</p><div class="product-row"><div class="price"><small>Fiyat</small><b>390 TL</b></div><a class="buy" href="https://discord.gg/e5zJaTSypd" target="_blank" rel="noreferrer">Discord'da satın al</a></div></div>
           </article>
         </div>
       </section>
@@ -189,7 +189,7 @@
       let cart = 0;
       let toastTimer;
       const notify = (title, text) => { toastTitle.textContent = title; toastText.textContent = text; toast.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('show'), 2800); };
-      document.querySelectorAll('.buy').forEach((button) => button.addEventListener('click', (event) => { const product = event.currentTarget.closest('.product'); cart += 1; cartCount.textContent = cart; notify('Sepete eklendi', `${product.dataset.product} · ${product.dataset.price}`); }));
+      document.querySelectorAll('.buy').forEach((button) => button.addEventListener('click', () => notify('Discord yönlendirmesi', 'Satın alma talebi için Discord açılıyor.')));
       document.querySelector('#cartButton').addEventListener('click', () => notify('Sepet', cart ? `${cart} ürün talep listene eklendi.` : 'Sepetinde henüz ürün yok.'));
     </script>
   </body>

@@ -1,5 +1,9 @@
 # Uygulama Kontrol Listesi
 
+- [x] Tüm satın alma düğmelerini kullanıcı Discord davet bağlantısına yönlendirmek.
+- [x] Anime karakterini beyaz fonla Monarch logosunun hemen yanında hizalamak.
+- [x] Yeni satın alma akışını ve başlık yerleşimini masaüstü ile mobilde doğrulamak.
+
 - [x] Anime karakter varlığındaki kareli fonu kaldırarak gerçek alpha kanallı PNG elde etmek.
 - [x] Maskot yüklenirken görünen görsel alanı, başlık zeminiyle uyumlu hâle getirmek.
 

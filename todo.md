@@ -195,3 +195,5 @@
 - [x] Tema seçimi eklenirken mobil başlıktaki sepet düğmesinin görünür ve dokunulabilir kalmasını sağlamak. _(375 px görünümde hesap, tema ve sepet denetimleri aynı satırda tamamen görünür doğrulandı.)_
 
 - [x] Tema seçicisinde açık tema için güneş, koyu tema için ay simgesini ve doğru erişilebilir etiketi göstermek. _(Açık tema güneş simgesiyle doğrulandı; koyu tema için ay simgesi CSS durumuna bağlandı, durum/eylem etiketi güncellendi. 9 Vitest testi ve üretim derlemesi geçti.)_
+
+- [x] Görsel düzenleyicide yapılan son değişiklikleri dosya farkı ve önizleme üzerinden doğrulayıp gerekiyorsa yeni checkpoint kaydetmek. _(Düzenleyici dosya değişikliği üretmedi; çalışma ağacında yalnızca bu doğrulama kaydı vardı. Masaüstü önizlemede banner, hero video ve tema denetimi tutarlı göründü.)_

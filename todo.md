@@ -166,4 +166,6 @@
 
 - [x] Hero panelinde yüklenmeyen anime karakter görselini kalıcı statik varlık URL’siyle değiştirip eski robot arka planının görünmesini engellemek. _(Görsel yeniden kalıcı varlık olarak yüklendi; hero paneli düzeltildi, masaüstü önizleme dolu göründü ve 5 test ile üretim derlemesi geçti.)_
 
+- [x] Kalıcı varlık URL’si tarayıcıda yüklenmediğinde hero panelinin boş kalmaması için GitHub Pages ile doğrudan sunulan güvenilir anime görseli yedeğini yerleştirmek. _(Anime görseli, GitHub sürüm varlığı olarak yayınlandı; önizlemede hero paneli dolu göründü ve 5 test ile üretim derlemesi geçti.)_
+
 - [x] `/siparis-kur` komutunun satın-alım kanalı, ticket kategorisi, ekip rolü ve ses kanalı kimliklerini yerel bot verisine gerçekten kaydettiğini kod veya testle doğrulamak. _(Komut dört kimliği `saveOrderSettings` ile yazıyor; 17 bot testi, kaydedilen dört kimlik olmadan sipariş kuyruğunun yapılandırılmış sayılmadığını doğruladı.)_

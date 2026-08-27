@@ -15,3 +15,7 @@ Aynı onaylı talep için tekrar ticket veya satın alım bildirimi oluşmasın�
 ## GitHub Pages özel alan adı durumu
 
 27 Ağustos 2026 tarihinde GitHub Pages ayarları doğrudan doğrulandı: özel alan adı alanında `astralissaga.xyz` kayıtlı, ana dal kökten yayın yapıyor ve HTTP yayını güncel sipariş modüllerini sunuyor. GitHub’ın **DNS check successful** durumu doğrulandı. Sertifika hazırlığı tamamlandıktan sonra **Enforce HTTPS** etkinleştirildi. Doğrudan HTTPS isteği `200` döndü; sunulan sertifikanın adı `astralissaga.xyz`, alternatif adları ise `astralissaga.xyz` ve `www.astralissaga.xyz` olarak doğrulandı.
+
+## GitHub Pages 404 müdahalesi
+
+27 Ağustos 2026’da `astralissaga.xyz` üzerinde GitHub Pages 404 görüldü. Depo ayarları incelendiğinde Pages kaynağının `None` olduğu ve yayının devre dışı kaldığı doğrulandı. Yayın kaynağı **Deploy from a branch → main → /(root)** olarak yeniden kaydedildi; GitHub ayarı “GitHub Pages source saved” sonucunu verdi. Özel alan adı kayıtlı kaldı; GitHub’ın yeni dağıtım ve DNS denetiminin tamamlanması bekleniyor.

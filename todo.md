@@ -152,3 +152,12 @@
 - [x] Sunucuda doğrulanıp sıraya alınan müşteriye yalnızca mevcut `Talep` rolünü atamak; rol yoksa ticket veya sipariş bildirimi oluşturmamak. _(17 test geçti; rol yoksa ticket ve satın alım bildirimi çağrılarının ikisi de sıfır kaldı.)_
 - [x] `Talep` rolünün diğer müşterilerin ticketlarını görmesine izin vermeden özel ticket erişimini müşteri ve `Satış Ekibi` ile sınırlamak. _(`Talep` rolü ticket izin listesine eklenmedi; yalnızca doğrulanmış müşteri etiketi olarak atanır.)_
 - [x] Yalnızca güncellenen bot dosyasını test edip paylaşılabilir tek dosyalık teslim hazırlamak. _(`orders.js` sözdizimi ve 17 test başarıyla geçti; kullanıcıya yalnızca bu dosya verilecek.)_
+
+- [x] `service_role` için `order_requests` tablo yetkisini tamamlamak. _(27 Ağustos 2026: tablo izinleri ve atomik işlev yürütme izinleri Supabase SQL Editor’de başarıyla uygulandı.)_
+- [ ] Yerel bot yeniden başlatıldıktan sonra `/sira-listesi` ve gerçek sipariş doğrulama akışının yetki hatası vermediğini kullanıcı konsolunda doğrulamak.
+
+- [x] `astralissaga.xyz` alan adında görünen GitHub Pages 404 hatasının yayın, CNAME ve DNS kaynağını teşhis etmek. _(Neden: GitHub Pages kaynak seçimi `None` durumuna dönmüş, yani yayın devre dışı kalmıştı.)_
+- [x] GitHub Pages özel alan adı eşleşmesini onarıp canlı HTTPS mağaza erişimini yeniden doğrulamak. _(Pages yayını `main` dalının kök dizininden yeniden etkinleştirildi; `https://astralissaga.xyz` tekrar HTTP 200 ve Monarch Store içeriği döndürüyor.)_
+
+- [x] Hero alanındaki robot videosunu anime karakter merkezli kısa hareketli sahneyle değiştirmek. _(1280×720, 8 saniyelik sessiz H.264 video oluşturuldu ve kalıcı statik varlık olarak yüklendi.)_
+- [x] Yeni hero videosunun masaüstü/mobil mağaza görünümünü doğrulayıp GitHub Pages’e aktarmak. _(Masaüstü/mobil önizleme, 5 Vitest testi ve üretim derlemesi başarıyla tamamlandı.)_

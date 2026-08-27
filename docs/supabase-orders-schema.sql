@@ -141,3 +141,8 @@ revoke all on function public.monarch_enqueue_validated_order(text, text) from p
 grant execute on function public.monarch_claim_pending_order_requests(integer) to service_role;
 grant execute on function public.monarch_requeue_stalled_order_requests() to service_role;
 grant execute on function public.monarch_enqueue_validated_order(text, text) to service_role;
+
+-- Bot service_role anahtarı ile tabloyu okuyup atomik durum değişikliklerini yapar.
+-- Bu izin ziyaretçi rollerine verilmez; RLS ziyaretçi kuralları aynen korunur.
+grant select, insert, update, delete on table public.order_requests to service_role;
+grant usage, select on all sequences in schema public to service_role;

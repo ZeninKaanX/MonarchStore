@@ -168,4 +168,7 @@
 
 - [x] Kalıcı varlık URL’si tarayıcıda yüklenmediğinde hero panelinin boş kalmaması için GitHub Pages ile doğrudan sunulan güvenilir anime görseli yedeğini yerleştirmek. _(Anime görseli, GitHub sürüm varlığı olarak yayınlandı; önizlemede hero paneli dolu göründü ve 5 test ile üretim derlemesi geçti.)_
 
+- [x] Kullanıcının gönderdiği beyaz saçlı anime karakteri koruyarak soğuk savaş temasına uygun kaliteli yatay hero görselini üretmek. _(Gümüş-beyaz saç, koyu lacivert askerî üniforma ve karakter silüeti korunarak radar/radyo kuleli soğuk savaş komuta sahnesi üretildi.)_
+- [x] Yeni karakter hero görselini GitHub Pages’e yerleştirip masaüstü/mobil görünümünü doğrulamak. _(Hero görseli GitHub sürüm varlığıyla yüklendi; masaüstü ve mobil önizlemelerde kadraj/doğrudan yükleme doğrulandı, 5 test ve üretim derlemesi geçti.)_
+
 - [x] `/siparis-kur` komutunun satın-alım kanalı, ticket kategorisi, ekip rolü ve ses kanalı kimliklerini yerel bot verisine gerçekten kaydettiğini kod veya testle doğrulamak. _(Komut dört kimliği `saveOrderSettings` ile yazıyor; 17 bot testi, kaydedilen dört kimlik olmadan sipariş kuyruğunun yapılandırılmış sayılmadığını doğruladı.)_

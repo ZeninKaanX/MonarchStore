@@ -1,5 +1,23 @@
 # Uygulama Kontrol Listesi
 
+- [x] NexusBotDC arşivindeki kanal kurma dışındaki komutları, moderasyon ve yönetim özelliklerini güvenli biçimde incelemek. _(Ticket, moderasyon, küfür filtresi, karşılama/takviye, güvenlik, freeze, durum yansıtma ve bilgi komutları belirlendi; otomatik kanal/rol kurulum modülleri hariç tutulacak.)_
+- [x] Sipariş onayında Discord kullanıcı adıyla sunucu üyeliğini doğrulayan; eşleşme yoksa hiçbir sipariş, log veya ticket kaydı oluşturmayan iş kuralını tasarlamak. _(Tam kullanıcı adı eşleşmesi, atomik sahiplenme ve sessiz silme uygulanarak test edildi.)_
+- [x] Doğrulanmış kullanıcı ve ekip rolü dışında kimsenin göremediği özel ticket kanalını oluşturmak. _(Herkese kapalı izin sözleşmesi birim testle doğrulandı.)_
+- [x] NexusBotDC’den seçilen uyumlu özellikleri MonarchBot’a aktarırken çakışan veya güvenli olmayan işlevleri hariç tutmak. _(Otomatik kanal/rol kurulum komutları kaldırıldı; Freeze yalnızca yönetici mevcut rolü seçtiğinde çalışır.)_
+
+- [ ] Supabase proje hesabında sipariş kuyruğu için proje URL’si, yayınlanabilir anahtar ve yerel botta kullanılacak gizli anahtar ayrımını kurmak.
+- [ ] Discord satın alım metin kanalı ve görüşme ses kanalı kimliklerini bot yapılandırmasına eklemek.
+
+- [ ] MonarchBot’un kullanıcının kendi bilgisayarında çalışan konsol sürecine uygun ücretsiz sipariş iletim yöntemini seçmek.
+- [ ] Yerel çalıştırma için gerekli bot yapılandırmasını, token saklama yöntemini ve başlatma adımlarını belgelemek.
+
+- [x] Gönderilen MonarchBot arşivindeki mevcut ticket komutlarını, yapılandırmayı ve veri akışını incelemek. _(Bot şu anda Discord.js v14 tabanlı konsol botu; ticket, sipariş ve sesli taşıma komutları henüz yok.)_
+- [x] Site sipariş talebi, Discord kullanıcı adı, ürün özeti ve sıra durumunu içeren ödeme almayan sipariş modelini tanımlamak. _(Supabase şeması, RLS ve atomik kuyruk işlevleri uygulandı.)_
+- [x] Sipariş talebini satın alım kanalına ticket olarak ileten güvenli bot entegrasyonunu uygulamak. _(Yerel gizli anahtar kurulumu sonrası canlı test bekliyor.)_
+- [x] Yetkili ekip için sipariş sıraya alma, ticket kapatma ve kullanıcıyı ses kanalına taşıma komutlarını eklemek. _(`/siraya-al`, `/isleme-al`, `/sira-listesi`, `/sese-cektir`, `/siparis-kapat` eklendi.)_
+- [x] Sitede sepetten talep oluşturma akışını, Discord kullanıcı adı onayını ve “işleminiz sıraya alındı” durumunu eklemek. _(27 Ağustos 2026: geçersiz kullanıcı adı reddi ve anonim Supabase `pending_validation` ekleme akışı gerçek tarayıcıda doğrulandı.)_
+- [ ] Botu sürekli çalışacak uygun barındırmaya almak ve uçtan uca sipariş akışını test etmek.
+
 - [x] Discord OAuth bağlantılarını GitHub Pages vitrinden kaldırmak.
 - [x] Tarayıcı yerel depolamasını kullanan hesap oluşturma, giriş ve çıkış arayüzünü eklemek.
 - [ ] Yerel hesap akışını masaüstü ve mobilde test edip GitHub Pages ana dalına aktarmak. _(Ana dala aktarıldı; canlı masaüstü/mobil etkileşimli doğrulama sürüyor.)_
@@ -120,3 +138,12 @@
 - [x] Spline sahnesini ana görev paneline, performansı koruyacak şekilde yerleştirmek.
 - [x] Referans görselleri, oluşturulan varlıkları ve mağaza etkileşimlerini tek HTML çıktısında birleştirmek.
 - [x] Masaüstü ve mobil görünümde tasarımı doğrulamak; son HTML dosyasını hazırlamak.
+
+- [x] Sipariş satırını atomik olarak sahiplenip tekrarlayan Discord ticket veya satın alım bildirimi riskini engellemek. _(Supabase işlevleri ve idempotent Discord işaretçileri eklendi.)_
+- [x] Eşleşmeyen Discord kullanıcı adı için yalnızca kuyruk kaydını sessizce kaldıran bot davranışını birim testle doğrulamak. _(Tam kullanıcı adı doğrulaması için birim testi eklendi; gerçek Discord testi yerel kurulumdan sonra yapılacak.)_
+- [x] Yalnızca müşteri ve yapılandırılmış ekip rolüne görünür özel sipariş ticket izinlerini test etmek.
+- [x] Sıra alma, işleme alma, ses kanalına çekme ve kapatma komutlarının durum değişimlerini netleştirmek.
+- [x] Monarch markalı moderasyon, karşılama, güvenlik, freeze ve durum yansıtma modüllerini otomatik kanal/rol kurulumu olmadan gözden geçirmek.
+- [x] Yerel bot paketi, kullanım belgesi ve gizli anahtar şablonunu güvenli şekilde teslim için hazırlamak.
+- [ ] Kullanıcının kendi bilgisayarında gizli anahtarları yerel `.env` dosyasına ekleyip gerçek Discord sunucusunda uçtan uca ticket ve ses taşıma testini yapması.
+- [x] Eşleşmeyen Discord kullanıcı adında `processGuild` akışının kaydı sildiğini, ticket ve satın alım bildirimi oluşturmadığını sahte Supabase/Discord nesneleriyle test etmek. _(13 testin tamamı geçti; sessiz silme dalında ticket ve satın alım mesajı çağrıları sıfırlandı.)_

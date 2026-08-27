@@ -1,0 +1,14 @@
+{
+  "warnings": {},
+  "badwords": {},
+  "filterEnabled": {},
+  "guildIds": [],
+  "welcomeChannel": {},
+  "boostChannel": {},
+  "security": {},
+  "freezeChannel": {},
+  "freezeLogChannel": {},
+  "frozen": {},
+  "mirrorUser": {},
+  "orderSettings": {}
+}

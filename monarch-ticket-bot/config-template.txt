@@ -1,0 +1,11 @@
+# Bu dosyayı kendi bilgisayarında `.env` olarak yeniden adlandır.
+# Değerleri GitHub'a yükleme ve hiç kimseyle paylaşma.
+DISCORD_TOKEN=
+CLIENT_ID=1542270538561622146
+GUILD_ID=
+SUPABASE_URL=https://aipnaodheezawsezrjpz.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=
+ORDER_POLL_INTERVAL_MS=12000
+# Yalnızca kendi bilgisayarındaki bir yardımcı uygulama YouTube başlıklarını gönderiyorsa true yap.
+YOUTUBE_LOCAL_MIRROR=false
+YOUTUBE_PORT=4321

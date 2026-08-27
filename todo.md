@@ -203,3 +203,6 @@
 
 - [x] Koyu temada logo yanındaki anime maskotunu görünür tutup kare beyaz zemin yerine küçük, uyumlu rozet görünümüne dönüştürmek. _(Maskot koyu modda geri getirildi; 38 px yuvarlak rozet, ince mavi çerçeve ve koyu halo kullanıldı. Mobilde 32 px’e uyarlanır.)_
 - [x] Anime maskotu koyu tema düzeltmesini masaüstü/mobilde test edip GitHub Pages’te doğrulamak. _(9 Vitest testi, TypeScript kontrolü ve üretim derlemesi geçti; canlı yayın doğrulaması sürüyor.)_
+
+- [x] Logo yanındaki anime maskotunun JPEG arka planını şeffaf PNG olarak kaldırıp tüm temalarda normal ölçüsünü korumak. _(Gerçek alfa kanallı `monarch-mascot-transparent.png` kullanıldı; koyu temadaki ayrı rozet/küçültme kuralları kaldırıldı ve normal 58 px ölçü korundu.)_
+- [x] Şeffaf maskotu masaüstü/mobilde doğrulayıp GitHub Pages’e aktarmak. _(Masaüstü üst menüde kutusuz ve normal ölçüde doğrulandı; 9 Vitest testi, TypeScript kontrolü ve üretim derlemesi geçti. Canlı yayın doğrulaması sürüyor.)_

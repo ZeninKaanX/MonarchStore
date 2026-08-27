@@ -28,7 +28,7 @@
       .nav { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
       .logo { display: flex; align-items: center; min-width: 202px; gap: 0; }
       .logo img { display: block; width: 174px; height: 53px; object-fit: contain; object-position: left center; }
-      .logo .mascot { width: 58px; height: 58px; margin-left: -79px; object-fit: cover; object-position: center; background: #fff; mix-blend-mode: normal; }
+      .logo .mascot { width: 58px; height: 58px; margin-left: -79px; object-fit: contain; object-position: center; background: transparent; mix-blend-mode: normal; }
       .links { display: flex; align-items: center; gap: 24px; color: #536071; font-size: 13px; font-weight: 700; }
       .links a:hover { color: var(--blue); }
       .nav-actions { display: flex; align-items: center; gap: 9px; }
@@ -153,7 +153,6 @@
       html[data-theme="dark"] header { background: #05080c; }
       html[data-theme="dark"] .links { color: #c5d2de; }
       html[data-theme="dark"] .logo > img:first-child { filter: invert(1) grayscale(.18) brightness(1.5); }
-      html[data-theme="dark"] .logo .mascot { display: block; width: 38px; height: 38px; margin-left: -61px; border: 1px solid rgba(105, 178, 233, .58); border-radius: 50%; background: #dbe5ef; box-shadow: 0 0 0 3px rgba(5, 8, 12, .78); }
       html[data-theme="dark"] .account-button.is-signed-in, html[data-theme="dark"] .cart, html[data-theme="dark"] .theme-toggle { border-color: #354759; color: #dce8f2; background: #111c28; }
       html[data-theme="dark"] .theme-toggle:hover { border-color: var(--blue); color: var(--blue); }
       html[data-theme="dark"] .theme-toggle-sun { display: none; }
@@ -182,7 +181,6 @@
         .logo { min-width: 164px; gap: 0; }
         .logo img { width: 145px; height: 42px; }
         .logo .mascot { width: 45px; height: 45px; margin-left: -65px; }
-        html[data-theme="dark"] .logo .mascot { width: 32px; height: 32px; margin-left: -52px; }
         .links { display: none; }
         .nav-actions { gap: 4px; }
         .account-button { width: 86px; min-height: 35px; padding: 0 6px; font-size: 10px; }
@@ -212,7 +210,7 @@
     <div class="topline"><div class="container"><span class="status">Monarch Store açık</span><span>Minecraft ürünleri · Discord üzerinden destek</span></div></div>
     <header>
       <nav class="container nav" aria-label="Ana menü">
-        <a class="logo" href="#ana" aria-label="Monarch Store ana sayfa"><img src="/manus-storage/monarch-wordmark-transparent_4d0bf283.png" alt="Monarch Store logosu" /><img class="mascot" src="/manus-storage/monarch-mascot-source_c9118b5d.jpg" alt="Monarch Store anime karakteri" /></a>
+        <a class="logo" href="#ana" aria-label="Monarch Store ana sayfa"><img src="/manus-storage/monarch-wordmark-transparent_4d0bf283.png" alt="Monarch Store logosu" /><img class="mascot" src="https://github.com/ZeninKaanX/MonarchStore/releases/download/monarch-hero-assets/monarch-mascot-transparent.png" alt="Monarch Store anime karakteri" /></a>
         <div class="links"><a href="#botlar">Botlar</a><a href="#urunler">Minecraft Ürünleri</a><a href="#iletisim">İletişim</a></div>
         <div class="nav-actions"><button class="account-button" id="accountButton" type="button">Hesap oluştur</button><button class="theme-toggle" id="themeToggle" type="button" aria-label="Açık tema seçili. Koyu temaya geç" aria-pressed="false"><svg class="theme-toggle-icon theme-toggle-sun" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="3"></circle><path d="M8 1.25v1.5M8 13.25v1.5M1.25 8h1.5M13.25 8h1.5M3.23 3.23l1.06 1.06M11.71 11.71l1.06 1.06M12.77 3.23l-1.06 1.06M4.29 11.71l-1.06 1.06"></path></svg><svg class="theme-toggle-icon theme-toggle-moon" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.7 10.5A6 6 0 0 1 5.5 2.3 6.2 6.2 0 1 0 13.7 10.5Z" /></svg><span class="theme-toggle-text">Açık</span></button><button class="cart" id="cartButton" type="button" aria-label="Sepet">SEPET <strong id="cartCount">0</strong></button></div>
       </nav>

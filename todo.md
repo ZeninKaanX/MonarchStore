@@ -164,4 +164,6 @@
 
 - [x] Video kotası yenilenene kadar yanlış robot içeren videoyu kaldırıp anime karakter ilk karesini hafif hareketli hero görseli olarak kullanmak. _(Robot içeren video kaynak koddan tamamen çıkarıldı; anime karakterli hero görseli masaüstünde doğrulandı ve 5 test ile üretim derlemesi geçti.)_
 
+- [x] Hero panelinde yüklenmeyen anime karakter görselini kalıcı statik varlık URL’siyle değiştirip eski robot arka planının görünmesini engellemek. _(Görsel yeniden kalıcı varlık olarak yüklendi; hero paneli düzeltildi, masaüstü önizleme dolu göründü ve 5 test ile üretim derlemesi geçti.)_
+
 - [x] `/siparis-kur` komutunun satın-alım kanalı, ticket kategorisi, ekip rolü ve ses kanalı kimliklerini yerel bot verisine gerçekten kaydettiğini kod veya testle doğrulamak. _(Komut dört kimliği `saveOrderSettings` ile yazıyor; 17 bot testi, kaydedilen dört kimlik olmadan sipariş kuyruğunun yapılandırılmış sayılmadığını doğruladı.)_

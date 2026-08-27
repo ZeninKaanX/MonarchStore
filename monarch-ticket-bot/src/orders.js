@@ -71,6 +71,28 @@ function buildPrivateTicketOverwrites (guildId, memberId, staffRoleId) {
   ]
 }
 
+function findDemandRole (guild) {
+  const role = guild.roles.cache.find((candidate) => candidate.name === 'Talep' && candidate.id !== guild.id)
+  if (!role) throw new Error('Siparişleri işlemeye başlamadan önce sunucuda mevcut bir `Talep` rolü oluşturmalısın.')
+  if (role.managed) throw new Error('`Talep` rolü başka bir uygulama tarafından yönetiliyor; bot bu rolü veremez.')
+  return role
+}
+
+async function assignDemandRole (guild, member, demandRole) {
+  if (member.roles.cache.has(demandRole.id)) return false
+
+  const botMember = guild.members.me || await guild.members.fetchMe().catch(() => null)
+  if (!botMember?.permissions.has(PermissionFlagsBits.ManageRoles)) {
+    throw new Error('Botun `Rolleri Yönet` izni olmadan `Talep` rolü verilemez.')
+  }
+  if (demandRole.position >= botMember.roles.highest.position) {
+    throw new Error('Bot rolü, `Talep` rolünün üzerinde olmalı.')
+  }
+
+  await member.roles.add(demandRole, 'Monarch Store: doğrulanmış sipariş talebi')
+  return true
+}
+
 async function ensureOrderTicket (guild, member, order, resources) {
   let channel = findCachedOrderTicket(guild, order)
   if (!channel && order.ticket_channel_id) channel = await guild.channels.fetch(order.ticket_channel_id).catch(() => null)
@@ -226,6 +248,8 @@ function createOrderQueue ({ supabaseUrl, serviceRoleKey, pollIntervalMs, supaba
           await removeInvalidRequest(request)
           continue
         }
+        const demandRole = findDemandRole(guild)
+        await assignDemandRole(guild, member, demandRole)
         const ticket = await ensureOrderTicket(guild, member, request, resources)
         const validated = await rememberValidatedOrder(request, member, ticket)
         await publishValidationCard(resources.purchaseChannel, member, validated, ticket)
@@ -328,4 +352,4 @@ function createOrderQueue ({ supabaseUrl, serviceRoleKey, pollIntervalMs, supaba
   return { start, tick, queueOrder, takeOrder, listQueue, getOpenOrder, closeOrder, getOrderSettings, saveOrderSettings, configuredForOrders, resolveOrderResources }
 }
 
-module.exports = { createOrderQueue, getOrderSettings, saveOrderSettings, configuredForOrders, findExactGuildMember, resolveOrderResources, buildPrivateTicketOverwrites }
+module.exports = { createOrderQueue, getOrderSettings, saveOrderSettings, configuredForOrders, findExactGuildMember, resolveOrderResources, buildPrivateTicketOverwrites, findDemandRole, assignDemandRole }

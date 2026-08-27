@@ -148,3 +148,7 @@
 - [x] Yerel bot paketi, kullanım belgesi ve gizli anahtar şablonunu güvenli şekilde teslim için hazırlamak.
 - [ ] Kullanıcının kendi bilgisayarında gizli anahtarları yerel `.env` dosyasına ekleyip gerçek Discord sunucusunda uçtan uca ticket ve ses taşıma testini yapması.
 - [x] Eşleşmeyen Discord kullanıcı adında `processGuild` akışının kaydı sildiğini, ticket ve satın alım bildirimi oluşturmadığını sahte Supabase/Discord nesneleriyle test etmek. _(13 testin tamamı geçti; sessiz silme dalında ticket ve satın alım mesajı çağrıları sıfırlandı.)_
+
+- [x] Sunucuda doğrulanıp sıraya alınan müşteriye yalnızca mevcut `Talep` rolünü atamak; rol yoksa ticket veya sipariş bildirimi oluşturmamak. _(17 test geçti; rol yoksa ticket ve satın alım bildirimi çağrılarının ikisi de sıfır kaldı.)_
+- [x] `Talep` rolünün diğer müşterilerin ticketlarını görmesine izin vermeden özel ticket erişimini müşteri ve `Satış Ekibi` ile sınırlamak. _(`Talep` rolü ticket izin listesine eklenmedi; yalnızca doğrulanmış müşteri etiketi olarak atanır.)_
+- [x] Yalnızca güncellenen bot dosyasını test edip paylaşılabilir tek dosyalık teslim hazırlamak. _(`orders.js` sözdizimi ve 17 test başarıyla geçti; kullanıcıya yalnızca bu dosya verilecek.)_

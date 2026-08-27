@@ -68,10 +68,12 @@
       .button.secondary:hover { border-color: #fff; background: rgba(8,18,27,.66); }
       .robot-panel { position: relative; min-height: 365px; overflow: hidden; border: 1px solid rgba(220,234,244,.5); background: linear-gradient(145deg, rgba(11,22,33,.3), rgba(6,12,19,.15)), url("https://monarchshop-ns7bgnqa.manus.space/manus-storage/monarch-anime-hero-keyframe_e6bda8be.png") center/cover; box-shadow: 0 18px 42px rgba(0,0,0,.18); }
       .robot-panel::before { content: ""; position: absolute; z-index: 1; inset: 0; pointer-events: none; background: linear-gradient(0deg, rgba(7,14,22,.74), transparent 44%), repeating-linear-gradient(0deg, transparent 0, transparent 5px, rgba(214,235,247,.04) 6px); }
-      .robot-video { position: absolute; z-index: 0; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+      .anime-hero-still { position: absolute; z-index: 0; inset: -4%; background: url("https://monarchshop-ns7bgnqa.manus.space/manus-storage/monarch-anime-hero-keyframe_e6bda8be.png") center/cover no-repeat; transform-origin: center; animation: anime-hero-drift 12s ease-in-out infinite alternate; }
+      @keyframes anime-hero-drift { from { transform: scale(1.01) translate3d(0, 0, 0); } to { transform: scale(1.055) translate3d(-1%, .5%, 0); } }
       .robot-label { position: absolute; z-index: 3; top: 14px; left: 15px; padding: 6px 8px; border: 1px solid rgba(229,242,249,.38); color: #e5f3fb; background: rgba(9,19,30,.56); font: 700 9px "Space Mono", monospace; letter-spacing: .07em; }
       .robot-help { position: absolute; z-index: 3; right: 15px; bottom: 14px; left: 15px; padding-top: 11px; border-top: 1px solid rgba(224,241,250,.35); color: #e3eef4; font-size: 11px; }
       .robot-help b { display: block; margin-bottom: 3px; color: #fff; font-size: 13px; }
+      @media (prefers-reduced-motion: reduce) { .anime-hero-still { animation: none; transform: none; } }
 
       section { padding: 70px 0; }
       .section-head { display: flex; justify-content: space-between; align-items: end; gap: 28px; margin-bottom: 25px; }
@@ -183,7 +185,7 @@
           </div>
           <aside class="robot-panel" aria-label="Hareketli anime karakter sahnesi">
             <span class="robot-label">MONARCH / AKTİF</span>
-            <video class="robot-video" autoplay muted loop playsinline preload="metadata" poster="https://monarchshop-ns7bgnqa.manus.space/manus-storage/monarch-anime-hero-keyframe_e6bda8be.png" aria-label="Hareketli anime karakter sahnesi"><source src="https://monarchshop-ns7bgnqa.manus.space/manus-storage/monarch-anime-hero_7f14669d.mp4" type="video/mp4" /></video>
+            <div class="anime-hero-still" role="img" aria-label="Monarch iletişim merkezinde anime karakter"></div>
             <div class="robot-help"><b>Hareketli iletişim birimi aktif</b>Monarch sahası için görevde.</div>
           </aside>
         </div>

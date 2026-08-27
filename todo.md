@@ -161,3 +161,5 @@
 
 - [x] Hero alanındaki robot videosunu anime karakter merkezli kısa hareketli sahneyle değiştirmek. _(1280×720, 8 saniyelik sessiz H.264 video oluşturuldu ve kalıcı statik varlık olarak yüklendi.)_
 - [x] Yeni hero videosunun masaüstü/mobil mağaza görünümünü doğrulayıp GitHub Pages’e aktarmak. _(Masaüstü/mobil önizleme, 5 Vitest testi ve üretim derlemesi başarıyla tamamlandı.)_
+
+- [x] Video kotası yenilenene kadar yanlış robot içeren videoyu kaldırıp anime karakter ilk karesini hafif hareketli hero görseli olarak kullanmak. _(Robot içeren video kaynak koddan tamamen çıkarıldı; anime karakterli hero görseli masaüstünde doğrulandı ve 5 test ile üretim derlemesi geçti.)_

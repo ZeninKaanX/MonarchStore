@@ -183,3 +183,5 @@
 
 - [x] Kullanıcının sağladığı hero videosundaki görünür Gemini logosunu, karakter ve sahne düzenini koruyarak kaldırmak. _(Sağ alt köşedeki logo alanı onarıldı; doğrulamada görünür logo/filigran kalmadı.)_
 - [x] Temizlenmiş videoyu Monarch Store hero paneline yerleştirip masaüstü/mobilde doğrulamak ve GitHub Pages’e aktarmak. _(10 saniyelik temiz MP4, statik poster yedeği ve hareket azaltma tercihi desteğiyle üç HTML kopyasına eklendi; masaüstü/mobil önizleme ve üretim derlemesi geçti.)_
+
+- [ ] Mağazadaki tüm Discord katılım bağlantılarını `https://discord.gg/sAP3CwA4mP` davetine güncelleyip GitHub Pages’te doğrulamak.

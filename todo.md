@@ -188,3 +188,8 @@
 
 - [x] Kullanıcının sağladığı topçu ve kırmızı arazi görselini Monarch Store ana banner arka planına yerleştirip beyaz saçlı karakter videosunu korumak. _(Görsel, GitHub sürüm varlığı üzerinden üç HTML kopyasının ana hero arka planına uygulandı; sağ paneldeki karakter videosu korundu.)_
 - [x] Yeni banner görünümünü masaüstü/mobilde test edip GitHub Pages’te doğrulamak. _(Masaüstü ve mobil önizleme başarılı; GitHub Pages canlı HTML’i yeni banner URL’sini içeriyor.)_
+
+- [x] Mağaza başlığında masaüstü ve mobilde erişilebilir açık/koyu tema seçimi eklemek. _(Başlığa `aria-pressed` durumu ve anlamlı erişilebilir etiketi olan ay/mode düğmesi eklendi.)_
+- [x] Koyu temada mağaza metinleri, ürün kartları, pencereler ve topluluk alanının okunabilirliğini korumak; seçimi tarayıcıda hatırlamak. _(Koyu yüzey/rengin kuralları ile güvenli `localStorage` tercihi eklendi; depolama kapalıysa açık tema yedeği kullanılır.)_
+- [ ] Tema geçişini birim testleri, masaüstü/mobil görünüm ve GitHub Pages yayınıyla doğrulamak.
+- [x] Tema seçimi eklenirken mobil başlıktaki sepet düğmesinin görünür ve dokunulabilir kalmasını sağlamak. _(375 px görünümde hesap, tema ve sepet denetimleri aynı satırda tamamen görünür doğrulandı.)_

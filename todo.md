@@ -206,3 +206,8 @@
 
 - [x] Logo yanındaki anime maskotunun JPEG arka planını şeffaf PNG olarak kaldırıp tüm temalarda normal ölçüsünü korumak. _(Gerçek alfa kanallı `monarch-mascot-transparent.png` kullanıldı; koyu temadaki ayrı rozet/küçültme kuralları kaldırıldı ve normal 58 px ölçü korundu.)_
 - [x] Şeffaf maskotu masaüstü/mobilde doğrulayıp GitHub Pages’e aktarmak. _(Masaüstü üst menüde kutusuz ve normal ölçüde doğrulandı; 9 Vitest testi, TypeScript kontrolü ve üretim derlemesi geçti. Canlı yayın doğrulaması sürüyor.)_
+
+- [x] Maskotun mevcut beyaz sticker konturunu da kaldırarak, aynı karakteri gerçek şeffaf arka planla ve normal boyutta yeniden yerleştirmek. _(Kaynak JPEG’den üretilen `monarch-mascot-alpha-clean.png`, şeffaf alfa zeminde ve beyaz sticker konturu olmadan kullanıldı.)_
+
+- [x] Anime maskotunda kalan tema veya kaynak kaynaklı stil çakışmasını kaldırıp normal ölçüde sabit görünüm sağlamak. _(Koyu temaya özgü küçültme/rozet kuralları tamamen kaldırıldı; maskot iki temada da normal CSS ölçüsünü paylaşır.)_
+- [ ] Sabit maskot yerleşimini canlı GitHub Pages’te doğrulamak.

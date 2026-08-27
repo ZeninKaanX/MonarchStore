@@ -10,9 +10,9 @@ function applyTheme(theme) {
 function updateToggle(button, theme) {
   const isDark = theme === 'dark'
   button.setAttribute('aria-pressed', String(isDark))
-  button.setAttribute('aria-label', isDark ? 'Açık temaya geç' : 'Koyu temaya geç')
+  button.setAttribute('aria-label', isDark ? 'Koyu tema seçili. Açık temaya geç' : 'Açık tema seçili. Koyu temaya geç')
   const label = button.querySelector('.theme-toggle-text')
-  if (label) label.textContent = isDark ? 'Açık' : 'Koyu'
+  if (label) label.textContent = isDark ? 'Koyu' : 'Açık'
 }
 
 export function bindThemeToggle(button) {

@@ -36,6 +36,8 @@
       .theme-toggle:hover { border-color: var(--blue); color: var(--blue-dark); }
       .theme-toggle:active { transform: scale(.97); }
       .theme-toggle-icon { width: 13px; height: 13px; fill: currentColor; }
+      .theme-toggle-sun { display: inline-block; fill: none; stroke: currentColor; stroke-width: 1.7; }
+      .theme-toggle-moon { display: none; }
       .account-button { min-height: 38px; display: inline-flex; align-items: center; justify-content: center; padding: 0 12px; border: 1px solid #3e83b8; color: #fff; background: #3e83b8; font-size: 11px; font-weight: 800; white-space: nowrap; transition: background .18s, transform .18s; }
       .account-button:hover { background: #286791; }
       .account-button:active { transform: scale(.98); }
@@ -154,6 +156,8 @@
       html[data-theme="dark"] .logo .mascot { background: #111c28; }
       html[data-theme="dark"] .account-button.is-signed-in, html[data-theme="dark"] .cart, html[data-theme="dark"] .theme-toggle { border-color: #354759; color: #dce8f2; background: #111c28; }
       html[data-theme="dark"] .theme-toggle:hover { border-color: var(--blue); color: var(--blue); }
+      html[data-theme="dark"] .theme-toggle-sun { display: none; }
+      html[data-theme="dark"] .theme-toggle-moon { display: inline-block; }
       html[data-theme="dark"] .order-dialog, html[data-theme="dark"] .account-dialog { border-color: #344659; background: #111c28; }
       html[data-theme="dark"] .order-summary { border-color: #314253; background: #0d1722; }
       html[data-theme="dark"] .order-total { border-color: #314253; color: #e7f0f8; }
@@ -209,7 +213,7 @@
       <nav class="container nav" aria-label="Ana menü">
         <a class="logo" href="#ana" aria-label="Monarch Store ana sayfa"><img src="/manus-storage/monarch-wordmark-transparent_4d0bf283.png" alt="Monarch Store logosu" /><img class="mascot" src="/manus-storage/monarch-mascot-source_c9118b5d.jpg" alt="Monarch Store anime karakteri" /></a>
         <div class="links"><a href="#botlar">Botlar</a><a href="#urunler">Minecraft Ürünleri</a><a href="#iletisim">İletişim</a></div>
-        <div class="nav-actions"><button class="account-button" id="accountButton" type="button">Hesap oluştur</button><button class="theme-toggle" id="themeToggle" type="button" aria-label="Koyu temaya geç" aria-pressed="false"><svg class="theme-toggle-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.7 10.5A6 6 0 0 1 5.5 2.3 6.2 6.2 0 1 0 13.7 10.5Z" /></svg><span class="theme-toggle-text">Koyu</span></button><button class="cart" id="cartButton" type="button" aria-label="Sepet">SEPET <strong id="cartCount">0</strong></button></div>
+        <div class="nav-actions"><button class="account-button" id="accountButton" type="button">Hesap oluştur</button><button class="theme-toggle" id="themeToggle" type="button" aria-label="Açık tema seçili. Koyu temaya geç" aria-pressed="false"><svg class="theme-toggle-icon theme-toggle-sun" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="3"></circle><path d="M8 1.25v1.5M8 13.25v1.5M1.25 8h1.5M13.25 8h1.5M3.23 3.23l1.06 1.06M11.71 11.71l1.06 1.06M12.77 3.23l-1.06 1.06M4.29 11.71l-1.06 1.06"></path></svg><svg class="theme-toggle-icon theme-toggle-moon" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.7 10.5A6 6 0 0 1 5.5 2.3 6.2 6.2 0 1 0 13.7 10.5Z" /></svg><span class="theme-toggle-text">Açık</span></button><button class="cart" id="cartButton" type="button" aria-label="Sepet">SEPET <strong id="cartCount">0</strong></button></div>
       </nav>
     </header>
 

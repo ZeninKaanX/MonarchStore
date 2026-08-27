@@ -1,1 +1,1 @@
-export { bindOrderUI } from './client/store-orders.js'
+export { bindOrderUI, bindCommunityStats } from './client/store-orders.js'

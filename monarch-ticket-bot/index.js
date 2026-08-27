@@ -12,6 +12,7 @@ const mirror = require('./src/mirror')
 const welcome = require('./src/welcome')
 const tickets = require('./src/tickets')
 const { createOrderQueue, configuredForOrders } = require('./src/orders')
+const { countActiveHumanMembers, createCommunityStatsSync } = require('./src/community-stats')
 const { findMember, getRank, loadStore, logTo, saveStore } = require('./src/util')
 
 const TOKEN = process.env.DISCORD_TOKEN
@@ -19,6 +20,7 @@ const CLIENT_ID = process.env.CLIENT_ID
 const GUILD_ID = process.env.GUILD_ID
 const PREFIX = process.env.PREFIX || '!'
 const POLL_INTERVAL = Math.max(8000, Number(process.env.ORDER_POLL_INTERVAL_MS) || 12000)
+const COMMUNITY_STATS_INTERVAL = Math.max(30000, Number(process.env.COMMUNITY_STATS_INTERVAL_MS) || 60000)
 
 if (!TOKEN || !CLIENT_ID || !GUILD_ID) {
   console.error('[HATA] DISCORD_TOKEN, CLIENT_ID ve hedef GUILD_ID .env dosyasında tanımlanmalıdır.')
@@ -118,7 +120,7 @@ async function handleCommand (interaction, orderQueue, client) {
     if (orderCommands.has(name) && interaction.guild.id !== GUILD_ID) throw new Error('Sipariş komutları yalnızca yapılandırılmış hedef sunucuda kullanılabilir.')
     if (name === 'ping') return interaction.reply(`🏓 Pong — WebSocket: ${Math.round(client.ws.ping)} ms`)
     if (name === 'yardim') return interaction.reply({ ephemeral: true, embeds: [new EmbedBuilder().setColor(0x3e83b8).setTitle('MonarchBot komutları').setDescription('Sipariş: `/siparis-kur`, `/siparis-tara`, `/siraya-al`, `/isleme-al`, `/sira-listesi`, `/sese-cektir`, `/siparis-kapat`\nDestek: `/ticket-panel`, `/ticket-kapat`\nModerasyon: `/sil`, `/uyar`, `/ban`, `/kick`, `/sustur`, `/freeze`, `/guvenlik`, `/filtre`\nTopluluk: `/hosgeldin-kanali`, `/boost-kanali`, `/youtube-yansit`')] })
-    if (name === 'sunucu') return interaction.reply({ embeds: [new EmbedBuilder().setColor(0x5865f2).setTitle(interaction.guild.name).addFields({ name: 'Üyeler', value: String(interaction.guild.memberCount), inline: true }, { name: 'Kanallar', value: String(interaction.guild.channels.cache.size), inline: true }, { name: 'ID', value: interaction.guild.id, inline: true })] })
+    if (name === 'sunucu') return interaction.reply({ embeds: [new EmbedBuilder().setColor(0x5865f2).setTitle(interaction.guild.name).addFields({ name: 'Üyeler', value: String(interaction.guild.memberCount), inline: true }, { name: 'Çevrimiçi', value: String(countActiveHumanMembers(interaction.guild)), inline: true }, { name: 'Kanallar', value: String(interaction.guild.channels.cache.size), inline: true }, { name: 'ID', value: interaction.guild.id, inline: true })] })
     if (name === 'botbilgi') return interaction.reply({ embeds: [new EmbedBuilder().setColor(0xf1c40f).setTitle('MonarchBot').addFields({ name: 'Sunucular', value: String(client.guilds.cache.size), inline: true }, { name: 'Ping', value: `${Math.round(client.ws.ping)} ms`, inline: true }, { name: 'Çalışma', value: `${Math.floor(process.uptime() / 60)} dk`, inline: true })] })
     if (name === 'sil') { const count = interaction.options.getInteger('adet'); const deleted = await interaction.channel.bulkDelete(count, true); return interaction.reply({ content: `🧹 ${deleted.size} mesaj silindi.`, ephemeral: true }) }
     if (name === 'yaz') return interaction.reply(interaction.options.getString('metin'))
@@ -180,6 +182,7 @@ function setupConsole (client, orderQueue) {
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildVoiceStates, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildPresences], partials: [Partials.Channel, Partials.Message, Partials.User] })
 const orderQueue = createOrderQueue({ supabaseUrl: process.env.SUPABASE_URL, serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY, pollIntervalMs: POLL_INTERVAL })
+const communityStats = createCommunityStatsSync({ supabaseUrl: process.env.SUPABASE_URL, serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY, syncIntervalMs: COMMUNITY_STATS_INTERVAL })
 
 client.once('clientReady', async (readyClient) => {
   console.log(`[AKTİF] ${readyClient.user.tag} · ${readyClient.guilds.cache.size} sunucu`)
@@ -189,6 +192,7 @@ client.once('clientReady', async (readyClient) => {
   mirror.setup(readyClient)
   if (process.env.YOUTUBE_LOCAL_MIRROR === 'true') mirror.startLocal(readyClient)
   orderQueue.start(readyClient, GUILD_ID)
+  communityStats.start(readyClient, GUILD_ID)
   setupConsole(readyClient, orderQueue)
 })
 client.on('interactionCreate', (interaction) => { if (interaction.isButton()) { if (interaction.customId.startsWith('ticket_') && interaction.customId !== 'ticket_close') return tickets.openTicket(interaction); if (interaction.customId === 'ticket_close') return tickets.closeTicket(interaction) } return handleCommand(interaction, orderQueue, client) })

@@ -5,18 +5,18 @@
 - [x] Doğrulanmış kullanıcı ve ekip rolü dışında kimsenin göremediği özel ticket kanalını oluşturmak. _(Herkese kapalı izin sözleşmesi birim testle doğrulandı.)_
 - [x] NexusBotDC’den seçilen uyumlu özellikleri MonarchBot’a aktarırken çakışan veya güvenli olmayan işlevleri hariç tutmak. _(Otomatik kanal/rol kurulum komutları kaldırıldı; Freeze yalnızca yönetici mevcut rolü seçtiğinde çalışır.)_
 
-- [ ] Supabase proje hesabında sipariş kuyruğu için proje URL’si, yayınlanabilir anahtar ve yerel botta kullanılacak gizli anahtar ayrımını kurmak.
-- [ ] Discord satın alım metin kanalı ve görüşme ses kanalı kimliklerini bot yapılandırmasına eklemek.
+- [x] Supabase proje hesabında sipariş kuyruğu için proje URL’si, yayınlanabilir anahtar ve yerel botta kullanılacak gizli anahtar ayrımını kurmak. _(Yayınlanabilir anahtar yalnızca statik mağazada; gizli servis anahtarı yalnızca kullanıcının yerel bot `.env` dosyasında kullanılır.)_
+- [ ] Discord satın alım metin kanalı ve görüşme ses kanalı kimliklerini bot yapılandırmasına eklemek. _(`/siparis-kur` komutu kaynakta mevcut; gerçek sunucuda kaydetme sonucu henüz doğrulanmadı.)_
 
-- [ ] MonarchBot’un kullanıcının kendi bilgisayarında çalışan konsol sürecine uygun ücretsiz sipariş iletim yöntemini seçmek.
-- [ ] Yerel çalıştırma için gerekli bot yapılandırmasını, token saklama yöntemini ve başlatma adımlarını belgelemek.
+- [x] MonarchBot’un kullanıcının kendi bilgisayarında çalışan konsol sürecine uygun ücretsiz sipariş iletim yöntemini seçmek. _(Supabase kuyruk taraması yapan, kullanıcı bilgisayarında çalışan Discord.js bot seçildi.)_
+- [x] Yerel çalıştırma için gerekli bot yapılandırmasını, token saklama yöntemini ve başlatma adımlarını belgelemek. _(`README.md` ve `config-template.txt` hazırlandı; anahtarlar yalnızca yerel `.env` dosyasında kalır.)_
 
 - [x] Gönderilen MonarchBot arşivindeki mevcut ticket komutlarını, yapılandırmayı ve veri akışını incelemek. _(Bot şu anda Discord.js v14 tabanlı konsol botu; ticket, sipariş ve sesli taşıma komutları henüz yok.)_
 - [x] Site sipariş talebi, Discord kullanıcı adı, ürün özeti ve sıra durumunu içeren ödeme almayan sipariş modelini tanımlamak. _(Supabase şeması, RLS ve atomik kuyruk işlevleri uygulandı.)_
 - [x] Sipariş talebini satın alım kanalına ticket olarak ileten güvenli bot entegrasyonunu uygulamak. _(Yerel gizli anahtar kurulumu sonrası canlı test bekliyor.)_
 - [x] Yetkili ekip için sipariş sıraya alma, ticket kapatma ve kullanıcıyı ses kanalına taşıma komutlarını eklemek. _(`/siraya-al`, `/isleme-al`, `/sira-listesi`, `/sese-cektir`, `/siparis-kapat` eklendi.)_
 - [x] Sitede sepetten talep oluşturma akışını, Discord kullanıcı adı onayını ve “işleminiz sıraya alındı” durumunu eklemek. _(27 Ağustos 2026: geçersiz kullanıcı adı reddi ve anonim Supabase `pending_validation` ekleme akışı gerçek tarayıcıda doğrulandı.)_
-- [ ] Botu sürekli çalışacak uygun barındırmaya almak ve uçtan uca sipariş akışını test etmek.
+- [ ] Botu sürekli çalışacak uygun barındırmaya almak ve uçtan uca sipariş akışını test etmek. _(Yerel bilgisayarda çalıştırma seçildi; gerçek Discord/Supabase E2E doğrulaması henüz tamamlanmadı.)_
 
 - [x] Discord OAuth bağlantılarını GitHub Pages vitrinden kaldırmak.
 - [x] Tarayıcı yerel depolamasını kullanan hesap oluşturma, giriş ve çıkış arayüzünü eklemek.
@@ -49,8 +49,8 @@
 - [x] Mağaza arayüzüne erişilebilir “Discord ile giriş” kontrolünü ve giriş durumunu yerleştirmek.
 - [x] Discord girişini canlı alan adıyla doğrulayıp yayın mimarisini güncellemek. _(Kapatıldı: kullanıcı statik yerel hesap akışını seçti.)_
 
-- [ ] Kullanıcının gördüğü Natro park sayfasının hangi DNS önbelleği veya aktif Natro park ayarından geldiğini kesinleştirmek.
-- [ ] Natro panelindeki park/yönlendirme ayarını veya çakışan DNS kaydını kaldırarak kök alan adını yalnızca GitHub Pages’e yönlendirmek.
+- [x] Kullanıcının gördüğü Natro park sayfasının hangi DNS önbelleği veya aktif Natro park ayarından geldiğini kesinleştirmek. _(Geçici eski DNS önbelleği olarak belirlendi; yetkili Natro DNS’i GitHub Pages A kayıtlarını döndürdü.)_
+- [x] Natro panelinde çakışan bir park/yönlendirme kaydı olup olmadığını doğrulamak. _(Etkin yetkili kayıtlarda çakışma bulunmadı; alan adı GitHub Pages ve HTTPS üzerinden doğrulandı.)_
 - [x] Kullanıcı cihazında HTTP erişiminin Monarch Store’u açtığını, HTTPS sertifikası hazır olduğunda da güvenli erişimin çalıştığını yeniden doğrulamak. _(HTTPS 200 yanıtı ve alan adına ait sertifika doğrulandı.)_
 
 - [x] `astralissaga.xyz` alan adının Natro yönlendirmesine neden olan DNS veya web yönlendirme kaynağını tespit etmek. _(Yayılım sürecindeki eski DNS önbelleği; yetkili Natro DNS’i ve genel çözümleyiciler artık GitHub Pages’in dört A kaydını döndürüyor.)_
@@ -60,11 +60,11 @@
 
 - [x] GitHub deposunu `htmlXYZ` adından `MonarchStore` adına değiştirmek.
 - [x] Yeni GitHub Pages adresi ile özel alan adı ayarının devamlılığını doğrulamak.
-- [ ] Yeni depo bağlantısını kullanıcıya iletmek.
+- [x] Yeni depo bağlantısını kullanıcıya iletmek. _(Depo: `https://github.com/ZeninKaanX/MonarchStore`.)_
 
 - [x] `astralissaga.xyz` alan adını GitHub Pages ayarına eklemek.
 - [x] Gerekli DNS kayıtlarını doğrulamak ve alan adının yayın durumunu kontrol etmek.
-- [ ] Özel alan adı bağlantı sonucunu kullanıcıya iletmek.
+- [x] Özel alan adı bağlantı sonucunu kullanıcıya iletmek. _(`https://astralissaga.xyz` canlı ve HTTPS zorlaması etkin.)_
 
 - [x] GitHub Pages için bağımsız Monarch Store HTML dosyasını `index.html` olarak ana dala eklemek.
 - [x] htmlXYZ deposunda GitHub Pages yayınını etkinleştirmek.
@@ -163,3 +163,5 @@
 - [x] Yeni hero videosunun masaüstü/mobil mağaza görünümünü doğrulayıp GitHub Pages’e aktarmak. _(Masaüstü/mobil önizleme, 5 Vitest testi ve üretim derlemesi başarıyla tamamlandı.)_
 
 - [x] Video kotası yenilenene kadar yanlış robot içeren videoyu kaldırıp anime karakter ilk karesini hafif hareketli hero görseli olarak kullanmak. _(Robot içeren video kaynak koddan tamamen çıkarıldı; anime karakterli hero görseli masaüstünde doğrulandı ve 5 test ile üretim derlemesi geçti.)_
+
+- [x] `/siparis-kur` komutunun satın-alım kanalı, ticket kategorisi, ekip rolü ve ses kanalı kimliklerini yerel bot verisine gerçekten kaydettiğini kod veya testle doğrulamak. _(Komut dört kimliği `saveOrderSettings` ile yazıyor; 17 bot testi, kaydedilen dört kimlik olmadan sipariş kuyruğunun yapılandırılmış sayılmadığını doğruladı.)_

@@ -191,5 +191,5 @@
 
 - [x] Mağaza başlığında masaüstü ve mobilde erişilebilir açık/koyu tema seçimi eklemek. _(Başlığa `aria-pressed` durumu ve anlamlı erişilebilir etiketi olan ay/mode düğmesi eklendi.)_
 - [x] Koyu temada mağaza metinleri, ürün kartları, pencereler ve topluluk alanının okunabilirliğini korumak; seçimi tarayıcıda hatırlamak. _(Koyu yüzey/rengin kuralları ile güvenli `localStorage` tercihi eklendi; depolama kapalıysa açık tema yedeği kullanılır.)_
-- [ ] Tema geçişini birim testleri, masaüstü/mobil görünüm ve GitHub Pages yayınıyla doğrulamak.
+- [x] Tema geçişini birim testleri, masaüstü/mobil görünüm ve GitHub Pages yayınıyla doğrulamak. _(9 Vitest testi, TypeScript kontrolü ve üretim derlemesi geçti; masaüstü/mobil başlık görünümü doğrulandı, GitHub Pages canlı HTML’i tema denetimini ve betiğini taşıyor.)_
 - [x] Tema seçimi eklenirken mobil başlıktaki sepet düğmesinin görünür ve dokunulabilir kalmasını sağlamak. _(375 px görünümde hesap, tema ve sepet denetimleri aynı satırda tamamen görünür doğrulandı.)_

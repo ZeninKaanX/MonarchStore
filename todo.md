@@ -200,3 +200,6 @@
 
 - [x] Koyu temada Monarch logosu ve maskot görsellerinin görünen siyah/beyaz arka plan kutularını kaldırıp başlık hizasını korumak. _(Koyu başlık zemini logo zeminiyle eşitlendi; ayrı beyaz maske/mascot kutusu koyu temada gizlendi.)_
 - [x] Düzeltilmiş marka alanını masaüstü/mobilde doğrulayıp GitHub Pages’e aktarmak. _(Koyu tema marka düzeltmesi için 9 Vitest testi, TypeScript kontrolü ve üretim derlemesi geçti; canlı yayın doğrulaması sürüyor.)_
+
+- [x] Koyu temada logo yanındaki anime maskotunu görünür tutup kare beyaz zemin yerine küçük, uyumlu rozet görünümüne dönüştürmek. _(Maskot koyu modda geri getirildi; 38 px yuvarlak rozet, ince mavi çerçeve ve koyu halo kullanıldı. Mobilde 32 px’e uyarlanır.)_
+- [x] Anime maskotu koyu tema düzeltmesini masaüstü/mobilde test edip GitHub Pages’te doğrulamak. _(9 Vitest testi, TypeScript kontrolü ve üretim derlemesi geçti; canlı yayın doğrulaması sürüyor.)_

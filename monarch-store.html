@@ -153,7 +153,7 @@
       html[data-theme="dark"] header { background: #05080c; }
       html[data-theme="dark"] .links { color: #c5d2de; }
       html[data-theme="dark"] .logo > img:first-child { filter: invert(1) grayscale(.18) brightness(1.5); }
-      html[data-theme="dark"] .logo .mascot { display: none; }
+      html[data-theme="dark"] .logo .mascot { display: block; width: 38px; height: 38px; margin-left: -61px; border: 1px solid rgba(105, 178, 233, .58); border-radius: 50%; background: #dbe5ef; box-shadow: 0 0 0 3px rgba(5, 8, 12, .78); }
       html[data-theme="dark"] .account-button.is-signed-in, html[data-theme="dark"] .cart, html[data-theme="dark"] .theme-toggle { border-color: #354759; color: #dce8f2; background: #111c28; }
       html[data-theme="dark"] .theme-toggle:hover { border-color: var(--blue); color: var(--blue); }
       html[data-theme="dark"] .theme-toggle-sun { display: none; }
@@ -182,6 +182,7 @@
         .logo { min-width: 164px; gap: 0; }
         .logo img { width: 145px; height: 42px; }
         .logo .mascot { width: 45px; height: 45px; margin-left: -65px; }
+        html[data-theme="dark"] .logo .mascot { width: 32px; height: 32px; margin-left: -52px; }
         .links { display: none; }
         .nav-actions { gap: 4px; }
         .account-button { width: 86px; min-height: 35px; padding: 0 6px; font-size: 10px; }

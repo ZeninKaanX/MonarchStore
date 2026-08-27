@@ -177,3 +177,9 @@
 - [x] Yerel MonarchBot’a hazır olma, üye/presence değişimi ve güvenli zaman aralığı üzerinden aktif üye sayısını Supabase’e yazan senkronizasyon eklemek. _(`community-stats.js`, bot hazır olma/presence/üye olayları ve en az 30 saniyelik aralıkla eklendi; 20 bot testi geçti.)_
 - [x] GitHub Pages mağazasında Supabase’den çevrimiçi aktif üye sayısını okuyan, erişilemezse yanıltıcı sayı göstermeyen bir topluluk göstergesi eklemek. _(Masaüstü/mobil görünüm doğrulandı; Supabase satırı henüz oluşmadığında sayı yerine “Canlı durum bekleniyor” gösterilir.)_
 - [ ] Bot ve mağaza tarafını birim testleri, sözdizimi/üretim derlemesi ve tarayıcı görünümüyle doğrulamak; ardından kullanıcıya yalnızca değişen bot dosyalarını ve yerel güncelleme adımlarını vermek.
+
+- [ ] Mevcut beyaz saçlı askerî anime karakterin yüzünü, kıyafetini ve soğuk savaş komuta merkezi atmosferini koruyan kısa, sessiz ve döngüye uygun hero videosu üretmek.
+- [ ] Yeni hero videosunu masaüstü/mobil Monarch Store paneline erişilebilir ve performans dostu biçimde yerleştirmek; ardından test edip GitHub Pages’e aktarmak.
+
+- [x] Kullanıcının sağladığı hero videosundaki görünür Gemini logosunu, karakter ve sahne düzenini koruyarak kaldırmak. _(Sağ alt köşedeki logo alanı onarıldı; doğrulamada görünür logo/filigran kalmadı.)_
+- [x] Temizlenmiş videoyu Monarch Store hero paneline yerleştirip masaüstü/mobilde doğrulamak ve GitHub Pages’e aktarmak. _(10 saniyelik temiz MP4, statik poster yedeği ve hareket azaltma tercihi desteğiyle üç HTML kopyasına eklendi; masaüstü/mobil önizleme ve üretim derlemesi geçti.)_

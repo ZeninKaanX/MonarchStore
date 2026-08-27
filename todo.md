@@ -56,6 +56,7 @@
 - [x] `astralissaga.xyz` alan adının Natro yönlendirmesine neden olan DNS veya web yönlendirme kaynağını tespit etmek. _(Yayılım sürecindeki eski DNS önbelleği; yetkili Natro DNS’i ve genel çözümleyiciler artık GitHub Pages’in dört A kaydını döndürüyor.)_
 - [x] GitHub Pages’e yönelimi engelleyen Natro ayarını veya eski DNS kaydını düzeltmek. _(Ek panel değişikliği gerekmedi; etkin yetkili kayıtlar GitHub Pages’e doğru.)_
 - [ ] Alan adının MonarchStore GitHub Pages sitesine ve HTTPS’e doğru yönlendiğini doğrulamak.
+- [ ] GitHub Pages ayarlarındaki özel alan adı bağını yeniden kaydedip HTTPS sertifikasının `astralissaga.xyz` için hazırlanmasını beklemek. _(27 Ağustos 2026: DNS GitHub Pages IP’lerine çözülüyor ve HTTP yayın çalışıyor; ancak Pages API’de `custom_domain: null`, HTTPS zorlaması kapalı ve sertifika yalnızca `*.github.io` için.)_
 
 - [x] GitHub deposunu `htmlXYZ` adından `MonarchStore` adına değiştirmek.
 - [x] Yeni GitHub Pages adresi ile özel alan adı ayarının devamlılığını doğrulamak.

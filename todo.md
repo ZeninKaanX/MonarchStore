@@ -51,12 +51,12 @@
 
 - [ ] Kullanıcının gördüğü Natro park sayfasının hangi DNS önbelleği veya aktif Natro park ayarından geldiğini kesinleştirmek.
 - [ ] Natro panelindeki park/yönlendirme ayarını veya çakışan DNS kaydını kaldırarak kök alan adını yalnızca GitHub Pages’e yönlendirmek.
-- [ ] Kullanıcı cihazında HTTP erişiminin Monarch Store’u açtığını, HTTPS sertifikası hazır olduğunda da güvenli erişimin çalıştığını yeniden doğrulamak.
+- [x] Kullanıcı cihazında HTTP erişiminin Monarch Store’u açtığını, HTTPS sertifikası hazır olduğunda da güvenli erişimin çalıştığını yeniden doğrulamak. _(HTTPS 200 yanıtı ve alan adına ait sertifika doğrulandı.)_
 
 - [x] `astralissaga.xyz` alan adının Natro yönlendirmesine neden olan DNS veya web yönlendirme kaynağını tespit etmek. _(Yayılım sürecindeki eski DNS önbelleği; yetkili Natro DNS’i ve genel çözümleyiciler artık GitHub Pages’in dört A kaydını döndürüyor.)_
 - [x] GitHub Pages’e yönelimi engelleyen Natro ayarını veya eski DNS kaydını düzeltmek. _(Ek panel değişikliği gerekmedi; etkin yetkili kayıtlar GitHub Pages’e doğru.)_
-- [ ] Alan adının MonarchStore GitHub Pages sitesine ve HTTPS’e doğru yönlendiğini doğrulamak.
-- [ ] GitHub Pages ayarlarındaki özel alan adı bağını yeniden kaydedip HTTPS sertifikasının `astralissaga.xyz` için hazırlanmasını beklemek. _(27 Ağustos 2026: DNS GitHub Pages IP’lerine çözülüyor ve HTTP yayın çalışıyor; ancak Pages API’de `custom_domain: null`, HTTPS zorlaması kapalı ve sertifika yalnızca `*.github.io` için.)_
+- [x] Alan adının MonarchStore GitHub Pages sitesine ve HTTPS’e doğru yönlendiğini doğrulamak. _(GitHub Pages üzerinden HTTPS 200 yanıtı ve geçerli alan adı sertifikası alındı.)_
+- [x] GitHub Pages ayarlarındaki özel alan adı bağının kayıtlı olduğunu doğrulayıp HTTPS sertifikasının `astralissaga.xyz` için hazırlanmasını beklemek. _(Alan adı Pages ayarında kayıtlıydı; DNS denetimi başarıyla tamamlandı ve HTTPS zorlaması etkinleştirildi.)_
 
 - [x] GitHub deposunu `htmlXYZ` adından `MonarchStore` adına değiştirmek.
 - [x] Yeni GitHub Pages adresi ile özel alan adı ayarının devamlılığını doğrulamak.

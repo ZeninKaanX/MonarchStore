@@ -11,3 +11,7 @@ Bu kayıt, gerçek Discord kullanıcı bilgisi içermeyen kontrollü bir entegra
 Supabase SQL Editor’de 27 Ağustos 2026 tarihinde, mevcut kayıtlar korunarak `processing_started_at`, `validated_at` ve `purchase_message_id` alanları eklendi. Durum kısıtı `pending_validation`, `processing`, `validated`, `queued`, `in_progress`, `closed` ve `cancelled` akışını kapsayacak şekilde genişletildi. Sorgu **“Success. No rows returned”** sonucu verdi.
 
 Aynı onaylı talep için tekrar ticket veya satın alım bildirimi oluşmasını engellemek üzere aşağıdaki üç `security definer` işlev de başarıyla eklendi: `monarch_claim_pending_order_requests`, `monarch_requeue_stalled_order_requests` ve `monarch_enqueue_validated_order`. Bu işlevlerin çalıştırma yetkisi yalnızca `service_role` rolüne verildi.
+
+## GitHub Pages özel alan adı durumu
+
+27 Ağustos 2026 tarihinde GitHub Pages ayarları doğrudan doğrulandı: özel alan adı alanında `astralissaga.xyz` kayıtlı, ana dal kökten yayın yapıyor ve HTTP yayını güncel sipariş modüllerini sunuyor. GitHub’ın **DNS check successful** durumu doğrulandı. Sertifika hazırlığı tamamlandıktan sonra **Enforce HTTPS** etkinleştirildi. Doğrudan HTTPS isteği `200` döndü; sunulan sertifikanın adı `astralissaga.xyz`, alternatif adları ise `astralissaga.xyz` ve `www.astralissaga.xyz` olarak doğrulandı.

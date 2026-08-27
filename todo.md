@@ -175,5 +175,5 @@
 
 - [x] Discord sunucusundaki çevrimiçi insan üye sayısını saklayacak, yalnızca gerekli alanları içeren Supabase durum kaydını oluşturmak ve herkese açık salt-okunur erişimi güvenli biçimde sınırlamak. _(27 Ağustos 2026: `monarch_community_stats` tablosu, RLS ve sadece okuma politikası Supabase SQL Editor’de başarıyla uygulandı.)_
 - [x] Yerel MonarchBot’a hazır olma, üye/presence değişimi ve güvenli zaman aralığı üzerinden aktif üye sayısını Supabase’e yazan senkronizasyon eklemek. _(`community-stats.js`, bot hazır olma/presence/üye olayları ve en az 30 saniyelik aralıkla eklendi; 20 bot testi geçti.)_
-- [ ] GitHub Pages mağazasında Supabase’den çevrimiçi aktif üye sayısını okuyan, erişilemezse yanıltıcı sayı göstermeyen bir topluluk göstergesi eklemek.
+- [x] GitHub Pages mağazasında Supabase’den çevrimiçi aktif üye sayısını okuyan, erişilemezse yanıltıcı sayı göstermeyen bir topluluk göstergesi eklemek. _(Masaüstü/mobil görünüm doğrulandı; Supabase satırı henüz oluşmadığında sayı yerine “Canlı durum bekleniyor” gösterilir.)_
 - [ ] Bot ve mağaza tarafını birim testleri, sözdizimi/üretim derlemesi ve tarayıcı görünümüyle doğrulamak; ardından kullanıcıya yalnızca değişen bot dosyalarını ve yerel güncelleme adımlarını vermek.

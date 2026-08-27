@@ -5,7 +5,19 @@ export function normalizeUsername(value) {
   return String(value ?? "").trim().replace(/\s+/g, " ");
 }
 
+function localFallbackHash(password) {
+  let hash = 2166136261;
+  for (let index = 0; index < password.length; index += 1) {
+    hash ^= password.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return `local-${(hash >>> 0).toString(16)}`;
+}
+
 export async function hashPassword(password) {
+  if (!globalThis.crypto?.subtle) {
+    return localFallbackHash(password);
+  }
   const bytes = new TextEncoder().encode(password);
   const digest = await crypto.subtle.digest("SHA-256", bytes);
   return Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, "0")).join("");

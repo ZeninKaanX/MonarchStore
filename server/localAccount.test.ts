@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   createLocalAccount,
   getLocalSession,
+  hashPassword,
   signInLocalAccount,
   signOutLocalAccount,
 } from "../account-local.js";
@@ -33,5 +34,14 @@ describe("yerel hesap akışı", () => {
 
     await expect(signInLocalAccount(storage, "kaan", "gizli123")).resolves.toEqual({ username: "Kaan" });
     await expect(signInLocalAccount(storage, "kaan", "yanlis123")).rejects.toThrow("Kullanıcı adı veya şifre");
+  });
+
+  it("Web Crypto olmayan HTTP bağlamında yerel uyumluluk özetine döner", async () => {
+    const originalCrypto = globalThis.crypto;
+    Object.defineProperty(globalThis, "crypto", { configurable: true, value: undefined });
+
+    await expect(hashPassword("deneme123")).resolves.toMatch(/^local-/);
+
+    Object.defineProperty(globalThis, "crypto", { configurable: true, value: originalCrypto });
   });
 });

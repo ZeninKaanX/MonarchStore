@@ -2,7 +2,7 @@
 
 - [x] Discord OAuth bağlantılarını GitHub Pages vitrinden kaldırmak.
 - [x] Tarayıcı yerel depolamasını kullanan hesap oluşturma, giriş ve çıkış arayüzünü eklemek.
-- [ ] Yerel hesap akışını masaüstü ve mobilde test edip GitHub Pages ana dalına aktarmak.
+- [ ] Yerel hesap akışını masaüstü ve mobilde test edip GitHub Pages ana dalına aktarmak. _(Ana dala aktarıldı; canlı masaüstü/mobil etkileşimli doğrulama sürüyor.)_
 
 - [x] Ücretsiz planla özel alan adı ve sunucu tarafı Discord OAuth destekleyen uygun harici barındırma seçeneğini belirlemek. _(Kapatıldı: kullanıcı harici barındırma/DNS taşımasıyla uğraşmak istemiyor.)_
 - [x] Seçilen ücretsiz barındırma için Discord OAuth sunucu paketini çalışır hâle getirmek. _(Kapatıldı: kullanıcı statik yerel hesap akışını seçti.)_

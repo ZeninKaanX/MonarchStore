@@ -197,3 +197,6 @@
 - [x] Tema seçicisinde açık tema için güneş, koyu tema için ay simgesini ve doğru erişilebilir etiketi göstermek. _(Açık tema güneş simgesiyle doğrulandı; koyu tema için ay simgesi CSS durumuna bağlandı, durum/eylem etiketi güncellendi. 9 Vitest testi ve üretim derlemesi geçti.)_
 
 - [x] Görsel düzenleyicide yapılan son değişiklikleri dosya farkı ve önizleme üzerinden doğrulayıp gerekiyorsa yeni checkpoint kaydetmek. _(Düzenleyici dosya değişikliği üretmedi; çalışma ağacında yalnızca bu doğrulama kaydı vardı. Masaüstü önizlemede banner, hero video ve tema denetimi tutarlı göründü.)_
+
+- [x] Koyu temada Monarch logosu ve maskot görsellerinin görünen siyah/beyaz arka plan kutularını kaldırıp başlık hizasını korumak. _(Koyu başlık zemini logo zeminiyle eşitlendi; ayrı beyaz maske/mascot kutusu koyu temada gizlendi.)_
+- [x] Düzeltilmiş marka alanını masaüstü/mobilde doğrulayıp GitHub Pages’e aktarmak. _(Koyu tema marka düzeltmesi için 9 Vitest testi, TypeScript kontrolü ve üretim derlemesi geçti; canlı yayın doğrulaması sürüyor.)_

@@ -101,11 +101,13 @@
       .robot-help b { display: block; margin-bottom: 3px; color: #fff; font-size: 13px; }
       @media (prefers-reduced-motion: reduce) { .anime-hero-still { animation: none; transform: none; } .anime-hero-video { display: none; animation: none; transform: none; } }
 
-      /* Kategori Barı */
+      /* Kategori Barı & Özel Tema İkonları */
       .cat-nav { padding: 24px 0 0; }
       .cat-tabs { display: flex; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid var(--line); padding-bottom: 16px; }
-      .cat-tab { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border: 1px solid var(--line); background: var(--white); color: var(--ink); font: 700 11px "Space Mono", monospace; text-transform: uppercase; letter-spacing: .04em; transition: all .18s; }
-      .cat-tab:hover, .cat-tab.active { border-color: var(--blue); color: var(--blue); background: rgba(62, 131, 184, 0.08); }
+      .cat-tab { display: inline-flex; align-items: center; gap: 9px; padding: 9px 18px; border: 1px solid var(--line); background: var(--white); color: var(--ink); font: 700 11px "Space Mono", monospace; text-transform: uppercase; letter-spacing: .04em; transition: all .18s ease; border-radius: 4px; }
+      .cat-tab-icon { width: 16px; height: 16px; stroke: currentColor; stroke-width: 1.8; fill: none; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; opacity: 0.85; transition: transform .18s, opacity .18s; }
+      .cat-tab:hover .cat-tab-icon, .cat-tab.active .cat-tab-icon { opacity: 1; transform: scale(1.1); }
+      .cat-tab:hover, .cat-tab.active { border-color: var(--blue); color: var(--blue); background: rgba(62, 131, 184, 0.08); box-shadow: 0 4px 14px rgba(62, 131, 184, 0.08); }
 
       section { padding: 60px 0; }
       .section-head { display: flex; justify-content: space-between; align-items: end; gap: 28px; margin-bottom: 25px; }
@@ -114,11 +116,11 @@
       .section-head > p { max-width: 420px; margin: 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
 
       .bot-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
-      .product { overflow: hidden; border: 1px solid var(--line); background: var(--white); box-shadow: var(--shadow); display: flex; flex-direction: column; }
+      .product { overflow: hidden; border: 1px solid var(--line); background: var(--white); box-shadow: var(--shadow); display: flex; flex-direction: column; border-radius: 4px; }
       .product-image { position: relative; height: 260px; overflow: hidden; background: #cdd7df; }
       .product-image img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; transition: transform .35s ease; }
       .product:hover .product-image img { transform: scale(1.025); }
-      .product-image span { position: absolute; top: 12px; left: 12px; padding: 6px 8px; color: #fff; background: rgba(25,31,40,.82); font: 700 9px "Space Mono", monospace; letter-spacing: .06em; z-index: 2; }
+      .product-image span { position: absolute; top: 12px; left: 12px; padding: 6px 8px; color: #fff; background: rgba(25,31,40,.82); font: 700 9px "Space Mono", monospace; letter-spacing: .06em; z-index: 2; border-radius: 2px; }
 
       .product-main { padding: 19px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
       .product h3 { margin: 0; font-size: 24px; letter-spacing: -.04em; }
@@ -127,17 +129,17 @@
       .price { display: grid; gap: 3px; }
       .price small { color: var(--muted); font: 9px "Space Mono", monospace; text-transform: uppercase; }
       .price b { font-size: 21px; }
-      .buy { min-height: 38px; display: inline-flex; align-items: center; justify-content: center; padding: 0 12px; border: 1px solid var(--blue); color: var(--blue); background: #fff; font-size: 11px; font-weight: 800; transition: color .18s, background .18s; }
+      .buy { min-height: 38px; display: inline-flex; align-items: center; justify-content: center; padding: 0 12px; border: 1px solid var(--blue); color: var(--blue); background: #fff; font-size: 11px; font-weight: 800; transition: color .18s, background .18s; border-radius: 2px; }
       .buy:hover { color: #fff; background: var(--blue); }
 
       .store-note { padding: 0 0 60px; }
-      .note-card { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 35px; padding: 27px 30px; border: 1px solid #d9e2e8; color: #263442; background: #eef4f7; }
+      .note-card { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 35px; padding: 27px 30px; border: 1px solid #d9e2e8; color: #263442; background: #eef4f7; border-radius: 4px; }
       .note-card h2 { font-size: 25px; }
       .note-card p { margin: 7px 0 0; color: #607181; font-size: 13px; }
       .item-list { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
-      .item-list span { padding: 8px 10px; border: 1px solid #ccdae2; background: #fff; color: #435565; font: 700 10px "Space Mono", monospace; }
+      .item-list span { padding: 8px 10px; border: 1px solid #ccdae2; background: #fff; color: #435565; font: 700 10px "Space Mono", monospace; border-radius: 2px; }
       .discord-section { padding: 0 0 28px; }
-      .discord-card { display: flex; align-items: center; justify-content: space-between; gap: 28px; padding: 22px 28px; border: 1px solid #d8e3eb; color: #274155; background: #fff; }
+      .discord-card { display: flex; align-items: center; justify-content: space-between; gap: 28px; padding: 22px 28px; border: 1px solid #d8e3eb; color: #274155; background: #fff; border-radius: 4px; }
       .discord-card .eyebrow { margin-bottom: 6px; }
       .discord-card h2 { font-size: 24px; }
       .discord-card p { margin: 6px 0 0; color: #687283; font-size: 13px; }
@@ -146,17 +148,17 @@
       .discord-stat-label { display: block; margin-top: 5px; color: #5a7080; font: 700 9px "Space Mono", monospace; letter-spacing: .07em; text-transform: uppercase; }
       .discord-stat-status { margin: 7px 0 0; color: #547889; font-size: 10px; }
       .discord-stat-status[data-state="live"]::before { content: ""; display: inline-block; width: 6px; height: 6px; margin: 0 5px 1px 0; border-radius: 50%; background: #5e9c70; }
-      .discord-button { min-width: 162px; min-height: 42px; display: inline-flex; align-items: center; justify-content: center; color: #fff; background: #5865f2; font-size: 12px; font-weight: 800; transition: background .18s, transform .18s; }
+      .discord-button { min-width: 162px; min-height: 42px; display: inline-flex; align-items: center; justify-content: center; color: #fff; background: #5865f2; font-size: 12px; font-weight: 800; transition: background .18s, transform .18s; border-radius: 2px; }
       .discord-button:hover { background: #4651c8; }
       .discord-button:active { transform: scale(.98); }
 
       footer { border-top: 1px solid var(--line); background: #fff; }
       .footer { min-height: 90px; display: flex; align-items: center; justify-content: space-between; gap: 20px; color: var(--muted); font-size: 11px; }
       .footer-logo { height: 28px; width: auto; object-fit: contain; }
-      .toast { position: fixed; z-index: 20; right: 22px; bottom: 22px; width: min(345px, calc(100% - 44px)); padding: 14px 16px; border: 1px solid #afd1e6; pointer-events: none; opacity: 0; transform: translateY(10px); color: #24445b; background: #f1f9fe; box-shadow: 0 15px 30px rgba(17,40,56,.14); font-size: 12px; transition: opacity .2s, transform .2s; }
+      .toast { position: fixed; z-index: 20; right: 22px; bottom: 22px; width: min(345px, calc(100% - 44px)); padding: 14px 16px; border: 1px solid #afd1e6; pointer-events: none; opacity: 0; transform: translateY(10px); color: #24445b; background: #f1f9fe; box-shadow: 0 15px 30px rgba(17,40,56,.14); font-size: 12px; transition: opacity .2s, transform .2s; border-radius: 4px; }
       .toast.show { opacity: 1; transform: translateY(0); }
       .toast b { display: block; margin-bottom: 3px; }
-      .account-dialog { width: min(430px, calc(100% - 32px)); padding: 0; border: 1px solid #d3dce5; color: var(--ink); background: #fff; box-shadow: 0 24px 65px rgba(12, 28, 42, .28); }
+      .account-dialog { width: min(430px, calc(100% - 32px)); padding: 0; border: 1px solid #d3dce5; color: var(--ink); background: #fff; box-shadow: 0 24px 65px rgba(12, 28, 42, .28); border-radius: 6px; }
       .account-dialog::backdrop { background: rgba(11, 25, 37, .56); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
       .account-panel { padding: 27px; }
       .dialog-close { position: absolute; top: 12px; right: 13px; width: 34px; height: 34px; border: 0; color: #5e6b79; background: transparent; font-size: 24px; line-height: 1; }
@@ -164,9 +166,9 @@
       .account-panel > p { margin: 9px 0 20px; color: var(--muted); font-size: 13px; line-height: 1.65; }
       .account-form { display: grid; gap: 13px; }
       .account-form label { display: grid; gap: 6px; color: #43505f; font-size: 12px; font-weight: 800; }
-      .account-form input { width: 100%; min-height: 43px; padding: 0 12px; border: 1px solid #cbd4de; color: var(--ink); background: #fff; font: inherit; }
+      .account-form input { width: 100%; min-height: 43px; padding: 0 12px; border: 1px solid #cbd4de; color: var(--ink); background: #fff; font: inherit; border-radius: 2px; }
       .account-form input:focus { border-color: var(--blue); outline: 2px solid rgba(62, 131, 184, .16); }
-      .account-submit, .account-switch, .account-logout { min-height: 42px; border: 0; font-size: 12px; font-weight: 800; }
+      .account-submit, .account-switch, .account-logout { min-height: 42px; border: 0; font-size: 12px; font-weight: 800; border-radius: 2px; }
       .account-submit { margin-top: 4px; color: #fff; background: var(--blue); }
       .account-switch { color: var(--blue-dark); background: transparent; }
       .account-logout { width: 100%; color: #fff; background: #32485c; }
@@ -191,7 +193,7 @@
       html[data-theme="dark"] .order-form label, html[data-theme="dark"] .account-form label { color: #c4d2df; }
       html[data-theme="dark"] .order-form input, html[data-theme="dark"] .account-form input { border-color: #384a5d; color: #eef5fb; background: #0c1520; }
       html[data-theme="dark"] .cat-tab { border-color: #2e3f52; background: #111c28; color: #d2e0eb; }
-      html[data-theme="dark"] .cat-tab:hover, html[data-theme="dark"] .cat-tab.active { border-color: var(--blue); color: var(--blue); background: rgba(105, 178, 233, 0.12); }
+      html[data-theme="dark"] .cat-tab:hover, html[data-theme="dark"] .cat-tab.active { border-color: var(--blue); color: var(--blue); background: rgba(105, 178, 233, 0.12); box-shadow: 0 4px 14px rgba(105, 178, 233, 0.14); }
       html[data-theme="dark"] .buy { background: #111c28; }
       html[data-theme="dark"] .note-card { border-color: #314455; color: #e2edf6; background: #102030; }
       html[data-theme="dark"] .note-card p { color: #b3c3d1; }
@@ -224,6 +226,9 @@
         .robot-panel { min-height: 320px; }
         .section-head { display: block; }
         .section-head > p { margin-top: 12px; }
+        .cat-tabs { gap: 6px; }
+        .cat-tab { padding: 7px 11px; font-size: 10px; }
+        .cat-tab-icon { width: 14px; height: 14px; }
         .bot-grid { grid-template-columns: 1fr; }
         .product-image { height: min(94vw, 300px); }
         .note-card { grid-template-columns: 1fr; gap: 19px; padding: 23px; }
@@ -281,13 +286,25 @@
         </div>
       </section>
 
-      <!-- Kategori Seçici -->
+      <!-- Kategori Seçici: Özel Tasarım Vektör İkonlar -->
       <nav class="container cat-nav" id="kategoriler" aria-label="Kategori Gezintisi">
         <div class="cat-tabs">
-          <a class="cat-tab active" href="#botlar">🤖 Minecraft Botları</a>
-          <a class="cat-tab" href="#uiux">🎨 UI / UX Tasarım</a>
-          <a class="cat-tab" href="#sunum">📊 Sunum Hizmetleri</a>
-          <a class="cat-tab" href="#urunler">📦 Oyun İçi Ürünler</a>
+          <a class="cat-tab active" href="#botlar">
+            <svg class="cat-tab-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="8" width="16" height="12" rx="3"></rect><path d="M9 13h6"></path><path d="M12 4v4"></path><circle cx="12" cy="3" r="1.2" fill="currentColor"></circle><path d="M2 14h2M20 14h2"></path></svg>
+            <span>Minecraft Botları</span>
+          </a>
+          <a class="cat-tab" href="#uiux">
+            <svg class="cat-tab-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M3 9h18"></path><path d="M9 21V9"></path><circle cx="6" cy="6" r="0.9" fill="currentColor"></circle></svg>
+            <span>UI / UX Tasarım</span>
+          </a>
+          <a class="cat-tab" href="#sunum">
+            <svg class="cat-tab-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 3h20"></path><rect x="4" y="3" width="16" height="12" rx="1"></rect><path d="M8 11v-2M12 11V7M16 11V8"></path><path d="M12 15v5M9 20h6"></path></svg>
+            <span>Sunum Hizmetleri</span>
+          </a>
+          <a class="cat-tab" href="#urunler">
+            <svg class="cat-tab-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path><path d="m3.3 7 8.7 5 8.7-5"></path><path d="M12 22V12"></path></svg>
+            <span>Oyun İçi Ürünler</span>
+          </a>
         </div>
       </nav>
 
@@ -522,6 +539,14 @@
       bindOrderUI({ cartButton: document.querySelector('#cartButton'), cartCount, dialog: document.querySelector('#orderDialog'), closeButton: document.querySelector('#orderClose'), form: document.querySelector('#orderForm'), discordInput: document.querySelector('#orderDiscordUsername'), summary: document.querySelector('#orderSummary'), submitButton: document.querySelector('#orderSubmit'), notify });
       bindCommunityStats({ countElement: document.querySelector('#discordActiveCount'), statusElement: document.querySelector('#discordActiveStatus') });
       bindLocalAccountUI({ button: document.querySelector('#accountButton'), dialog: document.querySelector('#accountDialog'), closeButton: document.querySelector('#accountClose'), form: document.querySelector('#accountForm'), usernameInput: document.querySelector('#accountUsername'), passwordInput: document.querySelector('#accountPassword'), confirmInput: document.querySelector('#accountPasswordConfirm'), title: document.querySelector('#accountTitle'), description: document.querySelector('#accountDescription'), submitButton: document.querySelector('#accountSubmit'), switchButton: document.querySelector('#accountSwitch'), logoutButton: document.querySelector('#accountLogout'), notify });
+
+      // Kategori sekme tıklama etkileşimi
+      document.querySelectorAll('.cat-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+        });
+      });
     </script>
   </body>
 </html>

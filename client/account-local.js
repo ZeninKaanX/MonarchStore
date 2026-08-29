@@ -185,7 +185,7 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
     if (signedIn) {
       if (session.isAdmin) {
         const discText = session.discordUsername ? ` (@${session.discordUsername})` : '';
-        title.textContent = `🛡️ Yetkili: ${session.username}${discText}`;
+        title.textContent = `Yetkili: ${session.username}${discText}`;
         description.textContent = "Monarch Store yönetim oturumunuz aktif.";
       } else {
         title.textContent = `Merhaba, ${session.username}`;
@@ -217,7 +217,7 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
   const show2FAView = (challengeId, passedDiscordUser = "") => {
     is2FAActive = true;
     activeChallengeId = challengeId;
-    title.textContent = "🔐 2FA Güvenlik Doğrulaması";
+    title.textContent = "2FA Güvenlik Doğrulaması";
     description.textContent = "Admin yetkisi algılandı. Discord #admin-2fa kanalına gelen 6 haneli kodu girin.";
 
     const modalTabs = document.querySelector("#accountModalTabs");

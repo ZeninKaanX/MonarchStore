@@ -250,7 +250,7 @@
       .toast.show { opacity: 1; transform: translateY(0); }
       .toast b { display: block; margin-bottom: 3px; }
       
-      /* ==================== MONARCH STORE AUTHENTIC ACCOUNT MODAL ==================== */
+      /* ==================== MONARCH STORE CLEAN NAVY ACCOUNT MODAL (NO EMOJIS) ==================== */
       .account-dialog { 
         width: min(440px, calc(100% - 24px)); 
         padding: 0; 
@@ -413,9 +413,9 @@
       }
       
       .pwd-input-wrap { position: relative; display: flex; align-items: center; width: 100%; }
-      .pwd-input-wrap input { width: 100%; padding-right: 42px !important; }
-      .pwd-toggle-btn { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); width: 30px; height: 30px; border: 0; background: transparent; cursor: pointer; display: grid; place-items: center; font-size: 14px; color: #8a9ba8; border-radius: 4px; }
-      .pwd-toggle-btn:hover { background: rgba(255,255,255,0.08); color: #fff; }
+      .pwd-input-wrap input { width: 100%; padding-right: 56px !important; }
+      .pwd-toggle-btn { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); padding: 0 8px; height: 28px; border: 1px solid #243c52; background: #0e1a27; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; font-family: 'Space Mono', monospace; color: #8ec5ee; border-radius: 3px; }
+      .pwd-toggle-btn:hover { background: var(--blue); color: #fff; border-color: var(--blue); }
 
       .account-form { display: grid; gap: 12px; }
       .account-form label { display: grid; gap: 5px; color: #d8e3eb; font: 700 11px "Space Mono", monospace; }
@@ -720,7 +720,7 @@
           <aside class="robot-panel" aria-label="Hareketli anime karakter sahnesi">
             <span class="robot-label">MONARCH / AKTİF</span>
             <div class="anime-hero-still" role="img" aria-label="Monarch iletişim merkezinde anime karakter"></div>
-            <video class="anime-hero-video" autoplay muted loop playsinline preload="none" poster="images/cold-war-winter-banner.jpg?v=20260829" aria-label="Monarch iletişim merkezinde hareketli anime karakter"><source src="https://github.com/ZeninKaanX/MonarchStore/releases/download/monarch-hero-assets/monarch-whitehair-hero-clean.mp4" type="video/mp4" /></video>
+            <video class="anime-hero-video" autoplay muted loop playsinline preload="none" poster="images/hero-whitehair.webp" aria-label="Monarch iletişim merkezinde hareketli anime karakter"><source src="https://github.com/ZeninKaanX/MonarchStore/releases/download/monarch-hero-assets/monarch-whitehair-hero-clean.mp4" type="video/mp4" /></video>
             <div class="robot-help"><b>Hareketli iletişim birimi aktif</b>Monarch sahası için görevde.</div>
           </aside>
         </div>
@@ -948,10 +948,10 @@
     <dialog class="account-dialog" id="accountDialog" aria-labelledby="accountTitle">
       <button class="dialog-close" id="accountClose" type="button" aria-label="Pencereyi kapat">×</button>
 
-      <!-- Monarch Store Header with Official Logo & Lena Commander Mascot -->
+      <!-- Monarch Store Header with Official Logo & Lena Commander Mascot (No Emojis) -->
       <div class="account-hero-banner">
         <div class="account-hero-left">
-          <span class="account-hero-badge">👑 MONARCH STORE · GİRİŞ</span>
+          <span class="account-hero-badge">MONARCH STORE // HESAP</span>
           <img src="images/logo-light.webp" alt="Monarch Store" class="account-coldwar-logo" width="145" height="34" />
           <div class="account-coldwar-status">
             <span class="tactical-dot"></span>
@@ -972,7 +972,7 @@
         </div>
 
         <!-- Admin İçin Panel Açma Butonu -->
-        <button class="account-admin-open-btn" id="accountOpenAdminBtn" type="button" style="display: none;">🛡️ YÖNETİM PANELİNİ AÇ</button>
+        <button class="account-admin-open-btn" id="accountOpenAdminBtn" type="button" style="display: none;">YÖNETİM PANELİNİ AÇ</button>
 
         <form class="account-form" id="accountForm">
           <!-- Standart Giriş/Kayıt Alanları -->
@@ -982,7 +982,7 @@
               Şifre
               <div class="pwd-input-wrap">
                 <input id="accountPassword" name="password" type="password" autocomplete="current-password" minlength="6" placeholder="••••••••" required />
-                <button type="button" class="pwd-toggle-btn" id="accountTogglePwd" title="Şifreyi Göster/Gizle" aria-label="Şifreyi Göster">👁️</button>
+                <button type="button" class="pwd-toggle-btn" id="accountTogglePwd" title="Şifreyi Göster/Gizle" aria-label="Şifreyi Göster">GÖSTER</button>
               </div>
             </label>
             <label id="accountDiscordLabel">Discord Kullanıcı Adınız (Opsiyonel)<input id="accountDiscordUsername" name="discordUsername" autocomplete="off" placeholder="Örn: eververity" /></label>
@@ -992,7 +992,7 @@
           <!-- Admin İçin Otomatik Açılan 2FA Güvenlik Kodu Alanı -->
           <div id="account2FAFields" style="display: none; gap: 12px;">
             <div class="account-2fa-box">
-              <b>🔐 2FA GÜVENLİK DOĞRULAMASI</b>
+              <b>2FA GÜVENLİK DOĞRULAMASI</b>
               Doğrulama kodu <strong>#admin-2fa</strong> kanalına iletildi ve Discord hesabınız etiketlendi.
               <div>Kalan Süre: <span class="countdown-pill" id="account2FACountdown">05:00</span></div>
             </div>

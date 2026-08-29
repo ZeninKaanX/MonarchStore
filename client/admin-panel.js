@@ -17,8 +17,8 @@ function getSupabase () {
   return supabaseClient
 }
 
-// SHA-256 Hash Yardımcısı
-async function sha256 (plainText) {
+// SHA-256 Hash
+export async function sha256 (plainText) {
   const encoder = new TextEncoder()
   const data = encoder.encode(plainText)
   const hashBuffer = await crypto.subtle.digest('SHA-256', data)
@@ -143,71 +143,22 @@ function formatItems (items) {
   `).join('')
 }
 
-export function initAdminUI ({ notify }) {
-  const adminBtn = document.querySelector('#adminNavButton')
-  const authDialog = document.querySelector('#adminAuthDialog')
+export function initAdminDashboardUI ({ notify }) {
   const dashboardDialog = document.querySelector('#adminDashboardDialog')
-  const authForm = document.querySelector('#adminAuthForm')
-  const step1 = document.querySelector('#adminStep1')
-  const step2 = document.querySelector('#adminStep2')
-  const usernameInput = document.querySelector('#adminUsername')
-  const passwordInput = document.querySelector('#adminPassword')
-  const codeInput = document.querySelector('#admin2FACode')
-  const countdownEl = document.querySelector('#admin2FACountdown')
   const ordersTbody = document.querySelector('#adminOrdersTableBody')
   const refreshBtn = document.querySelector('#adminRefreshBtn')
   const logoutBtn = document.querySelector('#adminLogoutBtn')
   const filterTabs = document.querySelectorAll('.admin-filter-tab')
   const searchInput = document.querySelector('#adminSearchInput')
-  const openAuthFromAccBtn = document.querySelector('#openAdminAuthFromAccount')
 
-  let currentChallengeId = null
-  let countdownTimer = null
   let cachedOrders = []
   let activeFilter = 'all'
 
-  function updateNavButtonVisibility () {
-    const session = getAdminSession()
-    if (adminBtn) {
-      if (session) {
-        adminBtn.style.display = 'inline-flex'
-        adminBtn.innerHTML = `🛡️ Admin (${escapeHtml(session.username)})`
-      } else {
-        adminBtn.style.display = 'none'
-      }
-    }
-  }
-
-  function startCountdown (seconds = 300) {
-    clearInterval(countdownTimer)
-    let remain = seconds
-    const tick = () => {
-      const min = Math.floor(remain / 60)
-      const sec = remain % 60
-      if (countdownEl) countdownEl.textContent = `${min}:${sec < 10 ? '0' : ''}${sec}`
-      if (remain <= 0) {
-        clearInterval(countdownTimer)
-        if (countdownEl) countdownEl.textContent = 'Süre Doldu'
-      }
-      remain--
-    }
-    tick()
-    countdownTimer = setInterval(tick, 1000)
-  }
-
-  function openAuthModal () {
-    if (getAdminSession()) {
-      openDashboard()
+  async function openDashboard () {
+    if (!getAdminSession()) {
+      notify('Yetkisiz', 'Önce hesap menüsünden admin girişi yapmalısınız.')
       return
     }
-    step1.style.display = 'grid'
-    step2.style.display = 'none'
-    authForm.reset()
-    authDialog.showModal()
-  }
-
-  async function openDashboard () {
-    updateNavButtonVisibility()
     dashboardDialog.showModal()
     await loadDashboardData()
   }
@@ -224,8 +175,6 @@ export function initAdminUI ({ notify }) {
       if (err.message.includes('Oturum') || err.message.includes('Yetkisiz')) {
         dashboardDialog.close()
         clearAdminSession()
-        updateNavButtonVisibility()
-        openAuthModal()
       }
     }
   }
@@ -316,17 +265,15 @@ export function initAdminUI ({ notify }) {
     })
   }
 
-  // Event Listeners
-  if (adminBtn) adminBtn.addEventListener('click', openDashboard)
-  if (openAuthFromAccBtn) openAuthFromAccBtn.addEventListener('click', openAuthModal)
   if (refreshBtn) refreshBtn.addEventListener('click', loadDashboardData)
 
   if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
       clearAdminSession()
-      updateNavButtonVisibility()
       dashboardDialog.close()
       notify('Çıkış yapıldı', 'Admin oturumu sonlandırıldı.')
+      const accBtn = document.querySelector('#accountButton')
+      if (accBtn) accBtn.textContent = 'Hesap oluştur'
     })
   }
 
@@ -343,70 +290,5 @@ export function initAdminUI ({ notify }) {
     searchInput.addEventListener('input', () => renderOrders())
   }
 
-  // Auth Form Submit
-  if (authForm) {
-    authForm.addEventListener('submit', async (e) => {
-      e.preventDefault()
-      const submitBtn = authForm.querySelector('button[type="submit"]')
-
-      // Adım 1: Kullanıcı Adı & Şifre -> 2FA Kodu Talep Et
-      if (step1.style.display !== 'none') {
-        const username = usernameInput.value.trim()
-        const password = passwordInput.value
-        if (!username || !password) return
-
-        submitBtn.disabled = true
-        submitBtn.textContent = '2FA İsteği Gönderiliyor…'
-        try {
-          const res = await requestAdmin2FA(username, password)
-          currentChallengeId = res.challenge_id
-          step1.style.display = 'none'
-          step2.style.display = 'grid'
-          startCountdown(300)
-          notify('2FA Kodu Gönderildi', 'Discord #admin-2fa kanalına güvenlik kodu iletildi.')
-          codeInput.focus()
-        } catch (err) {
-          notify('Giriş Başarısız', err.message || 'Kullanıcı adı veya şifre hatalı.')
-        } finally {
-          submitBtn.disabled = false
-          submitBtn.textContent = 'Devam Et'
-        }
-        return
-      }
-
-      // Adım 2: 2FA Kodunu Doğrula
-      if (step2.style.display !== 'none') {
-        const code = codeInput.value.trim()
-        if (!code || !currentChallengeId) return
-
-        submitBtn.disabled = true
-        submitBtn.textContent = 'Doğrulanıyor…'
-        try {
-          await verifyAdmin2FA(currentChallengeId, code)
-          clearInterval(countdownTimer)
-          authDialog.close()
-          notify('Giriş Başarılı', 'Admin paneline hoş geldiniz.')
-          updateNavButtonVisibility()
-          openDashboard()
-        } catch (err) {
-          notify('Doğrulama Başarısız', err.message || 'Geçersiz veya süresi dolmuş kod.')
-          codeInput.focus()
-        } finally {
-          submitBtn.disabled = false
-          submitBtn.textContent = 'Doğrula ve Giriş Yap'
-        }
-      }
-    })
-  }
-
-  // Gizli Kısayol: Ctrl+Alt+A veya Alt+Shift+M ile Admin Girişi
-  window.addEventListener('keydown', (e) => {
-    if ((e.ctrlKey && e.altKey && e.key.toLowerCase() === 'a') || (e.altKey && e.shiftKey && e.key.toLowerCase() === 'm')) {
-      e.preventDefault()
-      openAuthModal()
-    }
-  })
-
-  // Başlangıç kontrolü
-  updateNavButtonVisibility()
+  return { openDashboard, loadDashboardData }
 }

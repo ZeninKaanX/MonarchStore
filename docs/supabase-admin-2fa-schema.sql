@@ -31,11 +31,11 @@ create index if not exists monarch_admin_2fa_lookup_idx
 create index if not exists monarch_admin_2fa_session_idx
   on public.monarch_admin_2fa (session_token, session_expires_at);
 
--- Varsayılan Admin Hesabı Ekleme (Kullanıcı: admin, Şifre: monarch2026!)
--- Şifre hash'i SHA-256: 'monarch2026!' -> 28d54ee4a0bf7fe377e8ef6e6c71c4c9eb55b0a3c252ef5a1f6a19f07bb8a7fa
+-- Varsayılan Admin Hesabı Ekleme (Kullanıcı: admin, Şifre: Monarch!Founder#9824_Sec)
+-- Güvenli SHA-256 Hash'i: 46014b9696fb195e4f8d91c60fd2f2982fa9969aaa820c93faf2366a34ebdf9c
 insert into public.monarch_admin_accounts (username, password_hash, role)
-values ('admin', '28d54ee4a0bf7fe377e8ef6e6c71c4c9eb55b0a3c252ef5a1f6a19f07bb8a7fa', 'founder')
-on conflict (username) do nothing;
+values ('admin', '46014b9696fb195e4f8d91c60fd2f2982fa9969aaa820c93faf2366a34ebdf9c', 'founder')
+on conflict (username) do update set password_hash = '46014b9696fb195e4f8d91c60fd2f2982fa9969aaa820c93faf2366a34ebdf9c';
 
 -- 3. RLS Ayarları
 alter table public.monarch_admin_accounts enable row level security;

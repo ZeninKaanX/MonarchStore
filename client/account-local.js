@@ -448,7 +448,7 @@ export function bindLocalAccountUI({
     if (emailIn) emailIn.value = acc.email || session.email || '';
 
     if (emailBadge) {
-      emailBadge.textContent = isVerified ? "✓ Doğrulandı" : "Doğrulanmamış";
+      emailBadge.textContent = isVerified ? "Doğrulandı" : "Doğrulanmamış";
       emailBadge.style.color = isVerified ? "#22c55e" : "#f59e0b";
       emailBadge.style.borderColor = isVerified ? "rgba(34,197,94,0.3)" : "rgba(245,158,11,0.3)";
     }

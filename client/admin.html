@@ -739,7 +739,7 @@
           </div>
         </div>
         <div style="display: flex; gap: 6px;">
-          <button type="button" id="dashProfileBtn" style="flex: 1; min-height: 32px; background: rgba(56,189,248,0.12); border: 1px solid rgba(56,189,248,0.35); color: #38bdf8; font: 700 11px var(--font-mono); border-radius: 4px; cursor: pointer; transition: all 0.15s;">⚙️ Profil</button>
+          <button type="button" id="dashProfileBtn" style="flex: 1; min-height: 32px; background: rgba(56,189,248,0.12); border: 1px solid rgba(56,189,248,0.35); color: #38bdf8; font: 700 11px var(--font-mono); border-radius: 4px; cursor: pointer; transition: all 0.15s;">Profil</button>
           <button type="button" id="dashLogoutBtn" class="btn-logout" style="min-height: 32px;">Çıkış</button>
         </div>
       </div>
@@ -755,7 +755,7 @@
           <span class="clock-pill" id="dashClock">--:--:--</span>
         </div>
         <div class="top-bar-actions">
-          <button type="button" id="adminTopProfileBtn" class="btn-secondary" style="color: #38bdf8; border-color: rgba(56,189,248,0.4); background: rgba(56,189,248,0.08);">👤 Profilimi Düzenle</button>
+          <button type="button" id="adminTopProfileBtn" class="btn-secondary" style="color: #38bdf8; border-color: rgba(56,189,248,0.4); background: rgba(56,189,248,0.08);">Profilimi Düzenle</button>
           <button type="button" id="refreshBtn" class="btn-secondary">Yenile</button>
           <button type="button" id="exportBtn" class="btn-secondary">CSV İndir</button>
           <button type="button" id="deleteAllBtn" class="btn-secondary" style="color: #f87171; border-color: rgba(244,63,94,0.4); background: rgba(244,63,94,0.08);">Tümünü Sil</button>
@@ -829,7 +829,7 @@
         <h3 id="modalOrderCode" style="font-family: var(--font-mono); font-size: 22px; color: var(--primary); margin: 0;">—</h3>
         <span id="modalHeaderStatusBadge"></span>
       </div>
-      <button type="button" onclick="document.querySelector('#adminOrderDetailDialog').close()" style="background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 4px; color: var(--text-muted); font-size: 18px; width: 34px; height: 34px; cursor: pointer; display: grid; place-items: center;">✕</button>
+      <button type="button" onclick="document.querySelector('#adminOrderDetailDialog').close()" style="background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 4px; color: var(--text-muted); font-size: 18px; width: 34px; height: 34px; cursor: pointer; display: grid; place-items: center;">×</button>
     </div>
 
     <!-- Standart Siparişler İçin Özet Alanı -->
@@ -848,23 +848,23 @@
     <!-- Destek Yanıtlama Alanı (Sadece Destek Taleplerinde Görünür) -->
     <div id="modalSupportReplySection" style="display: none; margin-bottom: 18px; background: rgba(56,189,248,0.04); border: 1px solid rgba(56,189,248,0.3); border-radius: 8px; padding: 18px;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-        <span style="color: #38bdf8; font: 700 12px var(--font-mono); text-transform: uppercase;">🛡️ Yönetici Yanıtı İlet (Site & Discord):</span>
+        <span style="color: #38bdf8; font: 700 12px var(--font-mono); text-transform: uppercase;">[YÖNETİCİ] Yönetici Yanıtı İlet (Site & Discord):</span>
         <span style="color: var(--text-muted); font-size: 11px;">Mesajınız Discord ticket kanalına Embed olarak yansıtılacaktır.</span>
       </div>
 
       <!-- Yönetici Hızlı Yanıt Preset Çipleri -->
       <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
-        <button type="button" class="admin-quick-chip" data-text="Merhaba, Monarch Destek Ekibi olarak talebinizi aldık. Nasıl yardımcı olabiliriz?" style="background: #0a111b; border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-size: 11px; padding: 5px 10px; cursor: pointer;">👋 Karşılama</button>
-        <button type="button" class="admin-quick-chip" data-text="İşleminiz başarıyla tamamlanmıştır. Lütfen kontrol sağlayınız." style="background: #0a111b; border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-size: 11px; padding: 5px 10px; cursor: pointer;">✅ Tamamlandı</button>
-        <button type="button" class="admin-quick-chip" data-text="Gerekli yetkilendirme ve rol tanımlamalarınız Discord sunucumuzda yapılmıştır." style="background: #0a111b; border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-size: 11px; padding: 5px 10px; cursor: pointer;">🔑 Rol/Yetki Verildi</button>
-        <button type="button" class="admin-quick-chip" data-text="Talebiniz teknik ekibimiz tarafından incelenmektedir, lütfen kısa bir süre bekleyiniz." style="background: #0a111b; border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-size: 11px; padding: 5px 10px; cursor: pointer;">⏳ İnceleniyor</button>
+        <button type="button" class="admin-quick-chip" data-text="Merhaba, Monarch Destek Ekibi olarak talebinizi aldık. Nasıl yardımcı olabiliriz?" style="background: #0a111b; border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-size: 11px; padding: 5px 10px; cursor: pointer;">Karşılama</button>
+        <button type="button" class="admin-quick-chip" data-text="İşleminiz başarıyla tamamlanmıştır. Lütfen kontrol sağlayınız." style="background: #0a111b; border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-size: 11px; padding: 5px 10px; cursor: pointer;">Tamamlandı</button>
+        <button type="button" class="admin-quick-chip" data-text="Gerekli yetkilendirme ve rol tanımlamalarınız Discord sunucumuzda yapılmıştır." style="background: #0a111b; border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-size: 11px; padding: 5px 10px; cursor: pointer;">Rol/Yetki Verildi</button>
+        <button type="button" class="admin-quick-chip" data-text="Talebiniz teknik ekibimiz tarafından incelenmektedir, lütfen kısa bir süre bekleyiniz." style="background: #0a111b; border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-size: 11px; padding: 5px 10px; cursor: pointer;">İnceleniyor</button>
       </div>
 
       <textarea id="modalAdminReplyText" rows="4" placeholder="Müşteriye iletilecek resmi destek yanıtınızı detaylı olarak buraya yazın..." style="width: 100%; min-height: 100px; padding: 12px; border: 1px solid var(--border); border-radius: 6px; background: #070d14; color: var(--text); font-family: var(--font-body); font-size: 13px; margin-bottom: 12px; resize: vertical; line-height: 1.5;"></textarea>
       
       <div style="display: flex; gap: 10px;">
-        <button type="button" id="modalAdminSendReplyBtn" style="flex: 2; min-height: 42px; background: #0284c7; border: 0; color: #fff; font: 700 12px var(--font-mono); border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">🚀 Yanıtı Gönder (Site & Discord)</button>
-        <button type="button" id="modalAdminCloseTicketBtn" style="flex: 1; min-height: 42px; background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.4); color: #ef4444; font: 700 12px var(--font-mono); border-radius: 4px; cursor: pointer;">🔒 Talebi Çöz & Kapat</button>
+        <button type="button" id="modalAdminSendReplyBtn" style="flex: 2; min-height: 42px; background: #0284c7; border: 0; color: #fff; font: 700 12px var(--font-mono); border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">Yanıtı Gönder (Site & Discord)</button>
+        <button type="button" id="modalAdminCloseTicketBtn" style="flex: 1; min-height: 42px; background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.4); color: #ef4444; font: 700 12px var(--font-mono); border-radius: 4px; cursor: pointer;">Talebi Çöz & Kapat</button>
       </div>
     </div>
 
@@ -884,7 +884,7 @@
         <span class="login-hero-badge" style="margin-bottom: 2px;">ADMIN CONTROL</span>
         <h3 style="font-family: var(--font-mono); font-size: 18px; color: var(--primary); margin: 0;">Yönetici Profil Özelleştirme</h3>
       </div>
-      <button type="button" onclick="document.querySelector('#adminProfileDialog').close()" style="background: transparent; border: 0; color: var(--text-muted); font-size: 22px; cursor: pointer;">✕</button>
+      <button type="button" onclick="document.querySelector('#adminProfileDialog').close()" style="background: transparent; border: 0; color: var(--text-muted); font-size: 22px; cursor: pointer;">×</button>
     </div>
 
     <form id="adminProfileForm" style="display: grid; gap: 16px;">
@@ -1270,7 +1270,7 @@
       tbody.innerHTML = filtered.map(o => {
         const isSupport = Array.isArray(o.items) && (o.items[0]?.type === 'support' || o.items[0]?.sku === 'support_ticket');
         const itemsSummary = isSupport 
-          ? `<span style="color: #38bdf8; font-weight: 700;">💬 Destek: ${o.items[0]?.subject || 'Genel'}</span>`
+          ? `<span style="color: #38bdf8; font-weight: 700;">Destek: ${o.items[0]?.subject || 'Genel'}</span>`
           : (Array.isArray(o.items) ? o.items.map(i => `${i.title || i.name || 'Ürün'} (x${i.quantity || 1})`).join(', ') : 'Ürün bilgisi yok');
         
         const priceStr = isSupport ? '<span style="color: var(--text-muted);">Destek</span>' : `${o.total_price || o.total_tl || 0} TL`;
@@ -1340,7 +1340,7 @@
           <div style="display: grid; grid-template-columns: 280px 1fr; gap: 20px; align-items: start;">
             <!-- Sol Detaylar Kartı -->
             <div style="background: #0a111b; border: 1px solid var(--border); border-radius: 8px; padding: 18px;">
-              <span style="font: 700 11px var(--font-mono); color: #38bdf8; text-transform: uppercase; display: block; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 6px;">📋 Talep Parametreleri</span>
+              <span style="font: 700 11px var(--font-mono); color: #38bdf8; text-transform: uppercase; display: block; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 6px;">Talep Parametreleri</span>
               
               <div style="margin-bottom: 14px;">
                 <span style="font-size: 11px; color: var(--text-muted); display: block;">Müşteri Profili:</span>
@@ -1380,7 +1380,7 @@
                     <img src="${avatar}" alt="${m.author}" style="width: 40px; height: 40px; border-radius: ${isAdmin ? '6px' : '50%'}; object-fit: cover; border: 2px solid ${isAdmin ? 'rgba(34,197,94,0.4)' : 'rgba(56,189,248,0.4)'}; flex-shrink: 0;" />
                     <div style="flex: 1; background: ${isAdmin ? 'rgba(34,197,94,0.06)' : '#070d14'}; border: 1px solid ${isAdmin ? 'rgba(34,197,94,0.3)' : 'var(--border)'}; border-radius: 8px; padding: 12px 16px;">
                       <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 6px; border-bottom: 1px solid rgba(255,255,255,0.04); padding-bottom: 4px;">
-                        <strong style="color: ${isAdmin ? '#22c55e' : '#38bdf8'}; font-size: 12.5px;">${isAdmin ? '🛡️ ' + (m.author || 'Destek Ekibi') : '👤 ' + (m.author || 'Müşteri')}</strong>
+                        <strong style="color: ${isAdmin ? '#22c55e' : '#38bdf8'}; font-size: 12.5px;">${isAdmin ? '[YÖNETİCİ] ' + (m.author || 'Destek Ekibi') : '[KULLANICI] ' + (m.author || 'Müşteri')}</strong>
                         <span style="color: var(--text-muted); font-size: 10.5px;">${timeStr}</span>
                       </div>
                       <div style="color: var(--text); font-size: 13.5px; line-height: 1.55; white-space: pre-wrap;">${m.text}</div>
@@ -1446,7 +1446,7 @@
           notify('Hata', err.message);
         } finally {
           sendReplyBtn.disabled = false;
-          sendReplyBtn.textContent = '🚀 Yanıtı Gönder (Site & Discord)';
+          sendReplyBtn.textContent = 'Yanıtı Gönder (Site & Discord)';
         }
       });
     }

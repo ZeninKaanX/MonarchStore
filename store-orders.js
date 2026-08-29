@@ -410,7 +410,7 @@ export function bindSupportUI ({ button, dialog, closeButton, form, discordInput
     if (!tickets || tickets.length === 0) {
       ticketsListEl.innerHTML = `
         <div style="text-align: center; padding: 50px 20px; background: rgba(7, 13, 20, 0.6); border: 1px solid var(--border); border-radius: 8px;">
-          <div style="font-size: 32px; margin-bottom: 12px; color: var(--text-muted);">📋</div>
+          <div style="font-size: 32px; margin-bottom: 12px; color: var(--text-muted);"></div>
           <p style="margin-bottom: 16px; color: var(--text-muted); font-size: 14px;">Henüz açılmış bir destek talebiniz bulunmuyor.</p>
           <button type="button" class="account-submit" id="supportEmptyNewBtn" style="display: inline-block; width: auto; padding: 0 24px;">Yeni Destek Talebi Aç</button>
         </div>
@@ -524,7 +524,7 @@ export function bindSupportUI ({ button, dialog, closeButton, form, discordInput
         chatCloseTicketBtn.style.opacity = '0.5'
       } else {
         chatCloseTicketBtn.disabled = false
-        chatCloseTicketBtn.textContent = '🔒 Talebi Kapat'
+        chatCloseTicketBtn.textContent = 'Talebi Kapat'
         chatCloseTicketBtn.style.opacity = '1'
       }
     }
@@ -643,7 +643,7 @@ export function bindSupportUI ({ button, dialog, closeButton, form, discordInput
     } catch (err) {
       notify('Hata', err?.message || 'Talep kapatılamadı.')
       chatCloseTicketBtn.disabled = false
-      chatCloseTicketBtn.textContent = '🔒 Talebi Kapat'
+      chatCloseTicketBtn.textContent = 'Talebi Kapat'
     }
   })
 

@@ -106,6 +106,7 @@
       .cat-tabs { display: flex; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid var(--line); padding-bottom: 16px; }
       .cat-tab { display: inline-flex; align-items: center; gap: 9px; padding: 9px 18px; border: 1px solid var(--line); background: var(--white); color: var(--ink); font: 700 11px "Space Mono", monospace; text-transform: uppercase; letter-spacing: .04em; transition: all .18s ease; border-radius: 4px; }
       .cat-tab-icon { width: 16px; height: 16px; stroke: currentColor; stroke-width: 1.8; fill: none; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; opacity: 0.85; transition: transform .18s, opacity .18s; }
+      .cat-tab-icon[fill="currentColor"] { stroke: none; }
       .cat-tab:hover .cat-tab-icon, .cat-tab.active .cat-tab-icon { opacity: 1; transform: scale(1.1); }
       .cat-tab:hover, .cat-tab.active { border-color: var(--blue); color: var(--blue); background: rgba(62, 131, 184, 0.08); box-shadow: 0 4px 14px rgba(62, 131, 184, 0.08); }
 
@@ -290,7 +291,7 @@
       <nav class="container cat-nav" id="kategoriler" aria-label="Kategori Gezintisi">
         <div class="cat-tabs">
           <a class="cat-tab active" href="#botlar">
-            <svg class="cat-tab-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="8" width="16" height="12" rx="3"></rect><path d="M9 13h6"></path><path d="M12 4v4"></path><circle cx="12" cy="3" r="1.2" fill="currentColor"></circle><path d="M2 14h2M20 14h2"></path></svg>
+            <svg class="cat-tab-icon" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path fill-rule="evenodd" d="M2 2h20v20H2V2zm4 4h3v5H6V6zm9 0h3v5h-3V6zm-5 4h4v6h-4v-6zm-2 3h2v6H8v-6zm6 0h2v6h-2v-6z"/></svg>
             <span>Minecraft Botları</span>
           </a>
           <a class="cat-tab" href="#uiux">

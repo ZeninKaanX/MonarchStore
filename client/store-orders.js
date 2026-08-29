@@ -16,10 +16,17 @@ function getSupabase () {
 }
 
 let visitorPromise
-async function ensureVisitor () {
+async function ensureVisitor (forceNew = false) {
+  const supabase = getSupabase()
+  if (forceNew) {
+    visitorPromise = null
+    await supabase.auth.signOut().catch(() => null)
+    const { data, error } = await supabase.auth.signInAnonymously()
+    if (error) throw new Error('Sipariş oturumu başlatılamadı.')
+    return data.user
+  }
   if (visitorPromise) return visitorPromise
   visitorPromise = (async () => {
-    const supabase = getSupabase()
     const { data: sessionData } = await supabase.auth.getSession()
     if (sessionData.session?.user) return sessionData.session.user
     const { data, error } = await supabase.auth.signInAnonymously()
@@ -184,11 +191,24 @@ export function bindOrderUI ({ cartButton, cartCount, dialog, closeButton, form,
     }
     update()
     if (!cart.length) return
+
+    // 5 Dakika Bekleme Süresi Kontrolü
+    const lastOrderTime = Number(localStorage.getItem('monarch_last_order_time') || 0)
+    const cooldownMs = 5 * 60 * 1000 // 5 dakika
+    const elapsed = Date.now() - lastOrderTime
+    if (elapsed < cooldownMs) {
+      const remainSec = Math.ceil((cooldownMs - elapsed) / 1000)
+      const min = Math.floor(remainSec / 60)
+      const sec = remainSec % 60
+      notify('Bekleme Süresi (5 Dk)', `Yeni bir talep açmak için lütfen ${min} dk ${sec} sn bekleyin.`)
+      return
+    }
+
     submitButton.disabled = true
     submitButton.textContent = 'Talep gönderiliyor…'
     try {
       const supabase = getSupabase()
-      const user = await ensureVisitor()
+      const user = await ensureVisitor(true)
       const items = summarizeCart(cart)
       const { data, error } = await supabase.from('order_requests').insert({
         visitor_id: user.id,
@@ -201,6 +221,7 @@ export function bindOrderUI ({ cartButton, cartCount, dialog, closeButton, form,
         if (error.code === '23505') throw new Error('Zaten işlenmekte olan bir talebin var. Discord ticket kanalını kontrol et.')
         throw new Error('Talep şu an gönderilemedi. Birkaç dakika sonra tekrar dene.')
       }
+      localStorage.setItem('monarch_last_order_time', Date.now().toString())
       cart.splice(0, cart.length)
       update()
       dialog.close()

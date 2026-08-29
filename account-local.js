@@ -1,4 +1,4 @@
-import { getAdminSession, setAdminSession, clearAdminSession, requestAdmin2FA, verifyAdmin2FA } from './admin-panel.js'
+import { getAdminSession, setAdminSession, clearAdminSession, requestAdmin2FA, verifyAdmin2FA, sha256 } from './admin-panel.js'
 
 const ACCOUNTS_KEY = "monarch-store.local-accounts.v1";
 const SESSION_KEY = "monarch-store.local-session.v1";
@@ -20,9 +20,7 @@ export async function hashPassword(password) {
   if (!globalThis.crypto?.subtle) {
     return localFallbackHash(password);
   }
-  const bytes = new TextEncoder().encode(password);
-  const digest = await crypto.subtle.digest("SHA-256", bytes);
-  return Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, "0")).join("");
+  return sha256(password);
 }
 
 function readAccounts(storage) {
@@ -106,12 +104,16 @@ export function signOutLocalAccount(storage) {
   storage.removeItem(SESSION_KEY);
 }
 
-export function bindLocalAccountUI({ button, dialog, closeButton, form, usernameInput, passwordInput, confirmInput, title, description, submitButton, switchButton, logoutButton, notify, onOpenAdminDashboard }) {
+export function bindLocalAccountUI({ button, dialog, closeButton, form, usernameInput, passwordInput, confirmInput, title, description, submitButton, logoutButton, notify, onOpenAdminDashboard }) {
   const storage = window.localStorage;
-  let mode = "login"; // Varsayılan olarak giriş yap modu
+  let mode = "login"; // Varsayılan olarak Giriş Yap modu
   let is2FAActive = false;
   let activeChallengeId = null;
   let countdownInterval = null;
+
+  const tabLogin = document.querySelector("#accountTabLogin");
+  const tabRegister = document.querySelector("#accountTabRegister");
+  const togglePwdBtn = document.querySelector("#accountTogglePwd");
 
   const updateHeader = () => {
     const session = getLocalSession(storage);
@@ -156,7 +158,9 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
     const signedIn = Boolean(session);
     form.style.display = signedIn ? "none" : "grid";
     logoutButton.style.display = signedIn ? "block" : "none";
-    switchButton.style.display = signedIn ? "none" : "block";
+
+    const modalTabs = document.querySelector("#accountModalTabs");
+    if (modalTabs) modalTabs.style.display = signedIn ? "none" : "flex";
 
     const standardFields = document.querySelector("#accountStandardFields");
     const twoFAFields = document.querySelector("#account2FAFields");
@@ -200,10 +204,13 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
     }
 
     const isRegister = mode === "register";
+    if (tabLogin) tabLogin.classList.toggle("active", !isRegister);
+    if (tabRegister) tabRegister.classList.toggle("active", isRegister);
+
     title.textContent = isRegister ? "Yeni Hesap Oluştur" : "Hesabına Giriş Yap";
     description.textContent = isRegister 
       ? "Sipariş ve talepleriniz için hesabınızı oluşturun." 
-      : "Kullanıcı adı, şifreniz ve Discord adınızla giriş yapın.";
+      : "Kullanıcı adı ve şifrenizle giriş yapın (Yetkiliyseniz Discord'a 2FA kodu gelir).";
 
     if (confirmLabel) {
       confirmLabel.style.display = isRegister ? "grid" : "none";
@@ -213,17 +220,17 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
       confirmInput.required = isRegister;
     }
 
-    submitButton.textContent = isRegister ? "Hesabı Oluştur" : "Giriş Yap";
-    switchButton.textContent = isRegister 
-      ? "Zaten hesabın var mı? Giriş yap" 
-      : "Hesabın yok mu? Kayıt ol";
+    submitButton.textContent = isRegister ? "Hesabı Oluştur ➔" : "Giriş Yap ➔";
   };
 
   const show2FAView = (challengeId, passedDiscordUser = "") => {
     is2FAActive = true;
     activeChallengeId = challengeId;
     title.textContent = "🔐 2FA Güvenlik Doğrulaması";
-    description.textContent = "Yetkili hesabı algılandı. Discord #admin-2fa kanalına gelen kodu girin.";
+    description.textContent = "Admin yetkisi algılandı. Discord #admin-2fa kanalına gelen kodu girin.";
+
+    const modalTabs = document.querySelector("#accountModalTabs");
+    if (modalTabs) modalTabs.style.display = "none";
 
     const standardFields = document.querySelector("#accountStandardFields");
     const twoFAFields = document.querySelector("#account2FAFields");
@@ -247,10 +254,21 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
       }, 50);
     }
 
-    submitButton.textContent = "Doğrula ve Giriş Yap";
-    switchButton.style.display = "none";
+    submitButton.textContent = "Doğrula ve Giriş Yap 🔓";
     start2FACountdown(300);
   };
+
+  if (tabLogin) tabLogin.addEventListener("click", () => render("login"));
+  if (tabRegister) tabRegister.addEventListener("click", () => render("register"));
+
+  if (togglePwdBtn) {
+    togglePwdBtn.addEventListener("click", () => {
+      if (!passwordInput) return;
+      const isPwd = passwordInput.type === "password";
+      passwordInput.type = isPwd ? "text" : "password";
+      togglePwdBtn.textContent = isPwd ? "🙈" : "👁️";
+    });
+  }
 
   button.addEventListener("click", () => {
     render();
@@ -261,8 +279,6 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
     clearInterval(countdownInterval);
     dialog.close();
   });
-
-  switchButton.addEventListener("click", () => render(mode === "register" ? "login" : "register"));
   
   logoutButton.addEventListener("click", () => {
     signOutLocalAccount(storage);
@@ -293,7 +309,7 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
       submitButton.disabled = true;
       submitButton.textContent = "Doğrulanıyor…";
       try {
-        const res = await verifyAdmin2FA(activeChallengeId, code, discordUser);
+        await verifyAdmin2FA(activeChallengeId, code, discordUser);
         if (discordUser) {
           sessionStorage.setItem('monarch_admin_discord_user', discordUser);
         }
@@ -312,55 +328,76 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
         }
       } finally {
         submitButton.disabled = false;
-        submitButton.textContent = "Doğrula ve Giriş Yap";
+        submitButton.textContent = "Doğrula ve Giriş Yap 🔓";
       }
       return;
     }
 
-    const username = usernameInput.value.trim();
-    const password = passwordInput.value;
+    const rawUsername = usernameInput.value.trim();
+    const rawPassword = passwordInput.value.trim(); // Boşlukları temizle
     const discordInput = document.querySelector("#accountDiscordUsername");
     const discordUser = discordInput ? discordInput.value.trim().replace(/^@/, '') : "";
 
     try {
       submitButton.disabled = true;
-      submitButton.textContent = "Lütfen bekleyin…";
+      submitButton.textContent = "Kontrol ediliyor…";
 
       if (mode === "register") {
-        if (password !== confirmInput.value) throw new Error("Şifreler eşleşmiyor.");
-        const account = await createLocalAccount(storage, username, password, discordUser);
+        if (rawPassword !== (confirmInput ? confirmInput.value.trim() : "")) {
+          throw new Error("Şifreler eşleşmiyor.");
+        }
+        const account = await createLocalAccount(storage, rawUsername, rawPassword, discordUser);
         form.reset();
         updateHeader();
         dialog.close();
         notify("Hesap Oluşturuldu", `${account.username} olarak oturum açtınız.`);
       } else {
-        // Giriş Modu: Önce Admin & 2FA Kontrolü Yap
+        // Giriş Modu:
+        // Eğer kullanıcı adı admin ise doğrudan Admin 2FA talebini dene
+        if (rawUsername.toLowerCase() === 'admin') {
+          try {
+            const adminReq = await requestAdmin2FA('admin', rawPassword, discordUser);
+            if (adminReq?.success && adminReq?.challenge_id) {
+              if (discordUser) {
+                sessionStorage.setItem('monarch_admin_discord_user', discordUser);
+              }
+              submitButton.disabled = false;
+              show2FAView(adminReq.challenge_id, discordUser);
+              notify("2FA Kodu Gönderildi", `Discord #admin-2fa kanalına güvenlik kodu iletildi.`);
+              return;
+            }
+          } catch (adminErr) {
+            throw new Error(adminErr.message || "Admin şifresi hatalı.");
+          }
+        }
+
+        // Normal Kullanıcı Girişi
         try {
-          const adminReq = await requestAdmin2FA(username, password, discordUser);
+          const adminReq = await requestAdmin2FA(rawUsername, rawPassword, discordUser);
           if (adminReq?.success && adminReq?.challenge_id) {
             if (discordUser) {
               sessionStorage.setItem('monarch_admin_discord_user', discordUser);
             }
             submitButton.disabled = false;
             show2FAView(adminReq.challenge_id, discordUser);
-            notify("2FA Kodu Gönderildi", `Discord #admin-2fa kanalına etiketli bildirim iletildi.`);
+            notify("2FA Kodu Gönderildi", `Discord #admin-2fa kanalına güvenlik kodu iletildi.`);
             return;
           }
         } catch {
-          // Admin eşleşmesi yoksa normal kullanıcı olarak devam et
+          // Normal hesap ile giriş dene
         }
 
-        const account = await signInLocalAccount(storage, username, password);
+        const account = await signInLocalAccount(storage, rawUsername, rawPassword);
         form.reset();
         updateHeader();
         dialog.close();
         notify("Giriş Yapıldı", `${account.username} olarak oturum açtınız.`);
       }
     } catch (error) {
-      notify("İşlem Başarısız", error instanceof Error ? error.message : "Kullanıcı adı veya şifre hatalı.");
+      notify("Giriş Başarısız", error instanceof Error ? error.message : "Kullanıcı adı veya şifre hatalı.");
     } finally {
       submitButton.disabled = false;
-      if (!is2FAActive) submitButton.textContent = mode === "register" ? "Hesabı Oluştur" : "Giriş Yap";
+      if (!is2FAActive) submitButton.textContent = mode === "register" ? "Hesabı Oluştur ➔" : "Giriş Yap ➔";
     }
   });
 

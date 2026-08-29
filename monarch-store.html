@@ -254,8 +254,18 @@
       .account-dialog::backdrop { background: rgba(11, 25, 37, .56); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
       .account-panel { padding: 27px; }
       .dialog-close { position: absolute; top: 12px; right: 13px; width: 34px; height: 34px; border: 0; color: #5e6b79; background: transparent; font-size: 24px; line-height: 1; cursor: pointer; }
-      .account-panel h2 { margin: 0; padding-right: 32px; font-size: 26px; }
-      .account-panel > p { margin: 9px 0 20px; color: var(--muted); font-size: 13px; line-height: 1.65; }
+      .account-panel h2 { margin: 0; padding-right: 32px; font-size: 24px; }
+      .account-panel > p { margin: 6px 0 16px; color: var(--muted); font-size: 12.5px; line-height: 1.6; }
+      
+      .account-modal-tabs { display: flex; gap: 6px; margin-bottom: 16px; border-bottom: 1px solid var(--line); padding-bottom: 8px; }
+      .account-modal-tab { flex: 1; padding: 8px 12px; border: 1px solid var(--line); background: #f8fafc; color: var(--muted); font: 700 11px "Space Mono", monospace; border-radius: 4px; transition: all .16s; text-align: center; }
+      .account-modal-tab.active, .account-modal-tab:hover { border-color: var(--blue); color: var(--blue); background: rgba(62, 131, 184, 0.1); }
+      
+      .pwd-input-wrap { position: relative; display: flex; align-items: center; width: 100%; }
+      .pwd-input-wrap input { width: 100%; padding-right: 42px !important; }
+      .pwd-toggle-btn { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); width: 30px; height: 30px; border: 0; background: transparent; cursor: pointer; display: grid; place-items: center; font-size: 14px; color: var(--muted); border-radius: 3px; }
+      .pwd-toggle-btn:hover { background: rgba(0,0,0,0.05); color: var(--ink); }
+
       .account-form { display: grid; gap: 13px; }
       .account-form label { display: grid; gap: 6px; color: #43505f; font-size: 12px; font-weight: 800; }
       .account-form input { width: 100%; min-height: 43px; padding: 0 12px; border: 1px solid #cbd4de; color: var(--ink); background: #fff; font: inherit; border-radius: 2px; }
@@ -677,6 +687,12 @@
         <h2 id="accountTitle">Hesabına Giriş Yap</h2>
         <p id="accountDescription">Kullanıcı adı ve şifrenizi girerek oturum açın.</p>
         
+        <!-- Giriş / Kayıt Sekmeleri -->
+        <div class="account-modal-tabs" id="accountModalTabs">
+          <button type="button" class="account-modal-tab active" id="accountTabLogin">Giriş Yap</button>
+          <button type="button" class="account-modal-tab" id="accountTabRegister">Yeni Kayıt</button>
+        </div>
+
         <!-- Admin İçin Panel Açma Butonu -->
         <button class="account-admin-open-btn" id="accountOpenAdminBtn" type="button" style="display: none;">🛡️ Yönetim Panelini Aç</button>
 
@@ -684,7 +700,13 @@
           <!-- Standart Giriş/Kayıt Alanları -->
           <div id="accountStandardFields" style="display: grid; gap: 13px;">
             <label>Kullanıcı adı<input id="accountUsername" name="username" autocomplete="username" minlength="3" maxlength="24" required /></label>
-            <label>Şifre<input id="accountPassword" name="password" type="password" autocomplete="current-password" minlength="6" required /></label>
+            <label>
+              Şifre
+              <div class="pwd-input-wrap">
+                <input id="accountPassword" name="password" type="password" autocomplete="current-password" minlength="6" required />
+                <button type="button" class="pwd-toggle-btn" id="accountTogglePwd" title="Şifreyi Göster/Gizle" aria-label="Şifreyi Göster">👁️</button>
+              </div>
+            </label>
             <label id="accountDiscordLabel">Discord Kullanıcı Adınız<input id="accountDiscordUsername" name="discordUsername" autocomplete="off" placeholder="Örn: eververity" /></label>
             <label id="accountConfirmLabel" style="display: none;">Şifre tekrar<input id="accountPasswordConfirm" name="passwordConfirm" type="password" autocomplete="new-password" minlength="6" disabled /></label>
           </div>
@@ -706,9 +728,8 @@
             </label>
           </div>
 
-          <button class="account-submit" id="accountSubmit" type="submit">Giriş Yap</button>
+          <button class="account-submit" id="accountSubmit" type="submit">Giriş Yap ➔</button>
         </form>
-        <button class="account-switch" id="accountSwitch" type="button">Hesabın yok mu? Kayıt ol</button>
         <button class="account-logout" id="accountLogout" type="button" style="display: none;">Bu cihazda çıkış yap</button>
         <p class="account-note">Monarch Store kullanıcı ve sipariş yönetim sistemi.</p>
       </div>
@@ -781,9 +802,9 @@
 
     <script type="module" src="./theme-toggle.js"></script>
     <script type="module">
-      import { bindLocalAccountUI } from './account-local.js?v=20260829_discord_tag_v1';
+      import { bindLocalAccountUI } from './account-local.js?v=20260829_login_tabs_v2';
       import { bindOrderUI, bindCommunityStats } from './store-orders.js';
-      import { initAdminDashboardUI } from './admin-panel.js?v=20260829_discord_tag_v1';
+      import { initAdminDashboardUI } from './admin-panel.js?v=20260829_login_tabs_v2';
 
       const cartCount = document.querySelector('#cartCount');
       const toast = document.querySelector('#toast');

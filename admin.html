@@ -856,9 +856,11 @@
       clearAdminSession, 
       fetchAdminOrders, 
       updateOrderStatusRPC, 
+      cancelSingleOrder,
+      cancelAllActiveOrders,
       exportOrdersToCSV, 
       getStatusBadgeHTML 
-    } from './admin-panel.js?v=20260829_v2';
+    } from './admin-panel.js?v=20260829_atomic_v4';
 
     const loginRoot = document.querySelector('#adminLoginRoot');
     const appRoot = document.querySelector('#adminAppRoot');
@@ -1164,7 +1166,7 @@
       const code = activeDetailOrder.order_code;
       if (!confirm(`'${code}' kodlu siparisi silmek istediginize emin misiniz?`)) return;
       try {
-        await updateOrderStatusRPC(code, 'cancelled', 'Founder Silme');
+        await cancelSingleOrder(code);
         notify('Silindi', `${code} siparisi silindi.`);
         document.querySelector('#adminOrderDetailDialog').close();
         loadOrders();
@@ -1178,16 +1180,19 @@
       if (!activeList.length) return notify('Bilgi', 'Silinecek siparis bulunmuyor.');
       if (!confirm(`DIKKAT: Listedeki ${activeList.length} adet siparisin TUMU silinecek! Onayliyor musunuz?`)) return;
       
+      const btn = document.querySelector('#deleteAllBtn');
+      if (btn) { btn.disabled = true; btn.textContent = 'Siliniyor…'; }
       notify('Siliniyor', 'Tum siparisler temizleniyor…');
+
       try {
-        for (const ord of activeList) {
-          await updateOrderStatusRPC(ord.order_code, 'cancelled', 'Founder Toplu Silme');
-        }
-        notify('Temizlendi', 'Tum siparisler basariyla silindi.');
-        loadOrders();
+        const res = await cancelAllActiveOrders(activeList);
+        notify('Temizlendi', `${res.count} adet siparis basariyla silindi.`);
+        await loadOrders();
       } catch (err) {
         notify('Hata', err.message);
-        loadOrders();
+        await loadOrders();
+      } finally {
+        if (btn) { btn.disabled = false; btn.textContent = 'Tumunu Sil'; }
       }
     });
 

@@ -112,7 +112,7 @@ export async function updateOrderStatus (orderCode, newStatus, notes = null) {
   const supabase = getSupabase()
   const { data, error } = await supabase.rpc('monarch_admin_update_order_status', {
     p_session_token: session.token,
-    p_order_code: orderCode,
+    p_order_code: String(orderCode).trim().toUpperCase(),
     p_new_status: newStatus,
     p_notes: notes
   })
@@ -123,6 +123,33 @@ export async function updateOrderStatus (orderCode, newStatus, notes = null) {
 }
 
 export const updateOrderStatusRPC = updateOrderStatus
+
+export async function cancelSingleOrder (orderCode) {
+  return updateOrderStatus(orderCode, 'cancelled', 'Founder Silme')
+}
+
+export async function cancelAllActiveOrders (orders) {
+  const session = getAdminSession()
+  if (!session) throw new Error('Oturum süresi doldu. Lütfen tekrar giriş yapın.')
+  const supabase = getSupabase()
+
+  const targets = (orders || []).filter(o => o.status !== 'cancelled')
+  if (!targets.length) return { success: true, count: 0 }
+
+  const results = await Promise.allSettled(
+    targets.map(o => 
+      supabase.rpc('monarch_admin_update_order_status', {
+        p_session_token: session.token,
+        p_order_code: String(o.order_code).trim().toUpperCase(),
+        p_new_status: 'cancelled',
+        p_notes: 'Founder Toplu Silme'
+      })
+    )
+  )
+
+  const succeeded = results.filter(r => r.status === 'fulfilled' && r.value?.data?.success).length
+  return { success: true, count: succeeded }
+}
 
 export function getStatusBadgeHTML (status) {
   const map = {

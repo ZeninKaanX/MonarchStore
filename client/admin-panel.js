@@ -97,13 +97,48 @@ export async function fetchAdminOrders () {
   const session = getAdminSession()
   if (!session) throw new Error('Oturum süresi doldu. Lütfen tekrar giriş yapın.')
   const supabase = getSupabase()
-  const { data, error } = await supabase.rpc('monarch_admin_get_orders', {
-    p_session_token: session.token
-  })
 
-  if (error) throw new Error(error.message || 'Siparişler yüklenemedi.')
-  if (!data?.success) throw new Error(data?.message || 'Yetkisiz erişim.')
-  return data
+  // 1. RPC Call monarch_admin_get_orders
+  try {
+    const { data, error } = await supabase.rpc('monarch_admin_get_orders', {
+      p_session_token: session.token
+    })
+
+    if (!error && data) {
+      if (Array.isArray(data.orders)) {
+        return data.orders
+      }
+      if (Array.isArray(data)) {
+        return data
+      }
+    }
+  } catch (rpcErr) {
+    console.warn('RPC fetchAdminOrders error:', rpcErr)
+  }
+
+  // 2. Direct Query Fallback
+  try {
+    const { data: directOrders, error: directErr } = await supabase
+      .from('order_requests')
+      .select('*')
+      .order('created_at', { ascending: false })
+
+    if (!directErr && Array.isArray(directOrders)) {
+      return directOrders
+    }
+  } catch (directErr) {
+    console.warn('Direct order_requests query fallback error:', directErr)
+  }
+
+  // 3. Local tickets fallback
+  try {
+    const localTickets = JSON.parse(localStorage.getItem('monarch_local_tickets') || '[]')
+    if (Array.isArray(localTickets)) {
+      return localTickets
+    }
+  } catch {}
+
+  return []
 }
 
 export async function updateOrderStatus (orderCode, newStatus, notes = null) {

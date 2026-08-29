@@ -1221,8 +1221,16 @@
 
     async function loadOrders() {
       try {
-        const orders = await fetchAdminOrders();
-        allOrders = orders || [];
+        const res = await fetchAdminOrders();
+        if (Array.isArray(res)) {
+          allOrders = res;
+        } else if (res && Array.isArray(res.orders)) {
+          allOrders = res.orders;
+        } else if (res && typeof res === 'object') {
+          allOrders = Object.values(res).filter(item => item && typeof item === 'object' && item.order_code);
+        } else {
+          allOrders = [];
+        }
         updateMetrics();
         renderTable();
       } catch (err) {
@@ -1235,6 +1243,7 @@
     }
 
     function updateMetrics() {
+      if (!Array.isArray(allOrders)) allOrders = [];
       document.querySelector('#statTotalOrders').textContent = allOrders.length;
       
       const totalRev = allOrders
@@ -1250,6 +1259,7 @@
     }
 
     function renderTable() {
+      if (!Array.isArray(allOrders)) allOrders = [];
       const search = document.querySelector('#orderSearchInput').value.trim().toLowerCase();
       const filtered = allOrders.filter(o => {
         const isSupport = Array.isArray(o.items) && (o.items[0]?.type === 'support' || o.items[0]?.sku === 'support_ticket');
@@ -1484,18 +1494,18 @@
     });
 
     document.querySelector('#exportBtn').addEventListener('click', () => {
-      if (!allOrders.length) return notify('Uyarı', 'İndirilecek sipariş yok.');
+      if (!Array.isArray(allOrders) || !allOrders.length) return notify('Uyarı', 'İndirilecek sipariş yok.');
       exportOrdersToCSV(allOrders);
       notify('İndirildi', 'Siparişler CSV olarak indirildi.');
     });
 
     document.querySelector('#deleteAllBtn').addEventListener('click', async () => {
-      if (!allOrders.length) return notify('Bilgi', 'Silinecek sipariş bulunmuyor.');
+      if (!Array.isArray(allOrders) || !allOrders.length) return notify('Bilgi', 'Silinecek sipariş bulunmuyor.');
       if (!confirm(`DİKKAT: Aktif ${allOrders.length} adet siparişi silmek/iptal etmek istediğinize emin misiniz?`)) return;
 
       try {
         const res = await cancelAllActiveOrders(allOrders);
-        notify('Başarılı', `${res.count} sipariş iptal edildi / silindi.`);
+        notify('Başarılı', `${res.count || 0} sipariş iptal edildi / silindi.`);
         loadOrders();
       } catch (err) {
         notify('Hata', err.message);

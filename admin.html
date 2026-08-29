@@ -1051,6 +1051,9 @@
       <button type="button" id="modalActionDone" style="flex: 1; padding: 10px; background: #16a34a; border: 0; color: #fff; font: 700 12px var(--font-mono); border-radius: 6px; cursor: pointer;">Tamamla (Kapat)</button>
       <button type="button" id="modalActionCancel" style="flex: 1; padding: 10px; background: #e11d48; border: 0; color: #fff; font: 700 12px var(--font-mono); border-radius: 6px; cursor: pointer;">İptal Et</button>
     </div>
+    <div style="margin-top: 10px;">
+      <button type="button" id="modalActionWhatsApp" style="width: 100%; padding: 10px; background: #15803d; border: 0; color: #fff; font: 700 12px var(--font-mono); border-radius: 6px; cursor: pointer;">WhatsApp Bildirimi Gönder</button>
+    </div>
   </dialog>
 
   <!-- Toast -->
@@ -1430,6 +1433,19 @@
       } catch (err) {
         notify('Hata', err.message);
       }
+    });
+
+    document.querySelector('#modalActionWhatsApp')?.addEventListener('click', () => {
+      if (!activeDetailOrder) return;
+      const order = activeDetailOrder;
+      const items = Array.isArray(order.items) 
+        ? order.items.map(i => `• ${i.title || i.name} (x${i.quantity || 1})`).join('\n')
+        : '—';
+      const text = `*Monarch Store Sipariş Bildirimi*\nMerhaba,\n\nAlıcısı *@${order.discord_username || 'Müşteri'}* olan ve Monarch Store üzerinden sipariş edilen talebiniz işleme alınmıştır. 📦\n\n*Sipariş Kodu:* ${order.order_code}\n*Toplam Tutar:* ${order.total_price} TL\n*Sipariş Kalemleri:*\n${items}\n\n*Tarih:* ${new Date(order.created_at).toLocaleString('tr-TR')}\n\nSiparişinizin durumunu ve yönetim detaylarını aşağıdaki panelden takip edebilirsiniz:\nhttp://astralissaga.xyz/admin.html`;
+      
+      const adminNumbers = ['905488282882', '905517474118', '905065056589'];
+      const targetPhone = adminNumbers[0];
+      window.open(`https://api.whatsapp.com/send?phone=${targetPhone}&text=${encodeURIComponent(text)}`, '_blank');
     });
 
     // Başlangıç Kontrolü

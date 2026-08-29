@@ -114,8 +114,8 @@ begin
     return jsonb_build_object('success', false, 'message', 'Geçersiz veya süresi dolmuş 2FA kodu.');
   end if;
 
-  -- Oturum tokenı üret (12 saat geçerli)
-  v_session_token := encode(gen_random_bytes(32), 'hex');
+  -- Oturum tokenı üret (12 saat geçerli - 64 karakter)
+  v_session_token := replace(gen_random_uuid()::text, '-', '') || replace(gen_random_uuid()::text, '-', '');
 
   update public.monarch_admin_2fa
   set consumed = true,

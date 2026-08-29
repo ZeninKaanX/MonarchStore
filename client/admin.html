@@ -1242,14 +1242,31 @@
             createdAt: new Date().toISOString()
           });
 
-          // Supabase'de güncelle
-          const { data: updated, error } = await supabaseClient.from('order_requests')
-            .update({ items, status: 'validated' })
-            .eq('id', activeDetailOrder.id)
-            .select('*')
-            .single();
+          // Supabase'de güncelle (RPC & Direct Fallback)
+          let updated = null;
+          try {
+            const { data: rpcRes, error: rpcErr } = await supabaseClient.rpc('monarch_append_ticket_message', {
+              p_order_code: activeDetailOrder.order_code,
+              p_sender: 'admin',
+              p_author: author,
+              p_text: text
+            });
+            if (!rpcErr && rpcRes?.success && rpcRes?.order) {
+              updated = rpcRes.order;
+            }
+          } catch (rpcErr) {
+            console.warn('Admin RPC append fallback:', rpcErr);
+          }
 
-          if (error) throw error;
+          if (!updated) {
+            const { data: directUpd, error } = await supabaseClient.from('order_requests')
+              .update({ items, status: 'validated' })
+              .eq('id', activeDetailOrder.id)
+              .select('*')
+              .single();
+            if (error) throw error;
+            updated = directUpd;
+          }
 
           activeDetailOrder = updated;
           if (textIn) textIn.value = '';

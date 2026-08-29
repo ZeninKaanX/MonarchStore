@@ -614,9 +614,8 @@ export function bindLocalAccountUI({
   }
 
   // Destek Taleplerimi Aç Kısayolu
-  const profileOpenSupportBtn = document.querySelector("#profileOpenSupportBtn");
-  if (profileOpenSupportBtn) {
-    profileOpenSupportBtn.addEventListener("click", () => {
+  document.querySelectorAll("#profileOpenSupportBtn, .btn-open-support").forEach(btn => {
+    btn.addEventListener("click", () => {
       dialog.close();
       const supportDialog = document.querySelector("#supportDialog");
       if (supportDialog) {
@@ -625,7 +624,7 @@ export function bindLocalAccountUI({
         if (tabTickets) tabTickets.click();
       }
     });
-  }
+  });
 
   button.addEventListener("click", () => {
     const session = getLocalSession(storage);

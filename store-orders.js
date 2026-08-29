@@ -284,6 +284,21 @@ export async function sendUserTicketReply (orderCode, messageText, authorName = 
   localStorage.setItem(cacheKey, JSON.stringify(cachedMessages))
 
   try {
+    const { data: rpcData, error: rpcError } = await supabase.rpc('monarch_append_ticket_message', {
+      p_order_code: cleanCode,
+      p_sender: 'user',
+      p_author: authorName,
+      p_text: messageText.trim()
+    })
+
+    if (!rpcError && rpcData?.success && rpcData?.order) {
+      return rpcData.order
+    }
+  } catch (rpcErr) {
+    console.warn('RPC append message fallback to local thread:', rpcErr)
+  }
+
+  try {
     const { data: ticket } = await supabase.from('order_requests')
       .select('*')
       .eq('order_code', cleanCode)
@@ -294,16 +309,47 @@ export async function sendUserTicketReply (orderCode, messageText, authorName = 
       items[0].messages = Array.isArray(items[0].messages) ? [...items[0].messages] : []
       items[0].messages.push(newMsg)
 
-      await supabase.from('order_requests')
+      const { data: updated } = await supabase.from('order_requests')
         .update({ items })
         .eq('order_code', cleanCode)
+        .select('*')
+        .single()
+
+      if (updated) return updated
     }
-  } catch {}
+  } catch (err) {
+    console.warn('Supabase order update fallback:', err)
+  }
 
   return {
     order_code: cleanCode,
+    status: 'validated',
+    created_at: new Date().toISOString(),
     items: [{ messages: cachedMessages }]
   }
+}
+
+export async function closeUserTicket (orderCode) {
+  const supabase = getSupabase()
+  const cleanCode = (orderCode || '').trim().toUpperCase()
+
+  try {
+    await supabase.from('order_requests')
+      .update({ status: 'closed', closed_at: new Date().toISOString() })
+      .eq('order_code', cleanCode)
+  } catch (err) {
+    console.warn('Close ticket error:', err)
+  }
+
+  // Update cached status
+  const cachedTickets = JSON.parse(localStorage.getItem('monarch_local_tickets') || '[]')
+  const found = cachedTickets.find(t => (t.order_code || '').toUpperCase() === cleanCode)
+  if (found) {
+    found.status = 'closed'
+    localStorage.setItem('monarch_local_tickets', JSON.stringify(cachedTickets))
+  }
+
+  return true
 }
 
 export function bindSupportUI ({ button, dialog, closeButton, form, discordInput, subjectInput, messageInput, submitButton, notify }) {
@@ -312,6 +358,7 @@ export function bindSupportUI ({ button, dialog, closeButton, form, discordInput
   let activeChatTicket = null
   const tabNew = document.querySelector('#supportTabNew')
   const tabMyTickets = document.querySelector('#supportTabMyTickets')
+  const breadcrumbSub = document.querySelector('#supportBreadcrumbSub')
   const viewNew = document.querySelector('#supportViewNew')
   const viewList = document.querySelector('#supportViewList')
   const viewChat = document.querySelector('#supportViewChat')
@@ -321,6 +368,7 @@ export function bindSupportUI ({ button, dialog, closeButton, form, discordInput
   const chatReplyForm = document.querySelector('#supportChatReplyForm')
   const chatReplyInput = document.querySelector('#supportChatReplyInput')
   const chatReplySubmit = document.querySelector('#supportChatReplySubmit')
+  const chatCloseTicketBtn = document.querySelector('#supportChatCloseTicketBtn')
   const chatTitleEl = document.querySelector('#supportChatTitle')
   const chatStatusEl = document.querySelector('#supportChatStatus')
 
@@ -331,6 +379,11 @@ export function bindSupportUI ({ button, dialog, closeButton, form, discordInput
 
     if (tabNew) tabNew.classList.toggle('active', tabName === 'new')
     if (tabMyTickets) tabMyTickets.classList.toggle('active', tabName === 'list' || tabName === 'chat')
+
+    if (breadcrumbSub) {
+      if (tabName === 'new') breadcrumbSub.textContent = 'Yeni Talep'
+      else if (tabName === 'list') breadcrumbSub.textContent = 'Taleplerim'
+    }
 
     if (tabName === 'list') {
       loadAndRenderUserTickets()
@@ -460,8 +513,21 @@ export function bindSupportUI ({ button, dialog, closeButton, form, discordInput
     const userAvatar = localSess?.avatarUrl || 'images/default-avatar.jpg'
     const userName = localSess?.username || 'Kullanıcı'
 
+    if (breadcrumbSub) breadcrumbSub.textContent = `Talep #${ticket.order_code}`
     if (chatTitleEl) chatTitleEl.textContent = subject
     if (chatStatusEl) chatStatusEl.textContent = ticket.status === 'closed' ? 'Kapalı Talep' : 'Aktif Talep'
+
+    if (chatCloseTicketBtn) {
+      if (ticket.status === 'closed' || ticket.status === 'cancelled') {
+        chatCloseTicketBtn.disabled = true
+        chatCloseTicketBtn.textContent = 'Talep Kapalı'
+        chatCloseTicketBtn.style.opacity = '0.5'
+      } else {
+        chatCloseTicketBtn.disabled = false
+        chatCloseTicketBtn.textContent = '🔒 Talebi Kapat'
+        chatCloseTicketBtn.style.opacity = '1'
+      }
+    }
 
     // Left column details card elements
     const dAvatar = document.querySelector('#supportDetailUserAvatar')
@@ -543,6 +609,43 @@ export function bindSupportUI ({ button, dialog, closeButton, form, discordInput
 
     chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight
   }
+
+  // Hızlı Yanıt Preset Çipleri Olayları
+  dialog.querySelectorAll('.quick-reply-chip').forEach((chip) => {
+    chip.addEventListener('click', () => {
+      const presetText = chip.dataset.text
+      if (!presetText || !chatReplyInput) return
+      chatReplyInput.value = presetText
+      chatReplyInput.focus()
+    })
+  })
+
+  // Talebi Kapat Butonu Olayı
+  chatCloseTicketBtn?.addEventListener('click', async () => {
+    if (!activeChatTicket) return
+    if (activeChatTicket.status === 'closed') {
+      notify('Bilgi', 'Bu destek talebi zaten kapalı.')
+      return
+    }
+    if (!confirm('Bu destek talebini çözüldü olarak kapatmak istediğinize emin misiniz?')) return
+
+    try {
+      chatCloseTicketBtn.disabled = true
+      chatCloseTicketBtn.textContent = 'Kapatılıyor…'
+      await closeUserTicket(activeChatTicket.order_code)
+      activeChatTicket.status = 'closed'
+      if (chatStatusEl) chatStatusEl.textContent = 'Kapalı Talep'
+      const dStatusBadge = document.querySelector('#supportDetailStatusBadge')
+      if (dStatusBadge) dStatusBadge.innerHTML = '<span class="badge" style="background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); padding: 2px 8px; border-radius: 4px; font-weight: 700; font-size: 10.5px;">Kapalı</span>'
+      chatCloseTicketBtn.textContent = 'Talep Kapalı'
+      chatCloseTicketBtn.style.opacity = '0.5'
+      notify('Talep Kapatıldı', 'Destek talebiniz başarıyla çözüldü ve kapatıldı.')
+    } catch (err) {
+      notify('Hata', err?.message || 'Talep kapatılamadı.')
+      chatCloseTicketBtn.disabled = false
+      chatCloseTicketBtn.textContent = '🔒 Talebi Kapat'
+    }
+  })
 
   // Sekme Olayları
   tabNew?.addEventListener('click', () => showTab('new'))
@@ -694,4 +797,6 @@ export function bindSupportUI ({ button, dialog, closeButton, form, discordInput
 window.bindOrderUI = bindOrderUI
 window.bindSupportUI = bindSupportUI
 window.bindCommunityStats = bindCommunityStats
+window.closeUserTicket = closeUserTicket
+window.sendUserTicketReply = sendUserTicketReply
 

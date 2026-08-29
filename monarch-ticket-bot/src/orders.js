@@ -359,11 +359,78 @@ function createOrderQueue ({ supabaseUrl, serviceRoleKey, pollIntervalMs, supaba
     }
   }
 
+  async function cleanupCancelledAndClosedTickets (guild, resources) {
+    try {
+      // 1. Veritabanında iptal edilmiş veya silinmiş talepleri bul
+      const { data: inactiveOrders, error } = await supabase.from('order_requests')
+        .select('*')
+        .in('status', ['cancelled', 'closed'])
+        .limit(30)
+
+      if (!error && Array.isArray(inactiveOrders)) {
+        for (const order of inactiveOrders) {
+          if (!order.ticket_channel_id && !order.purchase_message_id) continue
+          try {
+            // Discord ticket kanalını sil
+            if (order.ticket_channel_id && guild.channels?.fetch) {
+              const channel = await guild.channels.fetch(order.ticket_channel_id).catch(() => null)
+              if (channel) {
+                await channel.delete().catch(() => null)
+              }
+            }
+
+            // Satın alım log kanalındaki mesajı sil
+            if (order.purchase_message_id && resources?.purchaseChannel?.messages?.fetch) {
+              const msg = await resources.purchaseChannel.messages.fetch(order.purchase_message_id).catch(() => null)
+              if (msg) {
+                await msg.delete().catch(() => null)
+              }
+            }
+
+            // Supabase kaydındaki kanal ID'lerini temizle
+            await supabase.from('order_requests')
+              .update({ ticket_channel_id: null, purchase_message_id: null })
+              .eq('id', order.id)
+          } catch (itemErr) {
+            logger.error('[TEMİZLİK] Discord silme hatası:', order.order_code, itemErr.message)
+          }
+        }
+      }
+
+      // 2. Veritabanından tamamen silinmiş taleplerin Discord kanallarını temizle
+      if (guild.channels?.cache && typeof guild.channels.cache.filter === 'function') {
+        const ticketChannels = guild.channels.cache.filter((c) => 
+          c.isTextBased?.() && 
+          c.topic?.startsWith('monarch-order:') &&
+          c.parentId === resources?.category?.id
+        )
+
+        for (const [channelId, channel] of ticketChannels) {
+          const match = channel.topic?.match(/monarch-order:([a-f0-9-]+);.*code:([A-Z0-9]+)/i)
+          if (match) {
+            const orderId = match[1]
+            const { data: dbOrder } = await supabase.from('order_requests')
+              .select('id, status')
+              .eq('id', orderId)
+              .maybeSingle()
+
+            if (!dbOrder || dbOrder.status === 'cancelled' || dbOrder.status === 'closed') {
+              await channel.delete().catch(() => null)
+            }
+          }
+        }
+      }
+    } catch (err) {
+      logger.error('[TEMİZLİK] Genel temizlik hatası:', err.message)
+    }
+  }
+
   async function processGuild (guild) {
     const settings = getOrderSettings(guild.id)
     const resources = await resolveOrderResources(guild, settings)
     if (!resources?.category && !resources?.purchaseChannel) return
     await recoverStalledRequests()
+    await cleanupCancelledAndClosedTickets(guild, resources)
     const requests = await claimPendingRequests()
 
     for (const request of requests) {

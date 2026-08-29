@@ -7,8 +7,13 @@
     <meta name="theme-color" content="#f6f7fa" />
     <meta name="description" content="Monarch Store Minecraft botları, UI/UX tasarımı ve profesyonel sunum hizmetleri." />
     <title>Monarch Store | Dijital Hizmetler, Botlar & Tasarım</title>
+    
+    <!-- DNS & CDN Prefetch -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+    <link rel="dns-prefetch" href="https://aipnaodheezawsezrjpz.supabase.co" />
+    
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
     <script>try { document.documentElement.dataset.theme = localStorage.getItem('monarch-theme') === 'dark' ? 'dark' : 'light'; } catch { document.documentElement.dataset.theme = 'light'; }</script>
     <style>
@@ -16,7 +21,7 @@
       :root[data-theme="dark"] { --ink: #edf4fb; --muted: #aab9c8; --paper: #0a111b; --line: #283848; --blue: #69b2e9; --blue-dark: #3d91d1; --white: #111c28; --green: #8ccf9b; --amber: #f59e0b; --shadow: 0 16px 38px rgba(0, 0, 0, .28); color-scheme: dark; }
       * { box-sizing: border-box; }
       html { scroll-behavior: smooth; }
-      body { margin: 0; color: var(--ink); background: linear-gradient(180deg, #f7f8fb 0%, #f2f4f7 100%); font-family: Manrope, sans-serif; }
+      body { margin: 0; color: var(--ink); background: linear-gradient(180deg, #f7f8fb 0%, #f2f4f7 100%); font-family: Manrope, sans-serif; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
       a { color: inherit; text-decoration: none; }
       button { font: inherit; cursor: pointer; }
       .container { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
@@ -24,7 +29,7 @@
       .topline .container { display: flex; justify-content: space-between; }
       .status { display: inline-flex; align-items: center; gap: 7px; }
       .status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #8ccf9b; }
-      header { position: sticky; z-index: 10; top: 0; border-bottom: 1px solid var(--line); background: #f8f8f8; backdrop-filter: blur(12px); }
+      header { position: sticky; z-index: 10; top: 0; border-bottom: 1px solid var(--line); background: #f8f8f8; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
       .nav { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
       
       /* Logo & Maskot */
@@ -50,7 +55,7 @@
       .cart { min-width: 108px; min-height: 38px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid #c8d0da; color: #263442; background: #fff; font: 700 11px "Space Mono", monospace; letter-spacing: .04em; }
       .cart strong { min-width: 18px; height: 18px; display: grid; place-items: center; border-radius: 50%; color: #fff; background: var(--blue); font-size: 10px; }
       .order-dialog { width: min(490px, calc(100% - 32px)); padding: 0; border: 1px solid #d3dce5; color: var(--ink); background: #fff; box-shadow: 0 24px 65px rgba(12, 28, 42, .28); }
-      .order-dialog::backdrop { background: rgba(11, 25, 37, .56); backdrop-filter: blur(3px); }
+      .order-dialog::backdrop { background: rgba(11, 25, 37, .56); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
       .order-panel { padding: 27px; }
       .order-panel h2 { margin: 0; padding-right: 32px; font-size: 26px; }
       .order-panel > p { margin: 9px 0 17px; color: var(--muted); font-size: 13px; line-height: 1.65; }
@@ -72,7 +77,7 @@
       .order-submit { min-height: 43px; margin-top: 4px; border: 0; color: #fff; background: var(--blue); font-size: 12px; font-weight: 800; }
       .order-submit:disabled { cursor: not-allowed; opacity: .65; }
 
-      .hero { position: relative; min-height: 470px; display: flex; align-items: center; overflow: hidden; color: #fff; background: #142333 url("https://github.com/ZeninKaanX/MonarchStore/releases/download/monarch-hero-assets/monarch-artillery-banner.webp") center/cover no-repeat; }
+      .hero { position: relative; min-height: 470px; display: flex; align-items: center; overflow: hidden; color: #fff; background: #142333 url("images/hero-banner.webp") center/cover no-repeat; }
       .hero::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(9,18,29,.91) 0%, rgba(9,18,29,.78) 42%, rgba(9,18,29,.28) 100%), linear-gradient(0deg, rgba(103,17,29,.38) 0%, transparent 34%), linear-gradient(120deg, rgba(37,77,110,.22), transparent 56%); }
       .hero::after { content: ""; position: absolute; right: 0; bottom: 0; left: 0; height: 3px; background: linear-gradient(90deg, #9f2834 0%, #c84a51 35%, rgba(200,74,81,0) 76%); }
       .hero-layout { position: relative; display: grid; grid-template-columns: minmax(0, 545px) minmax(330px, 430px); justify-content: space-between; align-items: center; gap: 42px; padding: 48px 0; }
@@ -88,7 +93,7 @@
       .robot-panel { position: relative; min-height: 365px; overflow: hidden; border: 1px solid rgba(220,234,244,.5); background: #0b1724; box-shadow: 0 18px 42px rgba(0,0,0,.18); }
       .robot-panel::before { content: ""; position: absolute; z-index: 1; inset: 0; pointer-events: none; background: linear-gradient(0deg, rgba(7,14,22,.74), transparent 44%), repeating-linear-gradient(0deg, transparent 0, transparent 5px, rgba(214,235,247,.04) 6px); }
       .anime-hero-still, .anime-hero-video { position: absolute; z-index: 0; inset: -4%; width: 108%; height: 108%; transform-origin: center; }
-      .anime-hero-still { background: url("https://github.com/ZeninKaanX/MonarchStore/releases/download/monarch-hero-assets/monarch-whitehair-hero.webp") 72% center/cover no-repeat; animation: anime-hero-drift 12s ease-in-out infinite alternate; }
+      .anime-hero-still { background: url("images/hero-whitehair.webp") 72% center/cover no-repeat; animation: anime-hero-drift 12s ease-in-out infinite alternate; }
       .anime-hero-video { display: block; object-fit: cover; object-position: 72% center; animation: anime-hero-drift 12s ease-in-out infinite alternate; }
       @keyframes anime-hero-drift { from { transform: scale(1.01) translate3d(0, 0, 0); } to { transform: scale(1.055) translate3d(-1%, .5%, 0); } }
       .robot-label { position: absolute; z-index: 3; top: 14px; left: 15px; padding: 6px 8px; border: 1px solid rgba(229,242,249,.38); color: #e5f3fb; background: rgba(9,19,30,.56); font: 700 9px "Space Mono", monospace; letter-spacing: .07em; }
@@ -152,7 +157,7 @@
       .toast.show { opacity: 1; transform: translateY(0); }
       .toast b { display: block; margin-bottom: 3px; }
       .account-dialog { width: min(430px, calc(100% - 32px)); padding: 0; border: 1px solid #d3dce5; color: var(--ink); background: #fff; box-shadow: 0 24px 65px rgba(12, 28, 42, .28); }
-      .account-dialog::backdrop { background: rgba(11, 25, 37, .56); backdrop-filter: blur(3px); }
+      .account-dialog::backdrop { background: rgba(11, 25, 37, .56); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
       .account-panel { padding: 27px; }
       .dialog-close { position: absolute; top: 12px; right: 13px; width: 34px; height: 34px; border: 0; color: #5e6b79; background: transparent; font-size: 24px; line-height: 1; }
       .account-panel h2 { margin: 0; padding-right: 32px; font-size: 26px; }
@@ -235,9 +240,9 @@
     <header>
       <nav class="container nav" aria-label="Ana menü">
         <a class="logo" href="#ana" aria-label="Monarch Store ana sayfa">
-          <img class="logo-img logo-light-mode" src="images/logo-dark.png" alt="Monarch Store logosu" />
-          <img class="logo-img logo-dark-mode" src="images/logo-light.png" alt="Monarch Store logosu" />
-          <img class="mascot" src="images/mascot-clean.png" alt="Monarch Store anime karakteri" />
+          <img class="logo-img logo-light-mode" src="images/logo-dark.webp" alt="Monarch Store logosu" fetchpriority="high" width="140" height="38" />
+          <img class="logo-img logo-dark-mode" src="images/logo-light.webp" alt="Monarch Store logosu" fetchpriority="high" width="140" height="38" />
+          <img class="mascot" src="images/mascot.webp" alt="Monarch Store anime karakteri" fetchpriority="high" width="44" height="44" />
         </a>
         <div class="links">
           <a href="#botlar">Minecraft Botları</a>
@@ -270,7 +275,7 @@
           <aside class="robot-panel" aria-label="Hareketli anime karakter sahnesi">
             <span class="robot-label">MONARCH / AKTİF</span>
             <div class="anime-hero-still" role="img" aria-label="Monarch iletişim merkezinde anime karakter"></div>
-            <video class="anime-hero-video" autoplay muted loop playsinline preload="metadata" poster="https://github.com/ZeninKaanX/MonarchStore/releases/download/monarch-hero-assets/monarch-whitehair-hero.webp" aria-label="Monarch iletişim merkezinde hareketli anime karakter"><source src="https://github.com/ZeninKaanX/MonarchStore/releases/download/monarch-hero-assets/monarch-whitehair-hero-clean.mp4" type="video/mp4" /></video>
+            <video class="anime-hero-video" autoplay muted loop playsinline preload="none" poster="images/hero-whitehair.webp" aria-label="Monarch iletişim merkezinde hareketli anime karakter"><source src="https://github.com/ZeninKaanX/MonarchStore/releases/download/monarch-hero-assets/monarch-whitehair-hero-clean.mp4" type="video/mp4" /></video>
             <div class="robot-help"><b>Hareketli iletişim birimi aktif</b>Monarch sahası için görevde.</div>
           </aside>
         </div>
@@ -294,15 +299,15 @@
         </div>
         <div class="bot-grid">
           <article class="product" data-product="AFK Bot" data-price="50 TL">
-            <div class="product-image"><img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663457714638/dTrbZHbHfwFOvNdY.jpg" alt="Monarch Store AFK Bot görseli" /><span>MS / AFK</span></div>
+            <div class="product-image"><img src="images/bot-afk.webp" alt="Monarch Store AFK Bot görseli" loading="lazy" decoding="async" width="400" height="300" /><span>MS / AFK</span></div>
             <div class="product-main"><h3>AFK Bot</h3><p>Grim Anti-Cheat korumalı, otomatik girişli ve kesintisiz çalışan AFK botu.</p><div class="product-row"><div class="price"><small>Fiyat</small><b>50 TL</b></div><button class="buy" type="button" data-add-to-cart="afk_bot">Sepete ekle</button></div></div>
           </article>
           <article class="product" data-product="Miner Bot" data-price="180 TL">
-            <div class="product-image"><img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663457714638/WtmnGWNFHlHMPTwQ.jpg" alt="Monarch Store Miner Bot görseli" /><span>MS / MINER</span></div>
+            <div class="product-image"><img src="images/bot-miner.webp" alt="Monarch Store Miner Bot görseli" loading="lazy" decoding="async" width="400" height="300" /><span>MS / MINER</span></div>
             <div class="product-main"><h3>Miner Bot</h3><p>Kaynak döngüleri ve otomatik madencilik operasyonları için akıllı bot.</p><div class="product-row"><div class="price"><small>Fiyat</small><b>180 TL</b></div><button class="buy" type="button" data-add-to-cart="miner_bot">Sepete ekle</button></div></div>
           </article>
           <article class="product" data-product="Farmer Bot" data-price="390 TL">
-            <div class="product-image"><img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663457714638/XxUQofeWPlQiwGHk.jpg" alt="Monarch Store Farmer Bot görseli" /><span>MS / FARMER</span></div>
+            <div class="product-image"><img src="images/bot-farmer.webp" alt="Monarch Store Farmer Bot görseli" loading="lazy" decoding="async" width="400" height="300" /><span>MS / FARMER</span></div>
             <div class="product-main"><h3>Farmer Bot</h3><p>Çiftlik ürünlerini otomatik hasat edip satan yüksek performanslı tarım botu.</p><div class="product-row"><div class="price"><small>Fiyat</small><b>390 TL</b></div><button class="buy" type="button" data-add-to-cart="farmer_bot">Sepete ekle</button></div></div>
           </article>
         </div>
@@ -317,7 +322,7 @@
         <div class="bot-grid">
           <article class="product" data-product="Temel UI/UX Tasarım" data-price="150 TL">
             <div class="product-image">
-              <img src="images/uiux-starter.jpg" alt="Temel UI/UX Tasarımı görseli" />
+              <img src="images/uiux-starter.webp" alt="Temel UI/UX Tasarımı görseli" loading="lazy" decoding="async" width="400" height="300" />
               <span>MS / UI-UX</span>
             </div>
             <div class="product-main">
@@ -331,7 +336,7 @@
           </article>
           <article class="product" data-product="Gelişmiş Web & Mobil UI/UX" data-price="350 TL">
             <div class="product-image">
-              <img src="images/uiux-pro.jpg" alt="Gelişmiş Web & Mobil UI/UX görseli" />
+              <img src="images/uiux-pro.webp" alt="Gelişmiş Web & Mobil UI/UX görseli" loading="lazy" decoding="async" width="400" height="300" />
               <span>MS / UI-UX PRO</span>
             </div>
             <div class="product-main">
@@ -345,7 +350,7 @@
           </article>
           <article class="product" data-product="Özel Komple Arayüz Tasarımı" data-price="500 TL">
             <div class="product-image">
-              <img src="images/uiux-custom.jpg" alt="Özel Komple Arayüz Tasarımı görseli" />
+              <img src="images/uiux-custom.webp" alt="Özel Komple Arayüz Tasarımı görseli" loading="lazy" decoding="async" width="400" height="300" />
               <span>MS / UI-UX MAX</span>
             </div>
             <div class="product-main">
@@ -369,7 +374,7 @@
         <div class="bot-grid">
           <article class="product" data-product="Standart Sunum Tasarımı" data-price="75 TL">
             <div class="product-image">
-              <img src="images/sunum-basic.jpg" alt="Standart Sunum Tasarımı görseli" />
+              <img src="images/sunum-basic.webp" alt="Standart Sunum Tasarımı görseli" loading="lazy" decoding="async" width="400" height="300" />
               <span>MS / SLIDES</span>
             </div>
             <div class="product-main">
@@ -383,7 +388,7 @@
           </article>
           <article class="product" data-product="Proje & Ödev Sunumu" data-price="120 TL">
             <div class="product-image">
-              <img src="images/sunum-pro.jpg" alt="Proje & Ödev Sunumu görseli" />
+              <img src="images/sunum-pro.webp" alt="Proje & Ödev Sunumu görseli" loading="lazy" decoding="async" width="400" height="300" />
               <span>MS / SLIDES PRO</span>
             </div>
             <div class="product-main">
@@ -397,7 +402,7 @@
           </article>
           <article class="product" data-product="Kurumsal Premium Sunum" data-price="200 TL">
             <div class="product-image">
-              <img src="images/sunum-premium.jpg" alt="Kurumsal Premium Sunum görseli" />
+              <img src="images/sunum-premium.webp" alt="Kurumsal Premium Sunum görseli" loading="lazy" decoding="async" width="400" height="300" />
               <span>MS / SLIDES VIP</span>
             </div>
             <div class="product-main">
@@ -450,8 +455,8 @@
     <footer id="iletisim">
       <div class="container footer">
         <div class="footer-brand">
-          <img class="footer-logo logo-light-mode" src="images/logo-dark.png" alt="Monarch Store logosu" />
-          <img class="footer-logo logo-dark-mode" src="images/logo-light.png" alt="Monarch Store logosu" />
+          <img class="footer-logo logo-light-mode" src="images/logo-dark.webp" alt="Monarch Store logosu" loading="lazy" decoding="async" width="102" height="28" />
+          <img class="footer-logo logo-dark-mode" src="images/logo-light.webp" alt="Monarch Store logosu" loading="lazy" decoding="async" width="102" height="28" />
         </div>
         <span><a href="https://discord.gg/monarchstoretr" target="_blank" rel="noreferrer">Monarch Store Discord</a> · Tüm siparişler ve teslimatlar Discord üzerinden yönetilir.</span>
       </div>
@@ -503,7 +508,7 @@
       </div>
     </dialog>
 
-    <script type="module" src="/theme-toggle.js"></script>
+    <script type="module" src="./theme-toggle.js"></script>
     <script type="module">
       import { bindLocalAccountUI } from './account-local.js?v=20260827a';
       import { bindOrderUI, bindCommunityStats } from './store-orders.js';

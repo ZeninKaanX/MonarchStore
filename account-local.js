@@ -2,8 +2,15 @@ import { sha256, requestAdmin2FA, verifyAdmin2FA, clearAdminSession } from './ad
 
 const STORAGE_KEY = "monarch_accounts_v1";
 const SESSION_KEY = "monarch_session_v1";
+const OTP_STORAGE_KEY = "monarch_email_otp_v1";
 
-function loadAccounts(storage) {
+export const DEFAULT_AVATARS = [
+  { id: 'lena', name: 'Lena Komutanı', url: 'images/lena-officer-avatar.jpg' },
+  { id: 'mascot', name: 'Monarch Maskot', url: 'images/mascot.webp' },
+  { id: 'hero', name: 'Saha Operatörü', url: 'images/hero-whitehair.webp' }
+];
+
+export function loadAccounts(storage = window.localStorage) {
   try {
     const raw = storage.getItem(STORAGE_KEY);
     if (!raw) return [];
@@ -14,7 +21,7 @@ function loadAccounts(storage) {
   }
 }
 
-function saveAccounts(storage, accounts) {
+export function saveAccounts(storage, accounts) {
   storage.setItem(STORAGE_KEY, JSON.stringify(accounts));
 }
 
@@ -28,7 +35,7 @@ export function getLocalSession(storage = window.localStorage) {
   }
 }
 
-function saveSession(storage, username, extra = {}) {
+export function saveSession(storage, username, extra = {}) {
   storage.setItem(
     SESSION_KEY,
     JSON.stringify({
@@ -39,19 +46,25 @@ function saveSession(storage, username, extra = {}) {
   );
 }
 
-export async function createLocalAccount(storage, username, password, discordUsername = "") {
+export function getAccountByUsername(storage, username) {
+  const normalized = (username || '').trim().toLowerCase();
+  const accounts = loadAccounts(storage);
+  return accounts.find(acc => acc.normalized === normalized) || null;
+}
+
+export async function createLocalAccount(storage, username, password, discordUsername = "", email = "") {
   const normalized = username.trim().toLowerCase();
   if (normalized.length < 3 || normalized.length > 24) {
-    throw new Error("Kullanici adi 3 ile 24 karakter arasinda olmalidir.");
+    throw new Error("Kullanıcı adı 3 ile 24 karakter arasında olmalıdır.");
   }
   if (password.length < 6) {
-    throw new Error("Sifre en az 6 karakter olmalidir.");
+    throw new Error("Şifre en az 6 karakter olmalıdır.");
   }
 
   const accounts = loadAccounts(storage);
   const exists = accounts.some(acc => acc.normalized === normalized);
   if (exists) {
-    throw new Error("Bu kullanici adi zaten alinmis. Lutfen 'Giris Yap' sekmesinden giris yapin.");
+    throw new Error("Bu kullanıcı adı zaten alınmış. Lütfen 'Giriş Yap' sekmesinden giriş yapın.");
   }
 
   const passwordHash = await sha256(password);
@@ -59,14 +72,22 @@ export async function createLocalAccount(storage, username, password, discordUse
     username: username.trim(),
     normalized,
     passwordHash,
-    discordUsername: discordUsername.trim(),
+    discordUsername: discordUsername.trim().replace(/^@/, ''),
+    email: email.trim().toLowerCase(),
+    emailVerified: false,
+    avatarUrl: DEFAULT_AVATARS[0].url,
     createdAt: new Date().toISOString()
   };
 
   accounts.push(newAccount);
   saveAccounts(storage, accounts);
-  saveSession(storage, newAccount.username, { discordUsername: newAccount.discordUsername });
-  return { username: newAccount.username, discordUsername: newAccount.discordUsername };
+  saveSession(storage, newAccount.username, {
+    discordUsername: newAccount.discordUsername,
+    email: newAccount.email,
+    emailVerified: newAccount.emailVerified,
+    avatarUrl: newAccount.avatarUrl
+  });
+  return newAccount;
 }
 
 export async function signInLocalAccount(storage, username, password) {
@@ -82,11 +103,21 @@ export async function signInLocalAccount(storage, username, password) {
     if (!exists) {
       throw new Error("not_registered");
     }
-    throw new Error("Sifre hatali. Lutfen kontrol edin.");
+    throw new Error("Şifre hatalı. Lütfen kontrol edin.");
   }
 
-  saveSession(storage, account.username, { discordUsername: account.discordUsername });
-  return { username: account.username, discordUsername: account.discordUsername };
+  if (!account.avatarUrl) {
+    account.avatarUrl = DEFAULT_AVATARS[0].url;
+    saveAccounts(storage, accounts);
+  }
+
+  saveSession(storage, account.username, {
+    discordUsername: account.discordUsername || '',
+    email: account.email || '',
+    emailVerified: Boolean(account.emailVerified),
+    avatarUrl: account.avatarUrl || DEFAULT_AVATARS[0].url
+  });
+  return account;
 }
 
 export function signOutLocalAccount(storage) {
@@ -96,15 +127,161 @@ export function signOutLocalAccount(storage) {
   storage.removeItem(SESSION_KEY);
 }
 
-export function bindLocalAccountUI({ button, dialog, closeButton, form, usernameInput, passwordInput, confirmInput, title, description, submitButton, logoutButton, notify, onOpenAdminDashboard }) {
+// Profil Güncelleme & Şifre Değiştirme
+export async function updateLocalAccountProfile(storage, username, { avatarUrl, discordUsername, email, currentPassword, newPassword }) {
+  const normalized = (username || '').trim().toLowerCase();
+  const accounts = loadAccounts(storage);
+  const account = accounts.find(acc => acc.normalized === normalized);
+  if (!account) throw new Error("Kullanıcı hesabı bulunamadı.");
+
+  if (avatarUrl) {
+    account.avatarUrl = avatarUrl;
+  }
+  if (typeof discordUsername === 'string') {
+    account.discordUsername = discordUsername.trim().replace(/^@/, '');
+  }
+  if (email && email.toLowerCase() !== account.email) {
+    account.email = email.trim().toLowerCase();
+    account.emailVerified = false;
+  }
+
+  if (newPassword) {
+    if (!currentPassword) {
+      throw new Error("Şifrenizi değiştirmek için lütfen mevcut şifrenizi girin.");
+    }
+    const currentHash = await sha256(currentPassword);
+    if (account.passwordHash !== currentHash) {
+      throw new Error("Mevcut şifreniz hatalı.");
+    }
+    if (newPassword.length < 6) {
+      throw new Error("Yeni şifre en az 6 karakter olmalıdır.");
+    }
+    account.passwordHash = await sha256(newPassword);
+  }
+
+  saveAccounts(storage, accounts);
+  saveSession(storage, account.username, {
+    discordUsername: account.discordUsername,
+    email: account.email,
+    emailVerified: account.emailVerified,
+    avatarUrl: account.avatarUrl
+  });
+
+  return account;
+}
+
+// E-Posta Doğrulama Kodu Üretme (OTP)
+export function sendEmailVerificationCode(storage, email) {
+  const cleanEmail = (email || '').trim().toLowerCase();
+  if (!cleanEmail || !cleanEmail.includes('@') || !cleanEmail.includes('.')) {
+    throw new Error("Lütfen geçerli bir e-posta adresi girin.");
+  }
+
+  const code = Math.floor(100000 + Math.random() * 900000).toString();
+  const expiresAt = Date.now() + 5 * 60 * 1000;
+
+  const otpData = {
+    email: cleanEmail,
+    code,
+    expiresAt,
+    createdAt: Date.now()
+  };
+
+  storage.setItem(OTP_STORAGE_KEY, JSON.stringify(otpData));
+  return { code, expiresAt, email: cleanEmail };
+}
+
+// E-Posta Kodunu Doğrulama
+export function verifyEmailCode(storage, email, inputCode, username = "") {
+  const raw = storage.getItem(OTP_STORAGE_KEY);
+  if (!raw) throw new Error("Doğrulama kodu bulunamadı. Lütfen yeni bir kod isteyin.");
+
+  const otpData = JSON.parse(raw);
+  const cleanEmail = (email || '').trim().toLowerCase();
+
+  if (otpData.email !== cleanEmail) {
+    throw new Error("Doğrulama kodu bu e-posta adresi için üretilmedi.");
+  }
+  if (Date.now() > otpData.expiresAt) {
+    throw new Error("Doğrulama kodunun süresi dolmuş (5 dakika). Lütfen yeni kod isteyin.");
+  }
+  if (otpData.code !== inputCode.trim()) {
+    throw new Error("Doğrulama kodu hatalı.");
+  }
+
+  if (username) {
+    const normalized = username.trim().toLowerCase();
+    const accounts = loadAccounts(storage);
+    const account = accounts.find(acc => acc.normalized === normalized);
+    if (account) {
+      account.email = cleanEmail;
+      account.emailVerified = true;
+      saveAccounts(storage, accounts);
+      saveSession(storage, account.username, {
+        discordUsername: account.discordUsername,
+        email: account.email,
+        emailVerified: true,
+        avatarUrl: account.avatarUrl
+      });
+    }
+  }
+
+  storage.removeItem(OTP_STORAGE_KEY);
+  return true;
+}
+
+// E-Posta Kodu ile Şifre Sıfırlama
+export async function resetPasswordWithEmail(storage, email, inputCode, newPassword) {
+  if (newPassword.length < 6) {
+    throw new Error("Yeni şifre en az 6 karakter olmalıdır.");
+  }
+
+  const cleanEmail = (email || '').trim().toLowerCase();
+  const accounts = loadAccounts(storage);
+  const account = accounts.find(acc => (acc.email || '').toLowerCase() === cleanEmail);
+  if (!account) {
+    throw new Error("Bu e-posta adresine kayıtlı hesap bulunamadı.");
+  }
+
+  verifyEmailCode(storage, cleanEmail, inputCode, account.username);
+
+  account.passwordHash = await sha256(newPassword);
+  saveAccounts(storage, accounts);
+
+  saveSession(storage, account.username, {
+    discordUsername: account.discordUsername,
+    email: account.email,
+    emailVerified: account.emailVerified,
+    avatarUrl: account.avatarUrl
+  });
+
+  return account;
+}
+
+export function bindLocalAccountUI({ 
+  button, 
+  dialog, 
+  closeButton, 
+  form, 
+  usernameInput, 
+  passwordInput, 
+  confirmInput, 
+  title, 
+  description, 
+  submitButton, 
+  logoutButton, 
+  notify, 
+  onOpenAdminDashboard 
+}) {
   const storage = window.localStorage;
-  let mode = "login"; // "login" | "register"
+  let mode = "login";
   let is2FAActive = false;
   let activeChallengeId = null;
   let countdownInterval = null;
 
   const tabLogin = document.querySelector("#accountTabLogin");
   const tabRegister = document.querySelector("#accountTabRegister");
+  const tabForgot = document.querySelector("#accountTabForgot");
   const togglePwdBtn = document.querySelector("#accountTogglePwd");
 
   const updateHeader = () => {
@@ -117,22 +294,23 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
       button.textContent = `Hesap: ${session.username}`;
       button.classList.add("is-signed-in");
     } else {
-      button.textContent = "Giris Yap / Kaydol";
+      button.textContent = "Giriş Yap / Kaydol";
       button.classList.remove("is-signed-in");
     }
   };
 
-  const start2FACountdown = (seconds = 300) => {
+  const startCountdown = (elementSelector, seconds = 300, onExpire) => {
     clearInterval(countdownInterval);
     let remain = seconds;
+    const el = document.querySelector(elementSelector);
     const tick = () => {
       const min = Math.floor(remain / 60);
       const sec = remain % 60;
-      const cdEl = document.querySelector("#account2FACountdown");
-      if (cdEl) cdEl.textContent = `${min}:${sec < 10 ? '0' : ''}${sec}`;
+      if (el) el.textContent = `${min}:${sec < 10 ? '0' : ''}${sec}`;
       if (remain <= 0) {
         clearInterval(countdownInterval);
-        if (cdEl) cdEl.textContent = "Sure Doldu";
+        if (el) el.textContent = "Süre Doldu";
+        if (onExpire) onExpire();
       }
       remain--;
     };
@@ -148,125 +326,269 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
 
     const session = getLocalSession(storage);
     const signedIn = Boolean(session);
-    form.style.display = signedIn ? "none" : "grid";
-    logoutButton.style.display = signedIn ? "block" : "none";
 
     const modalTabs = document.querySelector("#accountModalTabs");
-    if (modalTabs) modalTabs.style.display = signedIn ? "none" : "flex";
-
     const standardFields = document.querySelector("#accountStandardFields");
     const twoFAFields = document.querySelector("#account2FAFields");
+    const forgotFields = document.querySelector("#accountForgotFields");
+    const profilePanel = document.querySelector("#accountProfilePanel");
     const openAdminBtn = document.querySelector("#accountOpenAdminBtn");
     const confirmLabel = confirmInput ? confirmInput.closest("label") : null;
-    const discordInput = document.querySelector("#accountDiscordUsername");
-    const codeIn = document.querySelector("#account2FACodeInput");
-
-    if (standardFields) standardFields.style.display = "grid";
-    if (twoFAFields) twoFAFields.style.display = "none";
-    if (openAdminBtn) openAdminBtn.style.display = (session?.isAdmin ? "block" : "none");
-
-    if (usernameInput) {
-      usernameInput.disabled = false;
-      usernameInput.readOnly = false;
-      usernameInput.required = true;
-    }
-    if (passwordInput) {
-      passwordInput.disabled = false;
-      passwordInput.readOnly = false;
-      passwordInput.required = true;
-    }
-    if (discordInput) {
-      discordInput.disabled = false;
-      discordInput.readOnly = false;
-    }
-    if (codeIn) {
-      codeIn.disabled = false;
-      codeIn.readOnly = false;
-      codeIn.required = false;
-      codeIn.value = "";
-    }
 
     if (signedIn) {
-      if (session.isAdmin) {
-        const discText = session.discordUsername ? ` (@${session.discordUsername})` : '';
-        title.textContent = `Yetkili: ${session.username}${discText}`;
-        description.textContent = "Monarch Store yonetim oturumunuz aktif.";
-      } else {
-        title.textContent = `Merhaba, ${session.username}`;
-        description.textContent = "Oturumunuz aktif. Siparislerinizi takip edebilirsiniz.";
+      form.style.display = "none";
+      if (modalTabs) modalTabs.style.display = "none";
+      if (profilePanel) {
+        profilePanel.style.display = "block";
+        populateProfilePanel(session);
       }
+      if (logoutButton) logoutButton.style.display = "block";
+      if (openAdminBtn) openAdminBtn.style.display = (session.isAdmin ? "block" : "none");
+
+      const acc = getAccountByUsername(storage, session.username);
+      const avatarImg = document.querySelector("#accountHeroAvatarImg");
+      if (avatarImg && (acc?.avatarUrl || session.avatarUrl)) {
+        avatarImg.src = acc?.avatarUrl || session.avatarUrl;
+      }
+
+      title.textContent = session.isAdmin ? `Yönetici: ${session.username}` : `Hesabım: ${session.username}`;
+      description.textContent = session.isAdmin 
+        ? "Monarch Store yönetim oturumunuz aktif." 
+        : "Profilinizi özelleştirebilir, şifrenizi değiştirebilir veya destek taleplerinizi görebilirsiniz.";
       return;
     }
 
-    const isRegister = mode === "register";
-    if (tabLogin) tabLogin.classList.toggle("active", !isRegister);
-    if (tabRegister) tabRegister.classList.toggle("active", isRegister);
+    if (profilePanel) profilePanel.style.display = "none";
+    form.style.display = "grid";
+    if (modalTabs) modalTabs.style.display = "flex";
+    if (logoutButton) logoutButton.style.display = "none";
+    if (openAdminBtn) openAdminBtn.style.display = "none";
 
-    title.textContent = isRegister ? "Yeni Hesap Olustur" : "Hesabina Giris Yap";
-    description.textContent = isRegister 
-      ? "Siparis ve talepleriniz icin hesabinizi olusturun." 
-      : "Kullanici adi ve sifrenizle giris yapin.";
+    if (tabLogin) tabLogin.classList.toggle("active", mode === "login");
+    if (tabRegister) tabRegister.classList.toggle("active", mode === "register");
+    if (tabForgot) tabForgot.classList.toggle("active", mode === "forgot");
 
-    if (confirmLabel) {
-      confirmLabel.style.display = isRegister ? "grid" : "none";
+    if (mode === "forgot") {
+      if (standardFields) standardFields.style.display = "none";
+      if (twoFAFields) twoFAFields.style.display = "none";
+      if (forgotFields) forgotFields.style.display = "grid";
+      title.textContent = "Şifremi Unuttum";
+      description.textContent = "Kayıtlı e-posta adresinizi yazarak 6 haneli sıfırlama kodu alın.";
+      submitButton.textContent = "Şifreyi Sıfırla";
+      return;
     }
+
+    if (standardFields) standardFields.style.display = "grid";
+    if (twoFAFields) twoFAFields.style.display = "none";
+    if (forgotFields) forgotFields.style.display = "none";
+
+    const isRegister = mode === "register";
+    title.textContent = isRegister ? "Yeni Hesap Oluştur" : "Hesabına Giriş Yap";
+    description.textContent = isRegister 
+      ? "Sipariş ve talepleriniz için hesabınızı oluşturun." 
+      : "Kullanıcı adı ve şifrenizle giriş yapın.";
+
+    if (confirmLabel) confirmLabel.style.display = isRegister ? "grid" : "none";
     if (confirmInput) {
       confirmInput.disabled = !isRegister;
       confirmInput.required = isRegister;
       if (!isRegister) confirmInput.value = "";
     }
 
-    submitButton.textContent = isRegister ? "Hesap Olustur" : "Giris Yap";
+    submitButton.textContent = isRegister ? "Hesap Oluştur" : "Giriş Yap";
+  };
+
+  const populateProfilePanel = (session) => {
+    const acc = getAccountByUsername(storage, session.username) || {};
+    const discIn = document.querySelector("#profileDiscordInput");
+    const emailIn = document.querySelector("#profileEmailInput");
+    const emailBadge = document.querySelector("#profileEmailBadge");
+    const emailVerifyBtn = document.querySelector("#profileSendEmailCodeBtn");
+    const userDisplay = document.querySelector("#profileUsernameDisplay");
+
+    if (userDisplay) userDisplay.textContent = session.username;
+    if (discIn) discIn.value = acc.discordUsername || session.discordUsername || '';
+    if (emailIn) emailIn.value = acc.email || session.email || '';
+
+    const isVerified = Boolean(acc.emailVerified || session.emailVerified);
+    if (emailBadge) {
+      emailBadge.textContent = isVerified ? "✓ Doğrulandı" : "Doğrulanmamış";
+      emailBadge.style.color = isVerified ? "#22c55e" : "#f59e0b";
+      emailBadge.style.borderColor = isVerified ? "rgba(34,197,94,0.3)" : "rgba(245,158,11,0.3)";
+    }
+    if (emailVerifyBtn) {
+      emailVerifyBtn.style.display = isVerified ? "none" : "inline-block";
+    }
+
+    const currentAvatar = acc.avatarUrl || session.avatarUrl || DEFAULT_AVATARS[0].url;
+    document.querySelectorAll(".avatar-select-btn").forEach(btn => {
+      btn.classList.toggle("active", btn.dataset.url === currentAvatar);
+    });
   };
 
   const show2FAView = (challengeId, passedDiscordUser = "") => {
     is2FAActive = true;
     activeChallengeId = challengeId;
-    title.textContent = "2FA Guvenlik Dogrulamasi";
-    description.textContent = "Admin yetkisi algilandi. Discord #admin-2fa kanalina gelen 6 haneli kodu girin.";
+    title.textContent = "2FA Güvenlik Doğrulaması";
+    description.textContent = "Admin yetkisi algılandı. Discord #admin-2fa kanalına gelen 6 haneli kodu girin.";
 
     const modalTabs = document.querySelector("#accountModalTabs");
     if (modalTabs) modalTabs.style.display = "none";
 
     const standardFields = document.querySelector("#accountStandardFields");
     const twoFAFields = document.querySelector("#account2FAFields");
+    const forgotFields = document.querySelector("#accountForgotFields");
     if (standardFields) standardFields.style.display = "none";
+    if (forgotFields) forgotFields.style.display = "none";
     if (twoFAFields) twoFAFields.style.display = "grid";
 
-    if (usernameInput) usernameInput.required = false;
-    if (passwordInput) passwordInput.required = false;
-    if (confirmInput) confirmInput.required = false;
-
     const disc2FAIn = document.querySelector("#account2FADiscordUser");
-    if (disc2FAIn && passedDiscordUser) {
-      disc2FAIn.value = passedDiscordUser;
-    }
+    if (disc2FAIn && passedDiscordUser) disc2FAIn.value = passedDiscordUser;
 
     const codeIn = document.querySelector("#account2FACodeInput");
     if (codeIn) {
-      codeIn.disabled = false;
-      codeIn.readOnly = false;
-      codeIn.required = true;
       codeIn.value = "";
-      setTimeout(() => {
-        codeIn.focus();
-        codeIn.select();
-      }, 50);
+      setTimeout(() => codeIn.focus(), 50);
     }
 
-    submitButton.textContent = "Dogrula ve Giris Yap";
-    start2FACountdown(300);
+    submitButton.textContent = "Doğrula ve Giriş Yap";
+    startCountdown("#account2FACountdown", 300);
   };
 
   if (tabLogin) tabLogin.addEventListener("click", () => render("login"));
   if (tabRegister) tabRegister.addEventListener("click", () => render("register"));
+  if (tabForgot) tabForgot.addEventListener("click", () => render("forgot"));
 
   if (togglePwdBtn) {
     togglePwdBtn.addEventListener("click", () => {
       if (!passwordInput) return;
       const isPwd = passwordInput.type === "password";
       passwordInput.type = isPwd ? "text" : "password";
-      togglePwdBtn.textContent = isPwd ? "GIZLE" : "GOSTER";
+      togglePwdBtn.textContent = isPwd ? "GİZLE" : "GÖSTER";
+    });
+  }
+
+  // Profil Avatar Seçimi
+  document.querySelectorAll(".avatar-select-btn").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const session = getLocalSession(storage);
+      if (!session) return;
+      const avatarUrl = btn.dataset.url;
+      try {
+        await updateLocalAccountProfile(storage, session.username, { avatarUrl });
+        document.querySelectorAll(".avatar-select-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        const avatarImg = document.querySelector("#accountHeroAvatarImg");
+        if (avatarImg) avatarImg.src = avatarUrl;
+        notify("Avatar Güncellendi", `${btn.dataset.name} profil resminiz olarak ayarlandı.`);
+      } catch (err) {
+        notify("Hata", err.message);
+      }
+    });
+  });
+
+  // Profil Kaydetme
+  const profileSaveBtn = document.querySelector("#profileSaveBtn");
+  if (profileSaveBtn) {
+    profileSaveBtn.addEventListener("click", async () => {
+      const session = getLocalSession(storage);
+      if (!session) return;
+      const discIn = document.querySelector("#profileDiscordInput");
+      const emailIn = document.querySelector("#profileEmailInput");
+      const curPwdIn = document.querySelector("#profileCurrentPwdInput");
+      const newPwdIn = document.querySelector("#profileNewPwdInput");
+
+      try {
+        profileSaveBtn.disabled = true;
+        profileSaveBtn.textContent = "Kaydediliyor…";
+        await updateLocalAccountProfile(storage, session.username, {
+          discordUsername: discIn ? discIn.value.trim() : undefined,
+          email: emailIn ? emailIn.value.trim() : undefined,
+          currentPassword: curPwdIn ? curPwdIn.value : undefined,
+          newPassword: newPwdIn && newPwdIn.value ? newPwdIn.value : undefined
+        });
+
+        if (curPwdIn) curPwdIn.value = "";
+        if (newPwdIn) newPwdIn.value = "";
+        populateProfilePanel(getLocalSession(storage));
+        updateHeader();
+        notify("Profil Güncellendi", "Profil bilgileriniz ve ayarlarınız başarıyla kaydedildi.");
+      } catch (err) {
+        notify("Profil Güncellenemedi", err.message);
+      } finally {
+        profileSaveBtn.disabled = false;
+        profileSaveBtn.textContent = "Değişiklikleri Kaydet";
+      }
+    });
+  }
+
+  // Profil E-Posta Kod Gönder
+  const profileSendCodeBtn = document.querySelector("#profileSendEmailCodeBtn");
+  if (profileSendCodeBtn) {
+    profileSendCodeBtn.addEventListener("click", () => {
+      const emailIn = document.querySelector("#profileEmailInput");
+      const email = emailIn ? emailIn.value.trim() : "";
+      try {
+        const { code } = sendEmailVerificationCode(storage, email);
+        const codePrompt = document.querySelector("#profileEmailCodePrompt");
+        if (codePrompt) codePrompt.style.display = "block";
+        startCountdown("#profileEmailCountdown", 300);
+        notify("Doğrulama Kodu Üretildi", `6 Haneli Güvenlik Kodunuz: ${code} (5 dakika geçerlidir).`);
+      } catch (err) {
+        notify("Kod Gönderilemedi", err.message);
+      }
+    });
+  }
+
+  // Profil E-Posta Kodu Onayla
+  const profileVerifyCodeBtn = document.querySelector("#profileVerifyEmailCodeBtn");
+  if (profileVerifyCodeBtn) {
+    profileVerifyCodeBtn.addEventListener("click", () => {
+      const session = getLocalSession(storage);
+      const emailIn = document.querySelector("#profileEmailInput");
+      const codeIn = document.querySelector("#profileEmailOtpInput");
+      const email = emailIn ? emailIn.value.trim() : "";
+      const code = codeIn ? codeIn.value.trim() : "";
+
+      try {
+        verifyEmailCode(storage, email, code, session ? session.username : "");
+        const codePrompt = document.querySelector("#profileEmailCodePrompt");
+        if (codePrompt) codePrompt.style.display = "none";
+        populateProfilePanel(getLocalSession(storage));
+        notify("E-Posta Doğrulandı", "E-posta adresiniz başarıyla doğrulandı.");
+      } catch (err) {
+        notify("Doğrulama Başarısız", err.message);
+      }
+    });
+  }
+
+  // Şifremi Unuttum Kod Gönder
+  const forgotSendCodeBtn = document.querySelector("#forgotSendCodeBtn");
+  if (forgotSendCodeBtn) {
+    forgotSendCodeBtn.addEventListener("click", () => {
+      const emailIn = document.querySelector("#forgotEmailInput");
+      const email = emailIn ? emailIn.value.trim() : "";
+      try {
+        const { code } = sendEmailVerificationCode(storage, email);
+        startCountdown("#forgotCountdown", 300);
+        notify("Sıfırlama Kodu Üretildi", `6 Haneli Sıfırlama Kodunuz: ${code} (5 dakika geçerlidir).`);
+      } catch (err) {
+        notify("Kod Üretilemedi", err.message);
+      }
+    });
+  }
+
+  // Destek Taleplerimi Aç Kısayolu
+  const profileOpenSupportBtn = document.querySelector("#profileOpenSupportBtn");
+  if (profileOpenSupportBtn) {
+    profileOpenSupportBtn.addEventListener("click", () => {
+      dialog.close();
+      const supportDialog = document.querySelector("#supportDialog");
+      if (supportDialog) {
+        supportDialog.showModal();
+        const tabTickets = document.querySelector("#supportTabMyTickets");
+        if (tabTickets) tabTickets.click();
+      }
     });
   }
 
@@ -276,7 +598,7 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
       window.open('admin.html', '_blank');
       return;
     }
-    render("login");
+    render(session ? "profile" : "login");
     dialog.showModal();
   });
 
@@ -289,7 +611,7 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
     signOutLocalAccount(storage);
     updateHeader();
     dialog.close();
-    notify("Cikis Yapildi", "Oturumunuz bu cihazdan kapatildi.");
+    notify("Çıkış Yapıldı", "Oturumunuz bu cihazdan kapatıldı.");
   });
 
   const openAdminBtn = document.querySelector("#accountOpenAdminBtn");
@@ -303,7 +625,6 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
   form.addEventListener("submit", async event => {
     event.preventDefault();
 
-    // 2FA Kodu Doğrulama Aşaması
     if (is2FAActive) {
       const codeIn = document.querySelector("#account2FACodeInput");
       const discIn = document.querySelector("#account2FADiscordUser");
@@ -312,7 +633,7 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
       if (!code || !activeChallengeId) return;
 
       submitButton.disabled = true;
-      submitButton.textContent = "Dogrulaniyor…";
+      submitButton.textContent = "Doğrulanıyor…";
       try {
         await verifyAdmin2FA(activeChallengeId, code, discordUser);
         if (discordUser) {
@@ -324,10 +645,10 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
         form.reset();
         updateHeader();
         dialog.close();
-        notify("Giris Basarili", "Monarch Store yonetim paneli yeni sekmede aciliyor...");
+        notify("Giriş Başarılı", "Monarch Store yönetim paneli yeni sekmede açılıyor...");
         window.open('admin.html', '_blank');
       } catch (error) {
-        notify("Dogrulama Basarisiz", error?.message || "Gecersiz veya suresi dolmus kod.");
+        notify("Doğrulama Başarısız", error?.message || "Geçersiz veya süresi dolmuş kod.");
         if (codeIn) {
           codeIn.disabled = false;
           codeIn.readOnly = false;
@@ -335,7 +656,33 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
         }
       } finally {
         submitButton.disabled = false;
-        submitButton.textContent = "Dogrula ve Giris Yap";
+        submitButton.textContent = "Doğrula ve Giriş Yap";
+      }
+      return;
+    }
+
+    if (mode === "forgot") {
+      const forgotEmailIn = document.querySelector("#forgotEmailInput");
+      const forgotCodeIn = document.querySelector("#forgotCodeInput");
+      const forgotNewPwdIn = document.querySelector("#forgotNewPasswordInput");
+
+      const email = forgotEmailIn ? forgotEmailIn.value.trim() : "";
+      const code = forgotCodeIn ? forgotCodeIn.value.trim() : "";
+      const newPwd = forgotNewPwdIn ? forgotNewPwdIn.value : "";
+
+      try {
+        submitButton.disabled = true;
+        submitButton.textContent = "Sıfırlanıyor…";
+        await resetPasswordWithEmail(storage, email, code, newPwd);
+        form.reset();
+        updateHeader();
+        render("profile");
+        notify("Şifre Sıfırlandı", "Şifreniz başarıyla güncellendi ve oturumunuz açıldı.");
+      } catch (err) {
+        notify("İşlem Başarısız", err.message);
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = "Şifreyi Sıfırla";
       }
       return;
     }
@@ -352,16 +699,14 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
       if (mode === "register") {
         const confirmVal = confirmInput ? confirmInput.value.trim() : "";
         if (rawPassword !== confirmVal) {
-          throw new Error("Sifreler eslesmiyor. Lutfen iki alana da ayni sifreyi yazin.");
+          throw new Error("Şifreler eşleşmiyor. Lütfen iki alana da aynı şifreyi yazın.");
         }
         const account = await createLocalAccount(storage, rawUsername, rawPassword, discordUser);
         form.reset();
         updateHeader();
         dialog.close();
-        notify("Hesap Olusturuldu", `${account.username} olarak oturum acildi.`);
+        notify("Hesap Oluşturuldu", `${account.username} olarak oturum açıldı.`);
       } else {
-        // Giriş Modu:
-        // Eğer kullanıcı adı admin/founder ise doğrudan Admin 2FA talebini dene
         if (rawUsername.toLowerCase() === 'admin' || rawUsername.toLowerCase() === 'founder') {
           try {
             const adminReq = await requestAdmin2FA(rawUsername.toLowerCase(), rawPassword, discordUser);
@@ -372,24 +717,22 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
               }
               submitButton.disabled = false;
               show2FAView(adminReq.challenge_id, discordUser);
-              notify("2FA Kodu Gonderildi", "Discord #admin-2fa kanalina guvenlik kodu iletildi.");
+              notify("2FA Kodu Gönderildi", "Discord #admin-2fa kanalına güvenlik kodu iletildi.");
               return;
             }
           } catch (adminErr) {
-            throw new Error(adminErr.message || "Admin sifresi hatali.");
+            throw new Error(adminErr.message || "Admin şifresi hatalı.");
           }
         }
 
-        // Normal Kullanıcı Girişi
         try {
           const userAccount = await signInLocalAccount(storage, rawUsername, rawPassword);
           form.reset();
           updateHeader();
           dialog.close();
-          notify("Giris Yapildi", `Hos geldiniz, ${userAccount.username}`);
+          notify("Giriş Yapıldı", `Hoş geldiniz, ${userAccount.username}`);
         } catch (normalErr) {
           if (normalErr.message === "not_registered") {
-            // Otomatik olarak KAYDOL sekmesine geçir ve bilgilendir
             render("register");
             if (usernameInput) usernameInput.value = rawUsername;
             if (passwordInput) passwordInput.value = rawPassword;
@@ -397,18 +740,18 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
               confirmInput.value = rawPassword;
               confirmInput.focus();
             }
-            notify("Kayit Bulunamadi", "Bu kullanici kayitli degil. 'Kaydol' sekmesine gecildi, lutfen 'Hesap Olustur' butonuna basin.");
+            notify("Kayıt Bulunamadı", "Bu kullanıcı kayıtlı değil. 'Kaydol' sekmesine geçildi, lütfen 'Hesap Oluştur' butonuna basın.");
             return;
           }
           throw normalErr;
         }
       }
     } catch (error) {
-      notify("Islem Basarisiz", error?.message || "Giris yapilamadi.");
+      notify("İşlem Başarısız", error?.message || "Giris yapılamadı.");
     } finally {
-      if (!is2FAActive) {
+      if (!is2FAActive && mode !== "forgot") {
         submitButton.disabled = false;
-        submitButton.textContent = mode === "register" ? "Hesap Olustur" : "Giris Yap";
+        submitButton.textContent = mode === "register" ? "Hesap Oluştur" : "Giriş Yap";
       }
     }
   });

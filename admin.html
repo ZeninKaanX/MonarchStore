@@ -831,8 +831,15 @@
     </div>
 
     <div style="margin-bottom: 16px;">
-      <span style="color: var(--text-muted); display: block; font: 700 10px var(--font-mono); text-transform: uppercase; margin-bottom: 6px;">Siparis Kalemleri:</span>
-      <div id="modalOrderItemsList" style="background: #070d14; border: 1px solid var(--border); border-radius: 4px; padding: 10px; max-height: 140px; overflow-y: auto; font-size: 12px;"></div>
+      <span id="modalItemsTitle" style="color: var(--text-muted); display: block; font: 700 10px var(--font-mono); text-transform: uppercase; margin-bottom: 6px;">Siparis Kalemleri / Destek Mesajlari:</span>
+      <div id="modalOrderItemsList" style="background: #070d14; border: 1px solid var(--border); border-radius: 4px; padding: 10px; max-height: 200px; overflow-y: auto; font-size: 12px;"></div>
+    </div>
+
+    <!-- Destek Yanıtlama Alanı (Sadece Destek Taleplerinde Görünür) -->
+    <div id="modalSupportReplySection" style="display: none; margin-bottom: 14px; background: rgba(56,189,248,0.05); border: 1px solid rgba(56,189,248,0.3); border-radius: 4px; padding: 12px;">
+      <span style="color: #38bdf8; display: block; font: 700 11px var(--font-mono); text-transform: uppercase; margin-bottom: 6px;">Yönetici Yanıtı Yaz:</span>
+      <textarea id="modalAdminReplyText" rows="2" placeholder="Kullanıcıya iletilecek destek yanıtınızı yazın..." style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: #070d14; color: var(--text); font-family: var(--font-body); font-size: 12px; margin-bottom: 8px; resize: vertical;"></textarea>
+      <button type="button" id="modalAdminSendReplyBtn" style="width: 100%; min-height: 36px; background: #0284c7; border: 0; color: #fff; font: 700 11px var(--font-mono); border-radius: 4px; cursor: pointer;">Yanıtı Gönder (Site & Discord)</button>
     </div>
 
     <div style="display: flex; gap: 10px; margin-bottom: 10px;">
@@ -1103,6 +1110,8 @@
     function openDetailModal(order) {
       activeDetailOrder = order;
       const isSupport = Array.isArray(order.items) && order.items[0]?.type === 'support';
+      const replySection = document.querySelector('#modalSupportReplySection');
+      if (replySection) replySection.style.display = isSupport ? 'block' : 'none';
 
       document.querySelector('#modalOrderCode').textContent = order.order_code;
       document.querySelector('#modalOrderUser').textContent = `@${order.discord_username || 'Musteri'}`;
@@ -1112,10 +1121,33 @@
       const itemsContainer = document.querySelector('#modalOrderItemsList');
       if (isSupport) {
         const item = order.items[0] || {};
+        const messages = Array.isArray(item.messages) && item.messages.length > 0
+          ? item.messages
+          : [{
+              sender: 'user',
+              author: order.discord_username ? `@${order.discord_username}` : 'Müşteri',
+              text: item.message || item.description || 'Destek talebi oluşturuldu.',
+              createdAt: order.created_at
+            }];
+
         itemsContainer.innerHTML = `
-          <div style="padding: 4px 0;">
-            <div style="color: #38bdf8; font-weight: 700; margin-bottom: 6px;">Konu: ${item.subject || item.title || 'Genel Destek'}</div>
-            <div style="background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 4px; padding: 10px; color: var(--text); white-space: pre-wrap; font-family: var(--font-body); font-size: 12px; line-height: 1.5;">${item.message || item.description || '-'}</div>
+          <div style="padding: 2px 0;">
+            <div style="color: #38bdf8; font-weight: 700; font-size: 13px; margin-bottom: 8px;">Konu: ${item.subject || item.title || 'Genel Destek'}</div>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              ${messages.map(m => {
+                const isAdmin = m.sender === 'admin';
+                const timeStr = m.createdAt ? new Date(m.createdAt).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }) : '';
+                return `
+                  <div style="background: ${isAdmin ? 'rgba(34,197,94,0.1)' : 'rgba(56,189,248,0.1)'}; border: 1px solid ${isAdmin ? 'rgba(34,197,94,0.3)' : 'rgba(56,189,248,0.3)'}; border-radius: 4px; padding: 8px 10px;">
+                    <div style="display: flex; justify-content: space-between; font-size: 10.5px; margin-bottom: 3px;">
+                      <strong style="color: ${isAdmin ? '#22c55e' : '#38bdf8'};">${isAdmin ? '🛡️ ' + (m.author || 'Destek Ekibi') : '👤 ' + (m.author || 'Müşteri')}</strong>
+                      <span style="color: var(--text-muted);">${timeStr}</span>
+                    </div>
+                    <div style="color: var(--text); font-size: 12px; line-height: 1.4; white-space: pre-wrap;">${m.text}</div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
           </div>
         `;
       } else if (Array.isArray(order.items) && order.items.length) {
@@ -1130,6 +1162,67 @@
       }
 
       document.querySelector('#adminOrderDetailDialog').showModal();
+    }
+
+    // Yönetici Destek Yanıtı Gönderme
+    const sendReplyBtn = document.querySelector('#modalAdminSendReplyBtn');
+    if (sendReplyBtn) {
+      sendReplyBtn.addEventListener('click', async () => {
+        if (!activeDetailOrder) return;
+        const textIn = document.querySelector('#modalAdminReplyText');
+        const text = textIn ? textIn.value.trim() : '';
+        if (!text) {
+          notify('Uyarı', 'Lütfen bir yanıt metni yazın.');
+          return;
+        }
+
+        try {
+          sendReplyBtn.disabled = true;
+          sendReplyBtn.textContent = 'Yanıt İletiliyor…';
+
+          const session = getAdminSession();
+          const author = session?.username ? `Monarch Admin (${session.username})` : 'Monarch Destek Ekibi';
+          
+          const items = Array.isArray(activeDetailOrder.items) ? [...activeDetailOrder.items] : [{}];
+          items[0].messages = Array.isArray(items[0].messages) ? [...items[0].messages] : [];
+
+          if (items[0].messages.length === 0 && (items[0].message || items[0].description)) {
+            items[0].messages.push({
+              sender: 'user',
+              author: activeDetailOrder.discord_username ? `@${activeDetailOrder.discord_username}` : 'Müşteri',
+              text: items[0].message || items[0].description,
+              createdAt: activeDetailOrder.created_at || new Date().toISOString()
+            });
+          }
+
+          items[0].messages.push({
+            sender: 'admin',
+            author,
+            text,
+            createdAt: new Date().toISOString()
+          });
+
+          // Supabase'de güncelle
+          const { data: updated, error } = await supabaseClient.from('order_requests')
+            .update({ items, status: 'validated' })
+            .eq('id', activeDetailOrder.id)
+            .select('*')
+            .single();
+
+          if (error) throw error;
+
+          activeDetailOrder = updated;
+          if (textIn) textIn.value = '';
+          openDetailModal(updated);
+          loadOrders();
+          notify('Yanıt İletildi', 'Mesajınız destek geçmişine ve kullanıcıya iletildi.');
+        } catch (err) {
+          notify('Hata', err.message);
+        } finally {
+          sendReplyBtn.disabled = false;
+          sendReplyBtn.textContent = 'Yanıtı Gönder (Site & Discord)';
+        }
+      });
     }
 
     // Arama & Filtreler

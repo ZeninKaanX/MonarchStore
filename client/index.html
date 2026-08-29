@@ -250,39 +250,152 @@
       .toast.show { opacity: 1; transform: translateY(0); }
       .toast b { display: block; margin-bottom: 3px; }
       
-      .account-dialog { width: min(430px, calc(100% - 32px)); padding: 0; border: 1px solid #d3dce5; color: var(--ink); background: #fff; box-shadow: 0 24px 65px rgba(12, 28, 42, .28); border-radius: 6px; }
-      .account-dialog::backdrop { background: rgba(11, 25, 37, .56); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
-      .account-panel { padding: 27px; }
-      .dialog-close { position: absolute; top: 12px; right: 13px; width: 34px; height: 34px; border: 0; color: #5e6b79; background: transparent; font-size: 24px; line-height: 1; cursor: pointer; }
-      .account-panel h2 { margin: 0; padding-right: 32px; font-size: 24px; }
-      .account-panel > p { margin: 6px 0 16px; color: var(--muted); font-size: 12.5px; line-height: 1.6; }
+      /* ==================== PREMIUM MONARCH ACCOUNT MODAL ==================== */
+      .account-dialog { 
+        width: min(450px, calc(100% - 24px)); 
+        padding: 0; 
+        border: 1px solid rgba(124, 58, 237, 0.25); 
+        color: var(--ink); 
+        background: #ffffff; 
+        box-shadow: 0 25px 75px rgba(15, 23, 42, 0.4), 0 0 35px rgba(124, 58, 237, 0.15); 
+        border-radius: 12px; 
+        overflow: hidden; 
+      }
+      .account-dialog::backdrop { 
+        background: rgba(10, 15, 26, 0.72); 
+        backdrop-filter: blur(5px); 
+        -webkit-backdrop-filter: blur(5px); 
+      }
+
+      /* Hero Header Banner with Mascot & Brand */
+      .account-hero-banner {
+        position: relative;
+        background: linear-gradient(135deg, #090d16 0%, #151c2e 60%, #2e1065 100%);
+        padding: 22px 24px 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        overflow: hidden;
+      }
+      .account-hero-banner::after {
+        content: "";
+        position: absolute;
+        top: -40px;
+        right: -20px;
+        width: 140px;
+        height: 140px;
+        background: radial-gradient(circle, rgba(124, 58, 237, 0.35) 0%, transparent 70%);
+        pointer-events: none;
+      }
+      .account-hero-left {
+        position: relative;
+        z-index: 2;
+        max-width: 255px;
+      }
+      .account-hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 2px 8px;
+        background: rgba(124, 58, 237, 0.25);
+        border: 1px solid rgba(124, 58, 237, 0.45);
+        color: #c4b5fd;
+        font: 700 9.5px "Space Mono", monospace;
+        border-radius: 4px;
+        letter-spacing: 0.04em;
+        margin-bottom: 6px;
+      }
+      .account-hero-left h2 {
+        font-family: "Space Mono", monospace;
+        font-size: 19px;
+        font-weight: 700;
+        color: #ffffff;
+        margin: 0;
+        line-height: 1.25;
+      }
+      .account-hero-left p {
+        color: #94a3b8;
+        font-size: 11.5px;
+        margin: 4px 0 0;
+        line-height: 1.45;
+      }
+
+      .account-hero-mascot {
+        position: relative;
+        z-index: 2;
+        width: 90px;
+        height: 90px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        filter: drop-shadow(0 4px 14px rgba(124, 58, 237, 0.45));
+        animation: floatMascot 3s ease-in-out infinite alternate;
+      }
+      @keyframes floatMascot {
+        0% { transform: translateY(0); }
+        100% { transform: translateY(-4px); }
+      }
+      .account-hero-mascot img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+      }
+
+      .account-dialog .dialog-close {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        width: 28px;
+        height: 28px;
+        border: 0;
+        background: rgba(255, 255, 255, 0.08);
+        color: #94a3b8;
+        font-size: 18px;
+        line-height: 1;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+        z-index: 5;
+        transition: all 0.16s;
+      }
+      .account-dialog .dialog-close:hover {
+        background: rgba(239, 68, 68, 0.85);
+        color: #ffffff;
+      }
+
+      .account-panel { padding: 20px 24px 24px; }
       
-      .account-modal-tabs { display: flex; gap: 6px; margin-bottom: 16px; border-bottom: 1px solid var(--line); padding-bottom: 8px; }
-      .account-modal-tab { flex: 1; padding: 8px 12px; border: 1px solid var(--line); background: #f8fafc; color: var(--muted); font: 700 11px "Space Mono", monospace; border-radius: 4px; transition: all .16s; text-align: center; }
-      .account-modal-tab.active, .account-modal-tab:hover { border-color: var(--blue); color: var(--blue); background: rgba(62, 131, 184, 0.1); }
+      .account-modal-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+      .account-modal-tab { flex: 1; padding: 9px 12px; border: 1px solid #e2e8f0; background: #f8fafc; color: #64748b; font: 700 11.5px "Space Mono", monospace; border-radius: 6px; transition: all .16s; text-align: center; cursor: pointer; }
+      .account-modal-tab.active, .account-modal-tab:hover { border-color: #7c3aed; color: #ffffff; background: #7c3aed; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25); }
       
       .pwd-input-wrap { position: relative; display: flex; align-items: center; width: 100%; }
       .pwd-input-wrap input { width: 100%; padding-right: 42px !important; }
       .pwd-toggle-btn { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); width: 30px; height: 30px; border: 0; background: transparent; cursor: pointer; display: grid; place-items: center; font-size: 14px; color: var(--muted); border-radius: 3px; }
       .pwd-toggle-btn:hover { background: rgba(0,0,0,0.05); color: var(--ink); }
 
-      .account-form { display: grid; gap: 13px; }
-      .account-form label { display: grid; gap: 6px; color: #43505f; font-size: 12px; font-weight: 800; }
-      .account-form input { width: 100%; min-height: 43px; padding: 0 12px; border: 1px solid #cbd4de; color: var(--ink); background: #fff; font: inherit; border-radius: 2px; }
-      .account-form input:focus { border-color: var(--blue); outline: 2px solid rgba(62, 131, 184, .16); }
-      .account-submit, .account-switch, .account-logout { min-height: 42px; border: 0; font-size: 12px; font-weight: 800; border-radius: 2px; }
-      .account-submit { margin-top: 4px; color: #fff; background: var(--blue); }
+      .account-form { display: grid; gap: 12px; }
+      .account-form label { display: grid; gap: 5px; color: #334155; font-size: 11.5px; font-weight: 700; }
+      .account-form input { width: 100%; min-height: 42px; padding: 0 12px; border: 1px solid #cbd5e1; color: var(--ink); background: #f8fafc; font: inherit; font-size: 13px; border-radius: 6px; transition: all 0.16s; }
+      .account-form input:focus { border-color: #7c3aed; background: #ffffff; outline: none; box-shadow: 0 0 0 3px rgba(124, 58, 237, .12); }
+      .account-submit, .account-switch, .account-logout { min-height: 44px; border: 0; font-size: 12.5px; font-weight: 700; font-family: "Space Mono", monospace; border-radius: 6px; }
+      .account-submit { margin-top: 4px; color: #fff; background: #7c3aed; box-shadow: 0 4px 14px rgba(124, 58, 237, 0.3); cursor: pointer; transition: background 0.16s; }
+      .account-submit:hover { background: #6d28d9; }
       .account-switch { color: var(--blue-dark); background: transparent; }
       .account-logout { width: 100%; color: #fff; background: #32485c; }
       
-      .account-admin-open-btn { width: 100%; min-height: 42px; margin-bottom: 8px; border: 0; color: #fff; background: #7c3aed; font-size: 12px; font-weight: 800; border-radius: 2px; transition: background .18s; cursor: pointer; }
+      .account-admin-open-btn { width: 100%; min-height: 44px; margin-bottom: 8px; border: 0; color: #fff; background: #7c3aed; font-size: 12px; font-weight: 800; font-family: "Space Mono", monospace; border-radius: 6px; transition: background .18s; cursor: pointer; box-shadow: 0 4px 14px rgba(124, 58, 237, 0.3); }
       .account-admin-open-btn:hover { background: #6d28d9; }
       
-      .account-2fa-box { padding: 13px 15px; border: 1px solid #fed7aa; background: #fffbeb; border-radius: 4px; font-size: 12px; color: #9a3412; line-height: 1.5; }
+      .account-2fa-box { padding: 13px 15px; border: 1px solid #fed7aa; background: #fffbeb; border-radius: 6px; font-size: 12px; color: #9a3412; line-height: 1.5; }
       .account-2fa-box b { display: block; color: #7c2d12; font-size: 12.5px; margin-bottom: 3px; }
       .countdown-pill { display: inline-block; padding: 2px 7px; background: #ea580c; color: #fff; border-radius: 3px; font: 700 11px "Space Mono", monospace; margin-top: 4px; }
 
-      .account-note { margin: 15px 0 0; color: #7a8591; font-size: 11px; line-height: 1.55; }
+      .account-note { margin: 14px 0 0; color: #94a3b8; font-size: 11px; line-height: 1.5; text-align: center; }
       :focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
 
       /* Admin Dashboard Full Modal */
@@ -769,32 +882,33 @@
 
     <!-- Standart Kullanıcı & Entegre Admin/2FA Hesap Penceresi -->
     <dialog class="account-dialog" id="accountDialog" aria-labelledby="accountTitle">
-      <div class="account-panel">
-        <button class="dialog-close" id="accountClose" type="button" aria-label="Pencereyi kapat">×</button>
-        
-        <!-- Chibi Anime Mascot Header -->
-        <div class="account-mascot-header">
-          <div class="account-mascot-avatar-wrap">
-            <img src="images/mascot.webp" alt="Monarch Chibi Mascot" width="48" height="48" />
-          </div>
-          <div>
-            <h2 id="accountTitle" style="font-size: 22px; margin: 0;">Hesabına Giriş Yap</h2>
-            <p id="accountDescription" style="margin: 3px 0 0; font-size: 12px; color: var(--muted);">Kullanıcı adı ve şifrenizi girerek oturum açın.</p>
-          </div>
+      <button class="dialog-close" id="accountClose" type="button" aria-label="Pencereyi kapat">×</button>
+
+      <!-- Premium Hero Header Cover with Monarch Brand & Anime Mascot -->
+      <div class="account-hero-banner">
+        <div class="account-hero-left">
+          <span class="account-hero-badge">👑 MONARCH STORE</span>
+          <h2 id="accountTitle">Hesabına Giriş Yap</h2>
+          <p id="accountDescription">Kullanıcı adı ve şifrenizle giriş yapın (Yetkiliyseniz Discord'a 2FA kodu gelir).</p>
         </div>
-        
+        <div class="account-hero-mascot">
+          <img src="images/mascot-clean.png" alt="Monarch Anime Mascot Girl" width="90" height="90" />
+        </div>
+      </div>
+
+      <div class="account-panel">
         <!-- Giriş / Kayıt Sekmeleri -->
         <div class="account-modal-tabs" id="accountModalTabs">
-          <button type="button" class="account-modal-tab active" id="accountTabLogin">Giriş Yap</button>
-          <button type="button" class="account-modal-tab" id="accountTabRegister">Yeni Kayıt</button>
+          <button type="button" class="account-modal-tab active" id="accountTabLogin">⚡ Giriş Yap</button>
+          <button type="button" class="account-modal-tab" id="accountTabRegister">✨ Yeni Kayıt</button>
         </div>
 
         <!-- Admin İçin Panel Açma Butonu -->
-        <button class="account-admin-open-btn" id="accountOpenAdminBtn" type="button" style="display: none;">🛡️ Yönetim Panelini Aç</button>
+        <button class="account-admin-open-btn" id="accountOpenAdminBtn" type="button" style="display: none;">🛡️ Yönetim Panelini Aç (Yeni Sekme)</button>
 
         <form class="account-form" id="accountForm">
           <!-- Standart Giriş/Kayıt Alanları -->
-          <div id="accountStandardFields" style="display: grid; gap: 13px;">
+          <div id="accountStandardFields" style="display: grid; gap: 12px;">
             <label>Kullanıcı adı<input id="accountUsername" name="username" autocomplete="username" minlength="3" maxlength="24" required /></label>
             <label>
               Şifre
@@ -816,11 +930,11 @@
             </div>
             <label>
               Discord Kullanıcı Adınız
-              <input id="account2FADiscordUser" name="account2FADiscordUser" type="text" placeholder="Örn: eververity" autocomplete="off" style="width: 100%; min-height: 42px; padding: 0 12px; border: 1px solid #cbd4de; border-radius: 4px; color: var(--ink); background: #ffffff;" />
+              <input id="account2FADiscordUser" name="account2FADiscordUser" type="text" placeholder="Örn: eververity" autocomplete="off" style="width: 100%; min-height: 42px; padding: 0 12px; border: 1px solid #cbd4de; border-radius: 6px; color: var(--ink); background: #ffffff;" />
             </label>
             <label>
               6 Haneli Güvenlik Kodu
-              <input id="account2FACodeInput" name="account2FACode" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="Örn: 849216" autocomplete="one-time-code" style="letter-spacing: .25em; font-family: 'Space Mono', monospace; font-size: 18px; font-weight: 700; text-align: center; width: 100%; min-height: 46px; border: 2px solid #7c3aed; border-radius: 4px; color: var(--ink); background: #ffffff;" />
+              <input id="account2FACodeInput" name="account2FACode" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="849216" autocomplete="one-time-code" style="letter-spacing: .3em; font-family: 'Space Mono', monospace; font-size: 18px; font-weight: 700; text-align: center; width: 100%; min-height: 46px; border: 2px solid #7c3aed; border-radius: 6px; color: var(--ink); background: #ffffff;" />
             </label>
           </div>
 

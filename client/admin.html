@@ -557,20 +557,21 @@
       margin-bottom: 24px;
     }
     .login-avatar-wrap {
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
-      border: 2px solid var(--primary);
-      padding: 3px;
-      background: #000;
-      box-shadow: 0 0 20px var(--primary-glow);
+      width: 84px;
+      height: 84px;
       margin-bottom: 12px;
+      filter: drop-shadow(0 4px 18px var(--primary-glow));
+      animation: floatMascot 3s ease-in-out infinite alternate;
+    }
+    @keyframes floatMascot {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-4px); }
     }
     .login-avatar-wrap img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
-      border-radius: 50%;
+      object-fit: contain;
+      display: block;
     }
     .login-brand h2 {
       font: 800 20px var(--font-mono);
@@ -693,7 +694,7 @@
     <div class="login-card">
       <div class="login-brand">
         <div class="login-avatar-wrap">
-          <img src="images/mascot.webp" alt="Monarch Chibi Mascot">
+          <img src="images/mascot-clean.png" alt="Monarch Anime Mascot Girl" width="84" height="84">
         </div>
         <h2>MONARCH SUITE</h2>
         <p id="loginDesc">Enterprise Yönetim Paneli Girişi</p>

@@ -287,100 +287,174 @@
 
       /* Admin Dashboard Full Modal */
       .admin-dashboard-dialog { width: min(1200px, calc(100% - 24px)); height: min(90vh, 850px); max-height: 90vh; padding: 0; border: 1px solid #7c3aed; color: var(--ink); background: #ffffff; box-shadow: 0 30px 80px rgba(0, 0, 0, .35); border-radius: 8px; z-index: 35; display: flex; flex-direction: column; }
-      .admin-dashboard-dialog::backdrop { background: rgba(10, 15, 25, .82); backdrop-filter: blur(5px); }
-      .admin-dash-panel { display: flex; flex-direction: column; height: 100%; overflow: hidden; padding: 24px; }
-      .admin-dash-header { display: flex; align-items: center; justify-content: space-between; gap: 15px; border-bottom: 1px solid var(--line); padding-bottom: 16px; margin-bottom: 20px; }
-      .admin-dash-header h2 { margin: 0; font-size: 24px; display: flex; align-items: center; gap: 9px; }
-      .admin-dash-actions { display: flex; align-items: center; gap: 8px; }
-      .admin-btn-action { min-height: 36px; padding: 0 12px; border: 1px solid var(--line); background: var(--white); color: var(--ink); font: 700 11px "Space Mono", monospace; border-radius: 4px; transition: all .16s; }
-      .admin-btn-action:hover { border-color: var(--blue); color: var(--blue); }
-      .admin-btn-logout { border-color: #fca5a5; color: #dc2626; background: #fef2f2; }
-      .admin-btn-logout:hover { background: #fee2e2; }
-
-      .admin-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
-      .admin-stat-card { padding: 14px 18px; border: 1px solid var(--line); background: #f8fafc; border-radius: 6px; }
-      .admin-stat-card small { display: block; color: var(--muted); font: 700 10px "Space Mono", monospace; text-transform: uppercase; margin-bottom: 4px; }
-      .admin-stat-card strong { font-size: 24px; color: var(--ink); font-family: "Space Mono", monospace; }
-
-      .admin-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 14px; margin-bottom: 14px; flex-wrap: wrap; }
-      .admin-filter-tabs { display: flex; gap: 6px; }
-      .admin-filter-tab { padding: 6px 12px; border: 1px solid var(--line); background: #fff; font: 700 11px "Space Mono", monospace; border-radius: 4px; cursor: pointer; color: var(--muted); transition: all .16s; }
-      .admin-filter-tab.active, .admin-filter-tab:hover { border-color: #7c3aed; color: #7c3aed; background: rgba(124, 58, 237, 0.08); }
-      .admin-search-input { min-width: 260px; min-height: 36px; padding: 0 12px; border: 1px solid var(--line); background: #fff; font-size: 12px; border-radius: 4px; }
-
-      .admin-table-container { flex: 1; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: #fff; }
-      .admin-table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; }
-      .admin-table th { position: sticky; top: 0; background: #f1f5f9; color: #475569; font: 700 10px "Space Mono", monospace; text-transform: uppercase; padding: 11px 14px; border-bottom: 1px solid var(--line); z-index: 2; }
-      .admin-table td { padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: middle; }
-      .admin-table tr:hover td { background: #f8fafc; }
-      .admin-code { font: 700 12px "Space Mono", monospace; color: #1e293b; }
-      .admin-user-tag { font-weight: 700; color: #0284c7; }
-      .admin-uid { display: block; font: 9px "Space Mono", monospace; color: #64748b; }
-      .admin-uid-none { display: block; font: 9px "Space Mono", monospace; color: #f59e0b; }
-      .admin-item-pill { display: inline-block; padding: 2px 6px; background: #e2e8f0; color: #1e293b; font-size: 10px; border-radius: 3px; margin: 1px 2px; }
-      .admin-price { font-size: 13px; color: #0f172a; font-family: "Space Mono", monospace; }
-      .admin-date { font: 10px "Space Mono", monospace; color: #64748b; white-space: nowrap; }
+      /* ==================== ELITE SAAS ADMIN DASHBOARD ==================== */
+      .adm-dashboard-dialog { width: min(1380px, calc(100% - 24px)); height: min(94vh, 920px); max-height: 94vh; padding: 0; border: 1px solid #7c3aed; color: var(--ink); background: #ffffff; box-shadow: 0 35px 95px rgba(15, 23, 42, .45); border-radius: 10px; z-index: 40; display: flex; flex-direction: column; overflow: hidden; }
+      .adm-dashboard-dialog::backdrop { background: rgba(10, 15, 25, .86); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
       
-      .admin-badge { display: inline-block; padding: 4px 8px; border-radius: 3px; font: 700 9px "Space Mono", monospace; text-transform: uppercase; letter-spacing: .04em; white-space: nowrap; }
-      .badge-pending { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
-      .badge-processing { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
-      .badge-validated { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
-      .badge-queued { background: #f3e8ff; color: #6b21a8; border: 1px solid #e9d5ff; }
-      .badge-progress { background: #ffedd5; color: #c2410c; border: 1px solid #fed7aa; }
-      .badge-closed { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
-      .badge-cancelled { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
-      .badge-default { background: #e2e8f0; color: #334155; }
-
-      .admin-status-select { min-height: 28px; font-size: 11px; padding: 0 6px; border: 1px solid var(--line); border-radius: 3px; background: #fff; cursor: pointer; }
-      .admin-loading, .admin-empty { text-align: center; padding: 35px 0 !important; color: var(--muted); font-size: 13px; }
-
-      /* Dark Theme */
-      html[data-theme="dark"] body { background: radial-gradient(circle at 82% 0%, rgba(44, 96, 139, .22), transparent 31%), linear-gradient(180deg, #0a111b 0%, #0d1723 100%); }
-      html[data-theme="dark"] header { background: #05080c; }
-      html[data-theme="dark"] .links { color: #c5d2de; }
-      html[data-theme="dark"] .logo-dark-mode { display: block; }
-      html[data-theme="dark"] .logo-light-mode { display: none; }
-      html[data-theme="dark"] .account-button.is-signed-in, html[data-theme="dark"] .cart, html[data-theme="dark"] .theme-toggle { border-color: #354759; color: #dce8f2; background: #111c28; }
-      html[data-theme="dark"] .theme-toggle:hover { border-color: var(--blue); color: var(--blue); }
-      html[data-theme="dark"] .theme-toggle-sun { display: none; }
-      html[data-theme="dark"] .theme-toggle-moon { display: inline-block; }
-      html[data-theme="dark"] .order-dialog, html[data-theme="dark"] .account-dialog { border-color: #344659; background: #111c28; }
-      html[data-theme="dark"] .order-summary { border-color: #314253; background: #0d1722; }
-      html[data-theme="dark"] .order-total { border-color: #314253; color: #e7f0f8; }
-      html[data-theme="dark"] .order-notice { border-color: #854d0e; background: #2b1a08; color: #fde68a; }
-      html[data-theme="dark"] .order-notice strong { color: #fef08a; }
-      html[data-theme="dark"] .order-form label, html[data-theme="dark"] .account-form label { color: #c4d2df; }
-      html[data-theme="dark"] .order-form input, html[data-theme="dark"] .account-form input { border-color: #384a5d; color: #eef5fb; background: #0c1520; }
-      html[data-theme="dark"] .cat-tab { border-color: #2e3f52; background: #111c28; color: #d2e0eb; }
-      html[data-theme="dark"] .cat-tab:hover, html[data-theme="dark"] .cat-tab.active { border-color: var(--blue); color: var(--blue); background: rgba(105, 178, 233, 0.12); box-shadow: 0 4px 14px rgba(105, 178, 233, 0.14); }
-      html[data-theme="dark"] .buy { background: #111c28; }
-      html[data-theme="dark"] .discord-card { border-color: #33495a; color: #e4eef6; background: #111c28; }
-      html[data-theme="dark"] .discord-card p, html[data-theme="dark"] .discord-stat-label { color: #aebfce; }
-      html[data-theme="dark"] .discord-stat, html[data-theme="dark"] .product-row { border-color: #314354; }
-      html[data-theme="dark"] .discord-stat-count { color: #eaf3fa; }
-      html[data-theme="dark"] footer { background: #0d1722; }
-      html[data-theme="dark"] .toast { border-color: #31556e; color: #dcecf7; background: #102235; }
-      html[data-theme="dark"] .dialog-close { color: #c7d6e1; }
+      .adm-layout { display: grid; grid-template-columns: 260px 1fr; height: 100%; overflow: hidden; }
       
-      /* Dark Theme for Admin Components */
-      html[data-theme="dark"] .admin-dashboard-dialog { background: #0c1522; border-color: #8b5cf6; color: #f1f5f9; }
-      html[data-theme="dark"] .account-2fa-box { background: #2b1a08; border-color: #854d0e; color: #fde68a; }
-      html[data-theme="dark"] .account-2fa-box b { color: #fef08a; }
-      html[data-theme="dark"] .admin-stat-card { background: #111e2e; border-color: #1e2e42; }
-      html[data-theme="dark"] .admin-stat-card strong { color: #f8fafc; }
-      html[data-theme="dark"] .admin-filter-tab { background: #111e2e; border-color: #1e2e42; color: #94a3b8; }
-      html[data-theme="dark"] .admin-filter-tab.active { background: rgba(139, 92, 246, 0.18); border-color: #8b5cf6; color: #a78bfa; }
-      html[data-theme="dark"] .admin-search-input { background: #0b1420; border-color: #243548; color: #f1f5f9; }
-      html[data-theme="dark"] .admin-table-container { background: #0c1522; border-color: #1e2e42; }
-      html[data-theme="dark"] .admin-table th { background: #132030; color: #94a3b8; border-color: #1e2e42; }
-      html[data-theme="dark"] .admin-table td { border-color: #1e2e42; color: #e2e8f0; }
-      html[data-theme="dark"] .admin-table tr:hover td { background: #101c2b; }
-      html[data-theme="dark"] .admin-code { color: #38bdf8; }
-      html[data-theme="dark"] .admin-item-pill { background: #1e293b; color: #cbd5e1; }
-      html[data-theme="dark"] .admin-price { color: #f8fafc; }
-      html[data-theme="dark"] .admin-status-select { background: #111e2e; border-color: #243548; color: #f1f5f9; }
-      html[data-theme="dark"] .admin-btn-action { background: #111e2e; border-color: #1e2e42; color: #cbd5e1; }
-      html[data-theme="dark"] .admin-btn-logout { background: #3b1418; border-color: #7f1d1d; color: #fca5a5; }
+      /* Sidebar */
+      .adm-sidebar { display: flex; flex-direction: column; background: #0f172a; color: #f8fafc; border-right: 1px solid #1e293b; padding: 20px 16px; user-select: none; }
+      .adm-brand { display: flex; align-items: center; gap: 10px; padding-bottom: 16px; border-bottom: 1px solid #1e293b; margin-bottom: 16px; }
+      .adm-brand-icon { width: 32px; height: 32px; border-radius: 6px; background: linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%); display: grid; place-items: center; font-size: 16px; font-weight: 800; color: #fff; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4); }
+      .adm-brand-text strong { display: block; font: 700 13px "Space Mono", monospace; letter-spacing: .04em; color: #f8fafc; }
+      .adm-brand-text small { display: block; font: 9px "Space Mono", monospace; color: #94a3b8; }
+      
+      .adm-user-profile { padding: 12px; background: #1e293b; border-radius: 6px; margin-bottom: 18px; border: 1px solid #334155; }
+      .adm-user-profile-top { display: flex; align-items: center; gap: 10px; }
+      .adm-user-avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #8b5cf6, #ec4899); display: grid; place-items: center; font-weight: 800; font-size: 14px; color: #fff; }
+      .adm-user-info { flex: 1; min-width: 0; }
+      .adm-user-info strong { display: block; font-size: 13px; color: #f8fafc; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .adm-user-role-badge { display: inline-block; padding: 1px 6px; background: rgba(124, 58, 237, 0.3); border: 1px solid #7c3aed; color: #c4b5fd; font: 700 8.5px "Space Mono", monospace; border-radius: 3px; text-transform: uppercase; margin-top: 2px; }
+      .adm-user-discord-tag { display: block; font: 10px "Space Mono", monospace; color: #38bdf8; margin-top: 5px; }
+
+      .adm-nav-menu { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+      .adm-sidebar-tab { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 6px; border: 1px solid transparent; background: transparent; color: #94a3b8; font: 700 12px "Space Mono", monospace; cursor: pointer; transition: all .16s; text-align: left; }
+      .adm-sidebar-tab:hover { background: #1e293b; color: #f8fafc; }
+      .adm-sidebar-tab.active { background: #7c3aed; color: #fff; box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35); }
+      .adm-sidebar-tab-icon { font-size: 15px; }
+
+      .adm-sidebar-bottom { border-top: 1px solid #1e293b; padding-top: 14px; display: flex; flex-direction: column; gap: 8px; font-size: 11px; }
+      .adm-live-clock { display: flex; align-items: center; gap: 6px; color: #38bdf8; font: 700 10.5px "Space Mono", monospace; padding: 4px 6px; background: rgba(56, 189, 248, 0.1); border-radius: 4px; }
+      .adm-db-status { display: flex; align-items: center; gap: 6px; color: #4ade80; font: 10px "Space Mono", monospace; }
+      .adm-db-status::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 8px #4ade80; }
+      .adm-btn-sidebar-logout { width: 100%; padding: 8px; background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; font: 700 11px "Space Mono", monospace; border-radius: 4px; cursor: pointer; transition: all .16s; }
+      .adm-btn-sidebar-logout:hover { background: #ef4444; color: #fff; }
+
+      /* Main Content Area */
+      .adm-main { display: flex; flex-direction: column; height: 100%; overflow: hidden; background: #f8fafc; }
+      .adm-topbar { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 16px 24px; background: #ffffff; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+      .adm-topbar-left { display: flex; align-items: center; gap: 10px; flex: 1; max-width: 540px; }
+      .adm-search-box { position: relative; width: 100%; }
+      .adm-search-input { width: 100%; min-height: 38px; padding: 0 12px 0 34px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 12px; color: var(--ink); background: #f8fafc; transition: all .16s; }
+      .adm-search-input:focus { border-color: #7c3aed; background: #fff; box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1); }
+      .adm-search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); font-size: 13px; color: #94a3b8; pointer-events: none; }
+
+      .adm-topbar-right { display: flex; align-items: center; gap: 8px; }
+      .adm-filter-select, .adm-sort-select { min-height: 38px; padding: 0 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 11px; font-weight: 700; color: #334155; background: #fff; cursor: pointer; }
+      .adm-btn-top { min-height: 38px; padding: 0 14px; border: 1px solid #cbd5e1; background: #fff; color: #1e293b; font: 700 11px "Space Mono", monospace; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all .16s; }
+      .adm-btn-top:hover { border-color: #7c3aed; color: #7c3aed; background: #f5f3ff; }
+      .adm-btn-top.spinning .adm-icon-refresh { animation: spin 0.6s linear infinite; }
+      @keyframes spin { 100% { transform: rotate(360deg); } }
+      .adm-btn-close-modal { width: 34px; height: 34px; border: 0; background: transparent; font-size: 20px; color: #64748b; cursor: pointer; border-radius: 4px; display: grid; place-items: center; }
+      .adm-btn-close-modal:hover { background: #fee2e2; color: #ef4444; }
+
+      .adm-content-scroll { flex: 1; overflow-y: auto; padding: 24px; }
+      .adm-view-section { display: none; }
+
+      /* Stat Cards Grid */
+      .adm-stats-grid-elite { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; margin-bottom: 24px; }
+      .adm-stat-card-elite { padding: 16px; background: #ffffff; border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: space-between; }
+      .adm-stat-card-elite small { display: flex; align-items: center; justify-content: space-between; color: #64748b; font: 700 10px "Space Mono", monospace; text-transform: uppercase; margin-bottom: 6px; }
+      .adm-stat-card-elite strong { font-size: 20px; color: #0f172a; font-family: "Space Mono", monospace; font-weight: 700; }
+      .adm-stat-card-elite .adm-stat-icon { font-size: 16px; }
+
+      /* Overview Split Layout */
+      .adm-overview-split { display: grid; grid-template-columns: 360px 1fr; gap: 20px; }
+      .adm-card-box { padding: 20px; background: #ffffff; border: 1px solid var(--line); border-radius: 8px; }
+      .adm-card-box h3 { margin: 0 0 14px; font-size: 15px; font-weight: 800; display: flex; align-items: center; justify-content: space-between; }
+      .adm-cat-progress-item { margin-bottom: 14px; }
+      .adm-cat-progress-meta { display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 700; margin-bottom: 5px; color: #334155; }
+      .adm-cat-bar-bg { width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
+      .adm-cat-bar-fill { height: 100%; border-radius: 4px; transition: width 0.4s ease; }
+
+      /* Orders Table */
+      .adm-table-wrap { background: #ffffff; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+      .adm-table-header-info { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid var(--line); background: #ffffff; }
+      .adm-table-header-info h3 { margin: 0; font-size: 15px; display: flex; align-items: center; gap: 8px; }
+      .adm-count-badge { padding: 3px 8px; background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 4px; font: 700 10px "Space Mono", monospace; color: #475569; }
+
+      .adm-elite-table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; }
+      .adm-elite-table th { position: sticky; top: 0; background: #f8fafc; color: #475569; font: 700 10px "Space Mono", monospace; text-transform: uppercase; letter-spacing: .04em; padding: 12px 16px; border-bottom: 1px solid var(--line); z-index: 2; }
+      .adm-elite-table td { padding: 12px 16px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+      .adm-elite-table tr:hover td { background: #f8fafc; }
+
+      .adm-code-cell { display: flex; align-items: center; gap: 6px; }
+      .adm-code { font: 700 12px "Space Mono", monospace; color: #7c3aed; background: #f5f3ff; padding: 2px 6px; border-radius: 4px; border: 1px solid #ddd6fe; cursor: pointer; }
+      .adm-code:hover { background: #ede9fe; }
+      .adm-btn-copy { border: 0; background: transparent; cursor: pointer; font-size: 12px; color: #94a3b8; padding: 2px; }
+      .adm-btn-copy:hover { color: #7c3aed; }
+
+      .adm-user-cell { display: flex; align-items: center; gap: 9px; }
+      .adm-avatar-circle { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #3b82f6, #06b6d4); color: #fff; font-weight: 800; font-size: 11px; display: grid; place-items: center; flex-shrink: 0; }
+      .adm-user-meta { min-width: 0; }
+      .adm-user-name { font-weight: 700; color: #0284c7; font-size: 12px; }
+      .adm-user-id { display: block; font: 9px "Space Mono", monospace; color: #64748b; }
+      .adm-user-id-waiting { display: block; font: 9px "Space Mono", monospace; color: #d97706; }
+
+      .adm-item-pill { display: inline-block; padding: 3px 7px; background: #f1f5f9; border: 1px solid #cbd5e1; color: #1e293b; font-size: 10.5px; border-radius: 4px; margin: 1px 2px; white-space: nowrap; }
+      .adm-item-pill b { color: #0f172a; }
+      .adm-price { font: 700 13.5px "Space Mono", monospace; color: #0f172a; white-space: nowrap; }
+      .adm-time-cell { display: flex; flex-direction: column; gap: 1px; }
+      .adm-rel-time { font-weight: 700; font-size: 11.5px; color: #334155; }
+      .adm-abs-time { font: 9.5px "Space Mono", monospace; color: #94a3b8; }
+      .adm-handled-tag { padding: 2px 6px; background: #e0f2fe; border: 1px solid #bae6fd; color: #0369a1; border-radius: 3px; font: 700 9px "Space Mono", monospace; }
+
+      .adm-badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 9px; border-radius: 4px; font: 700 9.5px "Space Mono", monospace; text-transform: uppercase; letter-spacing: .03em; white-space: nowrap; }
+      .adm-badge-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+      
+      .adm-count-pill { padding: 3px 8px; background: #f5f3ff; border: 1px solid #ddd6fe; color: #7c3aed; border-radius: 4px; font: 700 11px "Space Mono", monospace; }
+
+      .adm-actions-group { display: flex; align-items: center; gap: 6px; }
+      .adm-status-select { min-height: 30px; font-size: 11px; padding: 0 6px; border: 1px solid #cbd5e1; border-radius: 4px; background: #fff; cursor: pointer; }
+      .adm-btn-inspect { min-height: 30px; padding: 0 8px; border: 1px solid #cbd5e1; background: #f8fafc; color: #334155; font: 700 10.5px "Space Mono", monospace; border-radius: 4px; cursor: pointer; transition: all .16s; }
+      .adm-btn-inspect:hover { border-color: #7c3aed; color: #7c3aed; background: #f5f3ff; }
+
+      .adm-btn-table-action { padding: 5px 10px; border: 1px solid #cbd5e1; background: #f8fafc; font: 700 10.5px "Space Mono", monospace; color: #334155; border-radius: 4px; cursor: pointer; }
+      .adm-btn-table-action:hover { border-color: #0284c7; color: #0284c7; }
+
+      /* Detail Inspector Drawer Dialog */
+      .adm-detail-dialog { width: min(580px, calc(100% - 24px)); padding: 0; border: 1px solid #7c3aed; border-radius: 8px; box-shadow: 0 30px 80px rgba(0,0,0,0.35); background: #ffffff; color: var(--ink); z-index: 50; }
+      .adm-detail-dialog::backdrop { background: rgba(10, 15, 25, 0.7); backdrop-filter: blur(4px); }
+      .adm-detail-panel { padding: 24px; }
+      .adm-detail-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); padding-bottom: 14px; margin-bottom: 16px; }
+      .adm-detail-header h3 { margin: 0; font-size: 18px; color: #7c3aed; }
+      .adm-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px; }
+      .adm-detail-box { padding: 10px 12px; background: #f8fafc; border: 1px solid var(--line); border-radius: 6px; }
+      .adm-detail-box small { display: block; font: 700 9.5px "Space Mono", monospace; color: #64748b; text-transform: uppercase; margin-bottom: 3px; }
+      .adm-detail-box strong { font-size: 13px; color: #0f172a; }
+      .adm-modal-items-wrap { border: 1px solid var(--line); border-radius: 6px; padding: 12px; margin-bottom: 18px; }
+      .adm-modal-item-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px dashed var(--line); font-size: 12px; }
+      .adm-modal-item-row:last-child { border-bottom: 0; }
+      .adm-detail-actions { display: flex; gap: 8px; margin-top: 18px; }
+      .adm-btn-modal-action { flex: 1; min-height: 40px; border: 0; font: 700 11px "Space Mono", monospace; border-radius: 4px; cursor: pointer; }
+      .adm-btn-modal-done { background: #16a34a; color: #fff; }
+      .adm-btn-modal-cancel { background: #dc2626; color: #fff; }
+
+      /* Dark Theme for Elite Dashboard */
+      html[data-theme="dark"] .adm-dashboard-dialog { background: #0b1320; border-color: #8b5cf6; }
+      html[data-theme="dark"] .adm-main { background: #080e18; color: #f1f5f9; }
+      html[data-theme="dark"] .adm-topbar { background: #0c1522; border-color: #1e293b; }
+      html[data-theme="dark"] .adm-search-input { background: #080e18; border-color: #1e293b; color: #f1f5f9; }
+      html[data-theme="dark"] .adm-filter-select, html[data-theme="dark"] .adm-sort-select, html[data-theme="dark"] .adm-btn-top { background: #0c1522; border-color: #1e293b; color: #f1f5f9; }
+      html[data-theme="dark"] .adm-stat-card-elite, html[data-theme="dark"] .adm-card-box, html[data-theme="dark"] .adm-table-wrap { background: #0c1522; border-color: #1e293b; }
+      html[data-theme="dark"] .adm-stat-card-elite strong { color: #f8fafc; }
+      html[data-theme="dark"] .adm-table-header-info { background: #0c1522; border-color: #1e293b; }
+      html[data-theme="dark"] .adm-elite-table th { background: #0e1826; border-color: #1e293b; color: #94a3b8; }
+      html[data-theme="dark"] .adm-elite-table td { border-color: #1e293b; color: #e2e8f0; }
+      html[data-theme="dark"] .adm-elite-table tr:hover td { background: #101c2e; }
+      html[data-theme="dark"] .adm-code { background: #1e1b4b; border-color: #4338ca; color: #c4b5fd; }
+      html[data-theme="dark"] .adm-item-pill { background: #1e293b; border-color: #334155; color: #e2e8f0; }
+      html[data-theme="dark"] .adm-item-pill b { color: #f8fafc; }
+      html[data-theme="dark"] .adm-price { color: #f8fafc; }
+      html[data-theme="dark"] .adm-rel-time { color: #cbd5e1; }
+      html[data-theme="dark"] .adm-status-select, html[data-theme="dark"] .adm-btn-inspect, html[data-theme="dark"] .adm-btn-table-action { background: #080e18; border-color: #1e293b; color: #f1f5f9; }
+      html[data-theme="dark"] .adm-detail-dialog { background: #0c1522; border-color: #8b5cf6; }
+      html[data-theme="dark"] .adm-detail-box { background: #080e18; border-color: #1e293b; }
+      html[data-theme="dark"] .adm-detail-box strong { color: #f8fafc; }
+
+      @media (max-width: 960px) {
+        .adm-layout { grid-template-columns: 1fr; }
+        .adm-sidebar { display: none; }
+        .adm-stats-grid-elite { grid-template-columns: repeat(3, 1fr); }
+        .adm-overview-split { grid-template-columns: 1fr; }
+        .adm-topbar { flex-direction: column; align-items: stretch; }
+        .adm-topbar-left { max-width: 100%; }
+        .adm-topbar-right { flex-wrap: wrap; }
+      }
+      @media (max-width: 600px) {
+        .adm-stats-grid-elite { grid-template-columns: repeat(2, 1fr); }
+      }
 
       @media (max-width: 720px) {
         .container { width: min(100% - 30px, 1120px); }
@@ -735,76 +809,338 @@
       </div>
     </dialog>
 
-    <!-- ADMIN DASHBOARD MODALI -->
-    <dialog class="admin-dashboard-dialog" id="adminDashboardDialog" aria-labelledby="adminDashTitle">
-      <div class="admin-dash-panel">
-        <div class="admin-dash-header">
-          <h2 id="adminDashTitle">🛡️ Monarch Store Yönetim Paneli</h2>
-          <div class="admin-dash-actions">
-            <button class="admin-btn-action" id="adminRefreshBtn" type="button">🔄 Yenile</button>
-            <button class="admin-btn-action admin-btn-logout" id="adminLogoutBtn" type="button">Çıkış Yap</button>
-            <button class="dialog-close" onclick="document.querySelector('#adminDashboardDialog').close()" style="position: static; font-size: 20px;" type="button" aria-label="Kapat">×</button>
+    <!-- ==================== ELITE SAAS ADMIN DASHBOARD ==================== -->
+    <dialog class="adm-dashboard-dialog" id="adminDashboardDialog" aria-labelledby="adminDashTitle">
+      <div class="adm-layout">
+        <!-- Sidebar -->
+        <aside class="adm-sidebar">
+          <div class="adm-brand">
+            <div class="adm-brand-icon">M</div>
+            <div class="adm-brand-text">
+              <strong id="adminDashTitle">MONARCH SUITE</strong>
+              <small>v2.6 Enterprise Control</small>
+            </div>
+          </div>
+
+          <!-- Admin Profile Card -->
+          <div class="adm-user-profile">
+            <div class="adm-user-profile-top">
+              <div class="adm-user-avatar">👑</div>
+              <div class="adm-user-info">
+                <strong id="adminUserBadge">admin</strong>
+                <span class="adm-user-role-badge">FOUNDER</span>
+              </div>
+            </div>
+            <span class="adm-user-discord-tag" id="adminDiscordTag">@yetkili</span>
+          </div>
+
+          <!-- Navigation Tabs -->
+          <nav class="adm-nav-menu">
+            <button type="button" class="adm-sidebar-tab" data-tab="overview">
+              <span class="adm-sidebar-tab-icon">📊</span>
+              <span>Genel Bakış</span>
+            </button>
+            <button type="button" class="adm-sidebar-tab active" data-tab="orders" id="tabOrdersBtn">
+              <span class="adm-sidebar-tab-icon">📦</span>
+              <span>Siparişler & Destek</span>
+            </button>
+            <button type="button" class="adm-sidebar-tab" data-tab="clients">
+              <span class="adm-sidebar-tab-icon">👥</span>
+              <span>Müşteri Dizini</span>
+            </button>
+            <button type="button" class="adm-sidebar-tab" data-tab="system">
+              <span class="adm-sidebar-tab-icon">⚡</span>
+              <span>Sistem & Bot</span>
+            </button>
+          </nav>
+
+          <!-- Sidebar Footer Info -->
+          <div class="adm-sidebar-bottom">
+            <div class="adm-live-clock">
+              <span>🕒</span>
+              <span id="adminClock">12:00:00 (İST)</span>
+            </div>
+            <div class="adm-db-status">Supabase DB Bağlı</div>
+            <button type="button" class="adm-btn-sidebar-logout" id="adminLogoutBtn">🚪 Güvenli Çıkış Yap</button>
+          </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="adm-main">
+          <!-- Topbar Toolbar -->
+          <div class="adm-topbar">
+            <div class="adm-topbar-left">
+              <div class="adm-search-box">
+                <span class="adm-search-icon">🔍</span>
+                <input type="search" class="adm-search-input" id="adminSearchInput" placeholder="Sipariş kodu, Discord adı veya ID ile ara…" />
+              </div>
+            </div>
+            <div class="adm-topbar-right">
+              <select class="adm-filter-select" id="adminStatusFilterSelect" title="Duruma Göre Filtrele">
+                <option value="all">Filtre: Tüm Durumlar</option>
+                <option value="pending">⏳ Bekleyenler</option>
+                <option value="active">⚡ Aktif / Sırada / Ticket Açık</option>
+                <option value="closed">✅ Tamamlanan / Kapalı</option>
+                <option value="cancelled">❌ İptal Edilenler</option>
+              </select>
+              <select class="adm-sort-select" id="adminSortSelect" title="Sıralama">
+                <option value="newest">Sırala: En Yeni</option>
+                <option value="oldest">Sırala: En Eski</option>
+                <option value="price_high">Sırala: Fiyat Azalan</option>
+                <option value="price_low">Sırala: Fiyat Artan</option>
+              </select>
+              <button type="button" class="adm-btn-top" id="adminRefreshBtn" title="Canlı Verileri Yenile">
+                <span class="adm-icon-refresh">🔄</span>
+                <span>Yenile</span>
+              </button>
+              <button type="button" class="adm-btn-top" id="adminExportCsvBtn" title="Excel / CSV Formatında İndir">
+                <span>📥</span>
+                <span>CSV</span>
+              </button>
+              <button type="button" class="adm-btn-close-modal" onclick="document.querySelector('#adminDashboardDialog').close()" title="Kapat" aria-label="Kapat">×</button>
+            </div>
+          </div>
+
+          <!-- Content Scroll Area -->
+          <div class="adm-content-scroll">
+            
+            <!-- SECTION 1: GENEL BAKIŞ (OVERVIEW) -->
+            <section class="adm-view-section" id="admSection_overview">
+              <div class="adm-stats-grid-elite">
+                <div class="adm-stat-card-elite">
+                  <small>Toplam Ciro <span class="adm-stat-icon">💰</span></small>
+                  <strong id="admStatTotalRevenue" style="color: #10b981;">0 TL</strong>
+                </div>
+                <div class="adm-stat-card-elite">
+                  <small>Toplam Talep <span class="adm-stat-icon">📦</span></small>
+                  <strong id="admStatTotalOrders">0</strong>
+                </div>
+                <div class="adm-stat-card-elite">
+                  <small>Ortalama Sepet <span class="adm-stat-icon">🏷️</span></small>
+                  <strong id="admStatAvgOrder">0 TL</strong>
+                </div>
+                <div class="adm-stat-card-elite">
+                  <small>Doğrulama Bekleyen <span class="adm-stat-icon">⏳</span></small>
+                  <strong id="admStatPending" style="color: #f59e0b;">0</strong>
+                </div>
+                <div class="adm-stat-card-elite">
+                  <small>Sırada / İşlemde <span class="adm-stat-icon">⚡</span></small>
+                  <strong id="admStatValidated" style="color: #3b82f6;">0</strong>
+                </div>
+                <div class="adm-stat-card-elite">
+                  <small>Tamamlanan <span class="adm-stat-icon">✅</span></small>
+                  <strong id="admStatCompleted" style="color: #16a34a;">0</strong>
+                </div>
+              </div>
+
+              <div class="adm-overview-split">
+                <!-- Kategori Dağılım Kartı -->
+                <div class="adm-card-box">
+                  <h3>📊 Hizmet Satış Dağılımı</h3>
+                  <div class="adm-cat-progress-item">
+                    <div class="adm-cat-progress-meta">
+                      <span>🤖 Minecraft Botları</span>
+                      <span id="admValBots">0 adet (%0)</span>
+                    </div>
+                    <div class="adm-cat-bar-bg">
+                      <div class="adm-cat-bar-fill" id="admBarBots" style="width: 0%; background: #3b82f6;"></div>
+                    </div>
+                  </div>
+                  <div class="adm-cat-progress-item">
+                    <div class="adm-cat-progress-meta">
+                      <span>🎨 UI/UX Tasarım</span>
+                      <span id="admValUiUx">0 adet (%0)</span>
+                    </div>
+                    <div class="adm-cat-bar-bg">
+                      <div class="adm-cat-bar-fill" id="admBarUiUx" style="width: 0%; background: #8b5cf6;"></div>
+                    </div>
+                  </div>
+                  <div class="adm-cat-progress-item">
+                    <div class="adm-cat-progress-meta">
+                      <span>📑 Sunum Hizmetleri</span>
+                      <span id="admValSlides">0 adet (%0)</span>
+                    </div>
+                    <div class="adm-cat-bar-bg">
+                      <div class="adm-cat-bar-fill" id="admBarSlides" style="width: 0%; background: #ec4899;"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Son Aktiviteler Tablosu -->
+                <div class="adm-card-box">
+                  <h3>⚡ Son Talepler</h3>
+                  <table class="adm-elite-table">
+                    <thead>
+                      <tr>
+                        <th>Kod</th>
+                        <th>Kullanıcı</th>
+                        <th>Tutar</th>
+                        <th>Durum</th>
+                      </tr>
+                    </thead>
+                    <tbody id="admRecentActivitiesBody">
+                      <tr><td colspan="4" class="adm-loading">Yükleniyor…</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+
+            <!-- SECTION 2: SİPARİŞLER VE DESTEK (DATA GRID) -->
+            <section class="adm-view-section" id="admSection_orders" style="display: block;">
+              <div class="adm-table-wrap">
+                <div class="adm-table-header-info">
+                  <h3>
+                    <span>📦 Sipariş & Destek Yönetim Matrisi</span>
+                    <span class="adm-count-badge" id="admOrdersCountBadge">0 Sipariş</span>
+                  </h3>
+                  <small style="color: #64748b; font-family: 'Space Mono', monospace; font-size: 10px;">CANLI SYNC AKTİF</small>
+                </div>
+                <div style="overflow-x: auto;">
+                  <table class="adm-elite-table">
+                    <thead>
+                      <tr>
+                        <th>Talep Kodu</th>
+                        <th>Discord Müşterisi</th>
+                        <th>Ürünler / Paketler</th>
+                        <th>Tutar</th>
+                        <th>Durum</th>
+                        <th>Tarih</th>
+                        <th>Yetkili</th>
+                        <th>İşlem & Detay</th>
+                      </tr>
+                    </thead>
+                    <tbody id="adminOrdersTableBody">
+                      <tr><td colspan="8" class="adm-loading">Sipariş verileri yükleniyor…</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+
+            <!-- SECTION 3: MÜŞTERİ DİZİNİ (CLIENTS) -->
+            <section class="adm-view-section" id="admSection_clients">
+              <div class="adm-table-wrap">
+                <div class="adm-table-header-info">
+                  <h3>👥 Kayıtlı Discord Müşteri Veritabanı</h3>
+                </div>
+                <div style="overflow-x: auto;">
+                  <table class="adm-elite-table">
+                    <thead>
+                      <tr>
+                        <th>Discord Kullanıcısı</th>
+                        <th>Toplam Sipariş</th>
+                        <th>Kümülatif Harcama</th>
+                        <th>Son Etkileşim</th>
+                        <th>Filtrele</th>
+                      </tr>
+                    </thead>
+                    <tbody id="adminClientsTableBody">
+                      <tr><td colspan="5" class="adm-loading">Müşteri listesi hazırlanıyor…</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+
+            <!-- SECTION 4: SİSTEM & BOT DURUMU (SYSTEM) -->
+            <section class="adm-view-section" id="admSection_system">
+              <div class="adm-stats-grid-elite" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 20px;">
+                <div class="adm-card-box">
+                  <h3>🗄️ Supabase PostgreSQL</h3>
+                  <p style="font-size: 12px; color: #64748b; margin: 4px 0 12px;">Veritabanı API ve RPC bağlantısı.</p>
+                  <div style="display: flex; flex-direction: column; gap: 6px; font-size: 11.5px; font-family: 'Space Mono', monospace;">
+                    <div>Durum: <b style="color: #16a34a;">🟢 Çevrimiçi (Connected)</b></div>
+                    <div>Bölge: <b>AWS eu-central-1</b></div>
+                    <div>Şifreleme: <b>SHA-256 + RLS Korumalı</b></div>
+                  </div>
+                </div>
+
+                <div class="adm-card-box">
+                  <h3>🤖 Monarch Discord Bot</h3>
+                  <p style="font-size: 12px; color: #64748b; margin: 4px 0 12px;">Discord.js v14 Ticket & 2FA Köprüsü.</p>
+                  <div style="display: flex; flex-direction: column; gap: 6px; font-size: 11.5px; font-family: 'Space Mono', monospace;">
+                    <div>Durum: <b style="color: #16a34a;">🟢 Aktif Polling (2.5s)</b></div>
+                    <div>Kanal: <b>#admin-2fa</b></div>
+                    <div>İzinli Roller: <b>Founder, Destek</b></div>
+                  </div>
+                </div>
+
+                <div class="adm-card-box">
+                  <h3>🔐 Aktif Güvenlik Oturumu</h3>
+                  <p style="font-size: 12px; color: #64748b; margin: 4px 0 12px;">Oturum tokenı ve güvenlik detayları.</p>
+                  <div style="display: flex; flex-direction: column; gap: 6px; font-size: 11.5px; font-family: 'Space Mono', monospace;">
+                    <div>Protokol: <b>UUIDv4 64-Bit Token</b></div>
+                    <div>Geçerlilik: <b>12 Saat</b></div>
+                    <div>Yetki Derecesi: <b style="color: #7c3aed;">Founder Root</b></div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+          </div>
+        </main>
+      </div>
+    </dialog>
+
+    <!-- SİPARİŞ DETAY INSPECTOR MODALI -->
+    <dialog class="adm-detail-dialog" id="adminOrderDetailDialog" aria-labelledby="modalDetailTitle">
+      <div class="adm-detail-panel">
+        <div class="adm-detail-header">
+          <h3 id="modalDetailTitle">🔍 Sipariş Detay Analizi</h3>
+          <button type="button" class="adm-btn-close-modal" onclick="document.querySelector('#adminOrderDetailDialog').close()" aria-label="Kapat">×</button>
+        </div>
+        
+        <div class="adm-detail-grid">
+          <div class="adm-detail-box">
+            <small>Talep Kodu</small>
+            <strong id="modalOrderCode" style="color: #7c3aed; font-family: 'Space Mono', monospace;">—</strong>
+          </div>
+          <div class="adm-detail-box">
+            <small>Toplam Tutar</small>
+            <strong id="modalOrderPrice" style="color: #16a34a; font-family: 'Space Mono', monospace;">—</strong>
+          </div>
+          <div class="adm-detail-box">
+            <small>Discord Kullanıcısı</small>
+            <strong id="modalOrderUser">—</strong>
+          </div>
+          <div class="adm-detail-box">
+            <small>Discord ID</small>
+            <strong id="modalOrderUserId" style="font-family: 'Space Mono', monospace; font-size: 11px;">—</strong>
+          </div>
+          <div class="adm-detail-box">
+            <small>Oluşturulma Tarihi</small>
+            <strong id="modalOrderDate" style="font-size: 11.5px;">—</strong>
+          </div>
+          <div class="adm-detail-box">
+            <small>Sorumlu Yetkili</small>
+            <strong id="modalOrderHandledBy">—</strong>
+          </div>
+          <div class="adm-detail-box" style="grid-column: span 2;">
+            <small>Mevcut Durum</small>
+            <div id="modalOrderStatus" style="margin-top: 4px;">—</div>
+          </div>
+          <div class="adm-detail-box" style="grid-column: span 2;">
+            <small>Ticket Kanalı</small>
+            <strong id="modalOrderTicketId" style="font-family: 'Space Mono', monospace; color: #0284c7;">—</strong>
           </div>
         </div>
 
-        <!-- Özet İstatistikler -->
-        <div class="admin-stats-grid">
-          <div class="admin-stat-card">
-            <small>Toplam Sipariş</small>
-            <strong id="adminStatTotalOrders">0</strong>
-          </div>
-          <div class="admin-stat-card">
-            <small>Toplam Gelir</small>
-            <strong id="adminStatTotalRevenue">0 TL</strong>
-          </div>
-          <div class="admin-stat-card">
-            <small>Bekleyen Talepler</small>
-            <strong id="adminStatPending" style="color: #d97706;">0</strong>
-          </div>
-          <div class="admin-stat-card">
-            <small>Doğrulanan / Sırada</small>
-            <strong id="adminStatValidated" style="color: #16a34a;">0</strong>
-          </div>
-        </div>
+        <small style="display: block; font: 700 10px 'Space Mono', monospace; color: #64748b; text-transform: uppercase; margin-bottom: 6px;">Sipariş Edilen Kalemler</small>
+        <div class="adm-modal-items-wrap" id="modalOrderItemsList"></div>
 
-        <!-- Toolbar: Filtreler & Arama -->
-        <div class="admin-toolbar">
-          <div class="admin-filter-tabs">
-            <button class="admin-filter-tab active" data-filter="all" type="button">Tümü</button>
-            <button class="admin-filter-tab" data-filter="pending" type="button">Bekleyenler</button>
-            <button class="admin-filter-tab" data-filter="validated" type="button">Doğrulanan / Sırada</button>
-            <button class="admin-filter-tab" data-filter="closed" type="button">Tamamlanan / Kapalı</button>
-          </div>
-          <input class="admin-search-input" id="adminSearchInput" type="search" placeholder="Kod veya Discord adıyla ara…" />
-        </div>
-
-        <!-- Sipariş & Destek Tablosu -->
-        <div class="admin-table-container">
-          <table class="admin-table">
-            <thead>
-              <tr>
-                <th>Talep Kodu</th>
-                <th>Discord Üyesi</th>
-                <th>Ürünler</th>
-                <th>Tutar</th>
-                <th>Durum</th>
-                <th>Tarih</th>
-                <th>İşlemler</th>
-              </tr>
-            </thead>
-            <tbody id="adminOrdersTableBody">
-              <tr><td colspan="7" class="admin-loading">Veriler yükleniyor…</td></tr>
-            </tbody>
-          </table>
+        <div class="adm-detail-actions">
+          <button type="button" class="adm-btn-modal-action adm-btn-modal-done" id="modalActionDone">✅ Siparişi Tamamla (Kapat)</button>
+          <button type="button" class="adm-btn-modal-action adm-btn-modal-cancel" id="modalActionCancel">❌ Siparişi İptal Et</button>
         </div>
       </div>
     </dialog>
 
     <script type="module" src="./theme-toggle.js"></script>
     <script type="module">
-      import { bindLocalAccountUI } from './account-local.js?v=20260829_login_tabs_v2';
+      import { bindLocalAccountUI } from './account-local.js?v=20260829_elite_admin_v3';
       import { bindOrderUI, bindCommunityStats } from './store-orders.js';
-      import { initAdminDashboardUI } from './admin-panel.js?v=20260829_login_tabs_v2';
+      import { initAdminDashboardUI } from './admin-panel.js?v=20260829_elite_admin_v3';
 
       const cartCount = document.querySelector('#cartCount');
       const toast = document.querySelector('#toast');

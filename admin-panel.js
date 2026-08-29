@@ -37,6 +37,7 @@ export function getAdminSession () {
   return {
     token,
     username: sessionStorage.getItem(USERNAME_STORAGE_KEY) || 'admin',
+    discordUsername: sessionStorage.getItem('monarch_admin_discord_user') || null,
     expiresAt: exp
   }
 }
@@ -51,6 +52,7 @@ export function clearAdminSession () {
   sessionStorage.removeItem(SESSION_STORAGE_KEY)
   sessionStorage.removeItem(USERNAME_STORAGE_KEY)
   sessionStorage.removeItem(EXPIRES_STORAGE_KEY)
+  sessionStorage.removeItem('monarch_admin_discord_user')
 }
 
 export async function requestAdmin2FA (username, password, discordUsername = null) {
@@ -122,24 +124,33 @@ function formatDate (isoString) {
   return date.toLocaleString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
 }
 
+function formatRelativeTime (isoString) {
+  if (!isoString) return '—'
+  const diffSec = Math.floor((Date.now() - new Date(isoString).getTime()) / 1000)
+  if (diffSec < 60) return 'Az önce'
+  if (diffSec < 3600) return `${Math.floor(diffSec / 60)} dk önce`
+  if (diffSec < 86400) return `${Math.floor(diffSec / 3600)} sa önce`
+  return `${Math.floor(diffSec / 86400)} gün önce`
+}
+
 function formatStatusBadge (status) {
   const map = {
-    'pending_validation': { label: 'Doğrulama Bekliyor', color: 'badge-pending' },
-    'processing': { label: 'İşleniyor', color: 'badge-processing' },
-    'validated': { label: 'Doğrulandı (Ticket Açıldı)', color: 'badge-validated' },
-    'queued': { label: 'Sırada', color: 'badge-queued' },
-    'in_progress': { label: 'İşlemde', color: 'badge-progress' },
-    'closed': { label: 'Tamamlandı / Kapatıldı', color: 'badge-closed' },
-    'cancelled': { label: 'İptal Edildi', color: 'badge-cancelled' }
+    'pending_validation': { label: 'Doğrulama Bekliyor', color: 'badge-pending', icon: '⏳' },
+    'processing': { label: 'İşleniyor', color: 'badge-processing', icon: '⚙️' },
+    'validated': { label: 'Doğrulandı (Ticket Açık)', color: 'badge-validated', icon: '🎫' },
+    'queued': { label: 'Sırada', color: 'badge-queued', icon: '📋' },
+    'in_progress': { label: 'Aktif İşlemde', color: 'badge-progress', icon: '⚡' },
+    'closed': { label: 'Tamamlandı / Kapalı', color: 'badge-closed', icon: '✅' },
+    'cancelled': { label: 'İptal Edildi', color: 'badge-cancelled', icon: '❌' }
   }
-  const item = map[status] || { label: status, color: 'badge-default' }
-  return `<span class="admin-badge ${item.color}">${escapeHtml(item.label)}</span>`
+  const item = map[status] || { label: status, color: 'badge-default', icon: '📌' }
+  return `<span class="adm-badge ${item.color}"><span class="adm-badge-dot"></span>${item.icon} ${escapeHtml(item.label)}</span>`
 }
 
 function formatItems (items) {
-  if (!Array.isArray(items) || !items.length) return '—'
+  if (!Array.isArray(items) || !items.length) return '<span class="adm-muted">—</span>'
   return items.map(item => `
-    <span class="admin-item-pill">
+    <span class="adm-item-pill" title="${escapeHtml(item.sku || 'Ürün')} (${item.quantity} adet)">
       <b>${escapeHtml(item.sku || 'Ürün')}</b> × ${item.quantity}
     </span>
   `).join('')
@@ -147,34 +158,69 @@ function formatItems (items) {
 
 export function initAdminDashboardUI ({ notify }) {
   const dashboardDialog = document.querySelector('#adminDashboardDialog')
+  const detailDialog = document.querySelector('#adminOrderDetailDialog')
   const ordersTbody = document.querySelector('#adminOrdersTableBody')
+  const clientsTbody = document.querySelector('#adminClientsTableBody')
   const refreshBtn = document.querySelector('#adminRefreshBtn')
+  const exportCsvBtn = document.querySelector('#adminExportCsvBtn')
   const logoutBtn = document.querySelector('#adminLogoutBtn')
-  const filterTabs = document.querySelectorAll('.admin-filter-tab')
   const searchInput = document.querySelector('#adminSearchInput')
+  const statusFilterSelect = document.querySelector('#adminStatusFilterSelect')
+  const sortSelect = document.querySelector('#adminSortSelect')
+  const navTabs = document.querySelectorAll('.adm-sidebar-tab')
+  const viewSections = document.querySelectorAll('.adm-view-section')
+  const clockEl = document.querySelector('#adminClock')
 
   let cachedOrders = []
+  let activeTab = 'orders'
   let activeFilter = 'all'
+  let autoRefreshTimer = null
+
+  // Canlı Saat Ticker'ı
+  function startClock () {
+    const updateClock = () => {
+      if (!clockEl) return
+      const now = new Date()
+      clockEl.textContent = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' (İST)'
+    }
+    updateClock()
+    setInterval(updateClock, 1000)
+  }
+  startClock()
 
   async function openDashboard () {
-    if (!getAdminSession()) {
+    const session = getAdminSession()
+    if (!session) {
       notify('Yetkisiz', 'Önce hesap menüsünden admin girişi yapmalısınız.')
       return
     }
+
+    // Profil Bilgilerini Güncelle
+    const userBadgeEl = document.querySelector('#adminUserBadge')
+    const discTagEl = document.querySelector('#adminDiscordTag')
+    if (userBadgeEl) userBadgeEl.textContent = session.username
+    if (discTagEl) discTagEl.textContent = session.discordUsername ? `@${session.discordUsername}` : 'Founder'
+
     dashboardDialog.showModal()
     await loadDashboardData()
+
+    // 15 saniyede bir otomatik canlı yenileme
+    clearInterval(autoRefreshTimer)
+    autoRefreshTimer = setInterval(loadDashboardData, 15000)
   }
 
   async function loadDashboardData () {
     try {
-      if (ordersTbody) ordersTbody.innerHTML = '<tr><td colspan="7" class="admin-loading">Veriler yükleniyor…</td></tr>'
       const data = await fetchAdminOrders()
       cachedOrders = data.orders || []
       renderStats(data.stats || {})
+      renderOverview()
       renderOrders()
+      renderClients()
     } catch (err) {
       notify('Hata', err.message || 'Veriler yüklenemedi.')
       if (err.message.includes('Oturum') || err.message.includes('Yetkisiz')) {
+        clearInterval(autoRefreshTimer)
         dashboardDialog.close()
         clearAdminSession()
       }
@@ -182,81 +228,199 @@ export function initAdminDashboardUI ({ notify }) {
   }
 
   function renderStats (stats) {
-    const totalEl = document.querySelector('#adminStatTotalOrders')
-    const revEl = document.querySelector('#adminStatTotalRevenue')
-    const pendingEl = document.querySelector('#adminStatPending')
-    const valEl = document.querySelector('#adminStatValidated')
+    const totalOrders = stats.total_orders || 0
+    const totalRev = stats.total_revenue || 0
+    const avgVal = totalOrders > 0 ? Math.round(totalRev / totalOrders) : 0
 
-    if (totalEl) totalEl.textContent = stats.total_orders || 0
-    if (revEl) revEl.textContent = `${stats.total_revenue || 0} TL`
-    if (pendingEl) pendingEl.textContent = stats.pending_orders || 0
-    if (valEl) valEl.textContent = stats.validated_orders || 0
+    const elTotal = document.querySelector('#admStatTotalOrders')
+    const elRev = document.querySelector('#admStatTotalRevenue')
+    const elAvg = document.querySelector('#admStatAvgOrder')
+    const elPending = document.querySelector('#admStatPending')
+    const elValidated = document.querySelector('#admStatValidated')
+    const elCompleted = document.querySelector('#admStatCompleted')
+
+    if (elTotal) elTotal.textContent = totalOrders
+    if (elRev) elRev.textContent = `${totalRev.toLocaleString('tr-TR')} TL`
+    if (elAvg) elAvg.textContent = `${avgVal} TL`
+    if (elPending) elPending.textContent = stats.pending_orders || 0
+    if (elValidated) elValidated.textContent = stats.validated_orders || 0
+    if (elCompleted) elCompleted.textContent = stats.completed_orders || 0
+  }
+
+  function renderOverview () {
+    // Kategori Dağılımını Hesapla
+    let countBots = 0
+    let countUiUx = 0
+    let countSlides = 0
+    let totalItems = 0
+
+    cachedOrders.forEach(o => {
+      if (Array.isArray(o.items)) {
+        o.items.forEach(it => {
+          const sku = (it.sku || '').toLowerCase()
+          const q = it.quantity || 1
+          totalItems += q
+          if (sku.includes('bot') || sku.includes('afk') || sku.includes('miner') || sku.includes('farmer')) countBots += q
+          else if (sku.includes('ui') || sku.includes('ux') || sku.includes('tasarım')) countUiUx += q
+          else if (sku.includes('sunum') || sku.includes('slayt') || sku.includes('slide')) countSlides += q
+          else countBots += q
+        })
+      }
+    })
+
+    const pctBots = totalItems > 0 ? Math.round((countBots / totalItems) * 100) : 0
+    const pctUiUx = totalItems > 0 ? Math.round((countUiUx / totalItems) * 100) : 0
+    const pctSlides = totalItems > 0 ? Math.round((countSlides / totalItems) * 100) : 0
+
+    const elBarBots = document.querySelector('#admBarBots')
+    const elBarUiUx = document.querySelector('#admBarUiUx')
+    const elBarSlides = document.querySelector('#admBarSlides')
+    const elValBots = document.querySelector('#admValBots')
+    const elValUiUx = document.querySelector('#admValUiUx')
+    const elValSlides = document.querySelector('#admValSlides')
+
+    if (elBarBots) elBarBots.style.width = `${pctBots}%`
+    if (elBarUiUx) elBarUiUx.style.width = `${pctUiUx}%`
+    if (elBarSlides) elBarSlides.style.width = `${pctSlides}%`
+
+    if (elValBots) elValBots.textContent = `${countBots} adet (%${pctBots})`
+    if (elValUiUx) elValUiUx.textContent = `${countUiUx} adet (%${pctUiUx})`
+    if (elValSlides) elValSlides.textContent = `${countSlides} adet (%${pctSlides})`
+
+    // Son Aktiviteler Mini Tablosu
+    const recentTbody = document.querySelector('#admRecentActivitiesBody')
+    if (recentTbody) {
+      const recent = cachedOrders.slice(0, 5)
+      if (!recent.length) {
+        recentTbody.innerHTML = '<tr><td colspan="4" class="adm-empty">Henüz aktivite bulunmuyor.</td></tr>'
+      } else {
+        recentTbody.innerHTML = recent.map(o => `
+          <tr>
+            <td><strong class="adm-code-sm" data-copy="${escapeHtml(o.order_code)}">${escapeHtml(o.order_code)}</strong></td>
+            <td><span class="adm-user-tag">@${escapeHtml(o.discord_username)}</span></td>
+            <td><b class="adm-price-sm">${o.total_tl} TL</b></td>
+            <td>${formatStatusBadge(o.status)}</td>
+          </tr>
+        `).join('')
+      }
+    }
   }
 
   function renderOrders () {
     if (!ordersTbody) return
     const query = (searchInput?.value || '').toLowerCase().trim()
-    let filtered = cachedOrders
+    const statusVal = statusFilterSelect?.value || 'all'
+    const sortVal = sortSelect?.value || 'newest'
 
-    if (activeFilter === 'pending') {
-      filtered = filtered.filter(o => ['pending_validation', 'processing'].includes(o.status))
-    } else if (activeFilter === 'validated') {
-      filtered = filtered.filter(o => ['validated', 'queued', 'in_progress'].includes(o.status))
-    } else if (activeFilter === 'closed') {
-      filtered = filtered.filter(o => ['closed', 'cancelled'].includes(o.status))
+    let filtered = [...cachedOrders]
+
+    // Durum Filtresi
+    if (statusVal !== 'all') {
+      if (statusVal === 'pending') {
+        filtered = filtered.filter(o => ['pending_validation', 'processing'].includes(o.status))
+      } else if (statusVal === 'active') {
+        filtered = filtered.filter(o => ['validated', 'queued', 'in_progress'].includes(o.status))
+      } else if (statusVal === 'closed') {
+        filtered = filtered.filter(o => ['closed'].includes(o.status))
+      } else if (statusVal === 'cancelled') {
+        filtered = filtered.filter(o => ['cancelled'].includes(o.status))
+      } else {
+        filtered = filtered.filter(o => o.status === statusVal)
+      }
     }
 
+    // Arama Filtresi
     if (query) {
       filtered = filtered.filter(o =>
         (o.order_code || '').toLowerCase().includes(query) ||
         (o.discord_username || '').toLowerCase().includes(query) ||
-        (o.discord_user_id || '').includes(query)
+        (o.discord_user_id || '').includes(query) ||
+        JSON.stringify(o.items || '').toLowerCase().includes(query)
       )
     }
 
+    // Sıralama
+    if (sortVal === 'newest') {
+      filtered.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+    } else if (sortVal === 'oldest') {
+      filtered.sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
+    } else if (sortVal === 'price_high') {
+      filtered.sort((a, b) => (b.total_tl || 0) - (a.total_tl || 0))
+    } else if (sortVal === 'price_low') {
+      filtered.sort((a, b) => (a.total_tl || 0) - (b.total_tl || 0))
+    }
+
+    const countBadge = document.querySelector('#admOrdersCountBadge')
+    if (countBadge) countBadge.textContent = `${filtered.length} Sipariş`
+
     if (!filtered.length) {
-      ordersTbody.innerHTML = '<tr><td colspan="7" class="admin-empty">Kayıt bulunamadı.</td></tr>'
+      ordersTbody.innerHTML = '<tr><td colspan="8" class="adm-empty">Arama kriterine uygun sipariş bulunamadı.</td></tr>'
       return
     }
 
     ordersTbody.innerHTML = filtered.map(order => `
-      <tr>
-        <td><strong class="admin-code">${escapeHtml(order.order_code)}</strong></td>
+      <tr class="adm-table-row">
         <td>
-          <div class="admin-user-cell">
-            <span class="admin-user-tag">@${escapeHtml(order.discord_username)}</span>
-            ${order.discord_user_id ? `<small class="admin-uid">${escapeHtml(order.discord_user_id)}</small>` : '<small class="admin-uid-none">ID Henüz Yok</small>'}
+          <div class="adm-code-cell">
+            <strong class="adm-code" title="Tıklayarak Kopyala" data-copy="${escapeHtml(order.order_code)}">${escapeHtml(order.order_code)}</strong>
+            <button type="button" class="adm-btn-copy" data-copy="${escapeHtml(order.order_code)}" title="Kodu Kopyala">📋</button>
           </div>
         </td>
-        <td><div class="admin-items-cell">${formatItems(order.items)}</div></td>
-        <td><b class="admin-price">${order.total_tl} TL</b></td>
-        <td>${formatStatusBadge(order.status)}</td>
-        <td><small class="admin-date">${formatDate(order.created_at)}</small></td>
         <td>
-          <div class="admin-actions">
-            <select class="admin-status-select" data-code="${escapeHtml(order.order_code)}">
+          <div class="adm-user-cell">
+            <div class="adm-avatar-circle">${escapeHtml((order.discord_username || 'M')[0].toUpperCase())}</div>
+            <div class="adm-user-meta">
+              <span class="adm-user-name">@${escapeHtml(order.discord_username)}</span>
+              ${order.discord_user_id ? `<small class="adm-user-id" title="Discord ID">${escapeHtml(order.discord_user_id)}</small>` : '<small class="adm-user-id-waiting">ID Bekleniyor</small>'}
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="adm-items-cell">
+            ${formatItems(order.items)}
+          </div>
+        </td>
+        <td>
+          <b class="adm-price">${order.total_tl} TL</b>
+        </td>
+        <td>
+          ${formatStatusBadge(order.status)}
+        </td>
+        <td>
+          <div class="adm-time-cell">
+            <span class="adm-rel-time">${formatRelativeTime(order.created_at)}</span>
+            <small class="adm-abs-time">${formatDate(order.created_at)}</small>
+          </div>
+        </td>
+        <td>
+          <span class="adm-handled-tag">${escapeHtml(order.handled_by || 'MonarchBot')}</span>
+        </td>
+        <td>
+          <div class="adm-actions-group">
+            <select class="adm-status-select" data-code="${escapeHtml(order.order_code)}" title="Durumu Değiştir">
               <option value="" disabled selected>Durum Değiştir</option>
-              <option value="validated">Doğrulandı</option>
-              <option value="queued">Sırada</option>
-              <option value="in_progress">İşlemde</option>
-              <option value="closed">Tamamlandı/Kapat</option>
-              <option value="cancelled">İptal Et</option>
+              <option value="validated" ${order.status === 'validated' ? 'selected' : ''}>🎫 Doğrulandı</option>
+              <option value="queued" ${order.status === 'queued' ? 'selected' : ''}>📋 Sırada</option>
+              <option value="in_progress" ${order.status === 'in_progress' ? 'selected' : ''}>⚡ İşlemde</option>
+              <option value="closed" ${order.status === 'closed' ? 'selected' : ''}>✅ Tamamlandı / Kapat</option>
+              <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>❌ İptal Et</option>
             </select>
+            <button type="button" class="adm-btn-inspect" data-inspect-code="${escapeHtml(order.order_code)}" title="Detay İncele">🔍 Detay</button>
           </div>
         </td>
       </tr>
     `).join('')
 
-    // Durum değiştirme dinleyicileri
-    ordersTbody.querySelectorAll('.admin-status-select').forEach(select => {
-      select.addEventListener('change', async (e) => {
+    // Durum Değiştirme Dinleyicileri
+    ordersTbody.querySelectorAll('.adm-status-select').forEach(select => {
+      select.addEventListener('change', async () => {
         const code = select.dataset.code
         const newStatus = select.value
         if (!newStatus) return
         try {
           select.disabled = true
           await updateOrderStatus(code, newStatus)
-          notify('Başarılı', `${code} durumu güncellendi.`)
+          notify('Durum Güncellendi', `${code} siparişi güncellendi.`)
           await loadDashboardData()
         } catch (err) {
           notify('Hata', err.message || 'Durum güncellenemedi.')
@@ -265,31 +429,216 @@ export function initAdminDashboardUI ({ notify }) {
         }
       })
     })
-  }
 
-  if (refreshBtn) refreshBtn.addEventListener('click', loadDashboardData)
+    // Detay İncele Butonları
+    ordersTbody.querySelectorAll('.adm-btn-inspect').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const code = btn.dataset.inspectCode
+        const order = cachedOrders.find(o => o.order_code === code)
+        if (order) openOrderDetailModal(order)
+      })
+    })
 
-  if (logoutBtn) {
-    logoutBtn.addEventListener('click', () => {
-      clearAdminSession()
-      dashboardDialog.close()
-      notify('Çıkış yapıldı', 'Admin oturumu sonlandırıldı.')
-      const accBtn = document.querySelector('#accountButton')
-      if (accBtn) accBtn.textContent = 'Hesap oluştur'
+    // Kopyalama Butonları
+    ordersTbody.querySelectorAll('[data-copy]').forEach(el => {
+      el.addEventListener('click', (e) => {
+        e.stopPropagation()
+        const text = el.dataset.copy
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(text)
+          notify('Kopyalandı', `${text} panoya kopyalandı.`)
+        }
+      })
     })
   }
 
-  filterTabs.forEach(tab => {
+  function renderClients () {
+    if (!clientsTbody) return
+    const clientMap = new Map()
+
+    cachedOrders.forEach(o => {
+      const username = o.discord_username || 'Bilinmiyor'
+      const existing = clientMap.get(username) || {
+        username,
+        discord_id: o.discord_user_id || null,
+        order_count: 0,
+        total_spent: 0,
+        last_order_at: o.created_at,
+        statuses: []
+      }
+
+      existing.order_count += 1
+      existing.total_spent += (o.total_tl || 0)
+      if (o.discord_user_id && !existing.discord_id) existing.discord_id = o.discord_user_id
+      if (new Date(o.created_at) > new Date(existing.last_order_at)) existing.last_order_at = o.created_at
+      existing.statuses.push(o.status)
+
+      clientMap.set(username, existing)
+    })
+
+    const clientList = Array.from(clientMap.values()).sort((a, b) => b.total_spent - a.total_spent)
+
+    if (!clientList.length) {
+      clientsTbody.innerHTML = '<tr><td colspan="5" class="adm-empty">Müşteri kaydı bulunmuyor.</td></tr>'
+      return
+    }
+
+    clientsTbody.innerHTML = clientList.map(c => `
+      <tr>
+        <td>
+          <div class="adm-user-cell">
+            <div class="adm-avatar-circle">${escapeHtml(c.username[0].toUpperCase())}</div>
+            <div class="adm-user-meta">
+              <strong class="adm-user-name">@${escapeHtml(c.username)}</strong>
+              ${c.discord_id ? `<small class="adm-user-id">${escapeHtml(c.discord_id)}</small>` : '<small class="adm-user-id-waiting">ID Yok</small>'}
+            </div>
+          </div>
+        </td>
+        <td><b class="adm-count-pill">${c.order_count} Sipariş</b></td>
+        <td><b class="adm-price">${c.total_spent.toLocaleString('tr-TR')} TL</b></td>
+        <td><span class="adm-rel-time">${formatRelativeTime(c.last_order_at)}</span></td>
+        <td>
+          <button type="button" class="adm-btn-table-action" onclick="document.querySelector('#adminSearchInput').value='${escapeHtml(c.username)}'; document.querySelector('#tabOrdersBtn').click();">
+            📦 Siparişleri Gör
+          </button>
+        </td>
+      </tr>
+    `).join('')
+  }
+
+  function openOrderDetailModal (order) {
+    if (!detailDialog) return
+    const modalCode = document.querySelector('#modalOrderCode')
+    const modalUser = document.querySelector('#modalOrderUser')
+    const modalUserId = document.querySelector('#modalOrderUserId')
+    const modalPrice = document.querySelector('#modalOrderPrice')
+    const modalStatus = document.querySelector('#modalOrderStatus')
+    const modalDate = document.querySelector('#modalOrderDate')
+    const modalItemsList = document.querySelector('#modalOrderItemsList')
+    const modalTicketId = document.querySelector('#modalOrderTicketId')
+    const modalHandledBy = document.querySelector('#modalOrderHandledBy')
+
+    if (modalCode) modalCode.textContent = order.order_code
+    if (modalUser) modalUser.textContent = `@${order.discord_username}`
+    if (modalUserId) modalUserId.textContent = order.discord_user_id || 'ID Kaydı Yok'
+    if (modalPrice) modalPrice.textContent = `${order.total_tl} TL`
+    if (modalStatus) modalStatus.innerHTML = formatStatusBadge(order.status)
+    if (modalDate) modalDate.textContent = formatDate(order.created_at)
+    if (modalTicketId) modalTicketId.textContent = order.ticket_channel_id ? `#${order.ticket_channel_id}` : 'Ticket Henüz Açılmadı'
+    if (modalHandledBy) modalHandledBy.textContent = order.handled_by || 'MonarchBot'
+
+    if (modalItemsList) {
+      if (Array.isArray(order.items) && order.items.length) {
+        modalItemsList.innerHTML = order.items.map(it => `
+          <div class="adm-modal-item-row">
+            <span class="adm-modal-item-name">📦 ${escapeHtml(it.sku || 'Ürün')}</span>
+            <span class="adm-modal-item-qty">${it.quantity} Adet</span>
+            <b class="adm-modal-item-price">${(it.unit_price || 0) * (it.quantity || 1)} TL</b>
+          </div>
+        `).join('')
+      } else {
+        modalItemsList.innerHTML = '<div class="adm-muted">Ürün bilgisi yok.</div>'
+      }
+    }
+
+    // Modal Hızlı Aksiyon Butonları
+    const btnQuickDone = document.querySelector('#modalActionDone')
+    const btnQuickCancel = document.querySelector('#modalActionCancel')
+
+    if (btnQuickDone) {
+      btnQuickDone.onclick = async () => {
+        try {
+          await updateOrderStatus(order.order_code, 'closed')
+          notify('Tamamlandı', `${order.order_code} başarıyla kapatıldı.`)
+          detailDialog.close()
+          await loadDashboardData()
+        } catch (e) {
+          notify('Hata', e.message)
+        }
+      }
+    }
+
+    if (btnQuickCancel) {
+      btnQuickCancel.onclick = async () => {
+        try {
+          await updateOrderStatus(order.order_code, 'cancelled')
+          notify('İptal Edildi', `${order.order_code} iptal edildi.`)
+          detailDialog.close()
+          await loadDashboardData()
+        } catch (e) {
+          notify('Hata', e.message)
+        }
+      }
+    }
+
+    detailDialog.showModal()
+  }
+
+  // CSV Dışa Aktarma Fonksiyonu
+  function exportCSV () {
+    if (!cachedOrders.length) {
+      notify('Hata', 'Dışa aktarılacak sipariş bulunamadı.')
+      return
+    }
+
+    const headers = ['Talep Kodu', 'Discord Kullanıcısı', 'Discord ID', 'Tutar (TL)', 'Durum', 'Yetkili', 'Tarih', 'Ürünler']
+    const rows = cachedOrders.map(o => [
+      `"${o.order_code || ''}"`,
+      `"${o.discord_username || ''}"`,
+      `"${o.discord_user_id || ''}"`,
+      o.total_tl || 0,
+      `"${o.status || ''}"`,
+      `"${o.handled_by || ''}"`,
+      `"${o.created_at || ''}"`,
+      `"${JSON.stringify(o.items || []).replace(/"/g, '""')}"`
+    ])
+
+    const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n')
+    const encodedUri = encodeURI(csvContent)
+    const link = document.createElement('a')
+    link.setAttribute('href', encodedUri)
+    link.setAttribute('download', `MonarchStore_Siparisler_${new Date().toISOString().slice(0, 10)}.csv`)
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    notify('İndirildi', 'Sipariş listesi CSV formatında dışa aktarıldı.')
+  }
+
+  // Sidebar Sekme Değiştirme
+  navTabs.forEach(tab => {
     tab.addEventListener('click', () => {
-      filterTabs.forEach(t => t.classList.remove('active'))
+      navTabs.forEach(t => t.classList.remove('active'))
       tab.classList.add('active')
-      activeFilter = tab.dataset.filter
-      renderOrders()
+      const targetView = tab.dataset.tab
+
+      viewSections.forEach(sec => {
+        sec.style.display = (sec.id === `admSection_${targetView}` ? 'block' : 'none')
+      })
     })
   })
 
-  if (searchInput) {
-    searchInput.addEventListener('input', () => renderOrders())
+  if (refreshBtn) refreshBtn.addEventListener('click', async () => {
+    refreshBtn.classList.add('spinning')
+    await loadDashboardData()
+    setTimeout(() => refreshBtn.classList.remove('spinning'), 600)
+    notify('Canlı Veri', 'Tüm sipariş ve istatistikler güncellendi.')
+  })
+
+  if (exportCsvBtn) exportCsvBtn.addEventListener('click', exportCSV)
+
+  if (searchInput) searchInput.addEventListener('input', renderOrders)
+  if (statusFilterSelect) statusFilterSelect.addEventListener('change', renderOrders)
+  if (sortSelect) sortSelect.addEventListener('change', renderOrders)
+
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+      clearInterval(autoRefreshTimer)
+      clearAdminSession()
+      dashboardDialog.close()
+      notify('Çıkış Yapıldı', 'Admin oturumu sonlandırıldı.')
+      const accBtn = document.querySelector('#accountButton')
+      if (accBtn) accBtn.textContent = 'Giriş Yap / Kaydol'
+    })
   }
 
   return { openDashboard, loadDashboardData }

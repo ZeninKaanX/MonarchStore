@@ -72,10 +72,41 @@ export function bindCommunityStats ({ countElement, statusElement }) {
 
 function renderCart (cart, summary, submitButton) {
   const items = formatCart(cart)
-  summary.innerHTML = items.length
-    ? `<ul>${items.map((item) => `<li><span>${escapeHtml(item.name)} × ${item.quantity}</span><b>${item.lineTotalTl} TL</b></li>`).join('')}</ul><div class="order-total"><span>Talep toplamı</span><b>${getCartTotalTl(items)} TL</b></div>`
-    : '<p>Sepetinde ürün yok.</p>'
-  submitButton.disabled = items.length === 0
+  if (!items.length) {
+    summary.innerHTML = '<p class="cart-empty-msg" style="text-align: center; color: var(--muted); padding: 14px 0; margin: 0;">Sepetinizde ürün bulunmuyor.</p>'
+    submitButton.disabled = true
+    return
+  }
+
+  summary.innerHTML = `
+    <ul class="cart-items-list">
+      ${items.map((item) => `
+        <li class="cart-item-row" data-sku="${item.sku}">
+          <div class="cart-item-info">
+            <b class="cart-item-title">${escapeHtml(item.name)}</b>
+            <span class="cart-item-unit-price">${item.unitPriceTl} TL / adet</span>
+          </div>
+          <div class="cart-item-actions">
+            <div class="cart-qty-box">
+              <button type="button" class="cart-btn-qty" data-action="dec" data-sku="${item.sku}" title="Miktarı azalt">-</button>
+              <span class="cart-qty-number">${item.quantity}</span>
+              <button type="button" class="cart-btn-qty" data-action="inc" data-sku="${item.sku}" title="Miktarı arttır">+</button>
+            </div>
+            <strong class="cart-item-total">${item.lineTotalTl} TL</strong>
+            <button type="button" class="cart-btn-remove" data-action="remove" data-sku="${item.sku}" title="Ürünü sepetten sil">Kaldır</button>
+          </div>
+        </li>
+      `).join('')}
+    </ul>
+    <div class="order-total-bar">
+      <button type="button" class="cart-btn-clear" data-action="clear" title="Tüm sepeti temizle">Sepeti Temizle</button>
+      <div class="order-total-sum">
+        <span>Talep toplamı:</span>
+        <b>${getCartTotalTl(items)} TL</b>
+      </div>
+    </div>
+  `
+  submitButton.disabled = false
 }
 
 export function bindOrderUI ({ cartButton, cartCount, dialog, closeButton, form, discordInput, summary, submitButton, notify }) {
@@ -92,6 +123,41 @@ export function bindOrderUI ({ cartButton, cartCount, dialog, closeButton, form,
     dialog.showModal()
     window.setTimeout(() => discordInput.focus(), 30)
   }
+
+  summary.addEventListener('click', (event) => {
+    const btn = event.target.closest('[data-action]')
+    if (!btn) return
+    const action = btn.dataset.action
+    const sku = btn.dataset.sku
+
+    if (action === 'inc') {
+      const item = cart.find((i) => i.sku === sku)
+      if (item) item.quantity = Math.min(10, item.quantity + 1)
+      update()
+    } else if (action === 'dec') {
+      const item = cart.find((i) => i.sku === sku)
+      if (item) {
+        item.quantity -= 1
+        if (item.quantity <= 0) {
+          const idx = cart.findIndex((i) => i.sku === sku)
+          if (idx !== -1) cart.splice(idx, 1)
+        }
+      }
+      update()
+    } else if (action === 'remove') {
+      const idx = cart.findIndex((i) => i.sku === sku)
+      if (idx !== -1) {
+        cart.splice(idx, 1)
+        update()
+        if (PRODUCT_CATALOG[sku]) notify('Ürün Çıkarıldı', `${PRODUCT_CATALOG[sku].name} sepetinizden silindi.`)
+      }
+    } else if (action === 'clear') {
+      cart.splice(0, cart.length)
+      update()
+      notify('Sepet Temizlendi', 'Sepetinizdeki tüm ürünler boşaltıldı.')
+    }
+  })
+
   document.querySelectorAll('[data-add-to-cart]').forEach((button) => {
     button.addEventListener('click', () => {
       const sku = button.dataset.addToCart

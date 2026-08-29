@@ -13,7 +13,7 @@ Bu paket, Monarch Store’daki **ödeme bilgisi almayan** ürün taleplerini Dis
 5. `GUILD_ID=` satırına siparişlerin işleneceği tek Discord sunucusunun kimliğini yaz. Sunucu kimliği için bot konsolunda `sunucular` yazabilirsin.
 6. Komut satırında bu klasörde sırayla `npm install` ve `npm start` çalıştır.
 
-`CLIENT_ID` ve `SUPABASE_URL` şablonda hazır gelir. `ORDER_POLL_INTERVAL_MS=12000`, botun her 12 saniyede bir bekleyen talebi kontrol etmesi içindir. `COMMUNITY_STATS_INTERVAL_MS=60000`, Discord’daki çevrimiçi insan üye sayısının mağazaya yenilenme aralığıdır; 30 saniyenin altına düşmez. Yerel YouTube başlık yansıtma yardımcı uygulaması kullanmıyorsan `YOUTUBE_LOCAL_MIRROR=false` bırak.
+`CLIENT_ID` ve `SUPABASE_URL` şablonda hazır gelir. `ORDER_POLL_INTERVAL_MS=12000`, botun her 12 saniyede bir bekleyen talebi kontrol etmesi içindir. Yerel YouTube başlık yansıtma yardımcı uygulaması kullanmıyorsan `YOUTUBE_LOCAL_MIRROR=false` bırak.
 
 ## Discord tarafındaki bir kerelik seçimler
 
@@ -47,10 +47,6 @@ Sipariş kodları ticketta ve satın alım bildiriminde görünür. Aynı web ta
 
 Paket; genel destek ticketları, mesaj silme, uyarı, ban/kick, süreli susturma, kanal kilidi/yavaş mod, duyuru/anket, isteğe bağlı küfür filtresi, spam/raid koruması, freeze, karşılama/takviye ve Discord Presence tabanlı YouTube durum yansıtmasını içerir. Küfür filtresi ve güvenlik varsayılan olarak pasiftir; yönetici komutuyla açılır. Yeni hesap/raid akışları, tanımlı **mevcut** Freeze rolü seçilmeden rol oluşturmaz veya üyeyi dondurmaz.
 
-### Mağazadaki çevrimiçi üye sayısı
-
-Bot açıldıktan sonra hedef sunucudaki **online**, **idle** ve **dnd** durumundaki insan üyeleri sayar; bot hesapları hariç tutulur. Sayı başlangıçta, üye/presence değişiminde ve en geç her 60 saniyede mağazaya yazılır. Mağaza, üç dakikadan eski veriyi sayı olarak göstermez; bu nedenle bot kapalıysa ziyaretçiye yanıltıcı bir değer sunulmaz. Kullanıcı adı, kullanıcı kimliği veya presence ayrıntısı kaydedilmez.
-
 ## Gerekli bot izinleri ve intentler
 
 Bot rolüne en az **View Channels**, **Send Messages**, **Embed Links**, **Manage Channels**, **Manage Messages**, **Read Message History**, **Move Members**, **Moderate Members** ve **Manage Roles** izinlerini ver. Bot rolü, yönetmesi gereken rollerin üzerinde olmalıdır.
@@ -59,4 +55,4 @@ Discord Developer Portal’daki **Bot** bölümünde **Server Members Intent**, 
 
 ## Hızlı kontrol
 
-Bot açıldıktan sonra konsolda `[AKTİF]` satırını görmelisin. Mağazadaki “çevrimiçi üye” kartı ilk başarılı güncellemeden sonra yaklaşık bir dakika içinde sayı ve güncelleme zamanını göstermelidir. Discord’da `/siparis-kur` komutunu bir kez çalıştır; ardından test için `/siparis-tara` kullanabilirsin. Gerçek uçtan uca kontrol için siteye sunucuda bulunan kendi Discord kullanıcı adınla küçük bir ürün talebi gönder. Bot açıkken özel ticket ve `#satın-alım` özetinin oluştuğunu kontrol et.
+Bot açıldıktan sonra konsolda `[AKTİF]` satırını görmelisin. Discord’da `/siparis-kur` komutunu bir kez çalıştır; ardından test için `/siparis-tara` kullanabilirsin. Gerçek uçtan uca kontrol için siteye sunucuda bulunan kendi Discord kullanıcı adınla küçük bir ürün talebi gönder. Bot açıkken özel ticket ve `#satın-alım` özetinin oluştuğunu kontrol et.

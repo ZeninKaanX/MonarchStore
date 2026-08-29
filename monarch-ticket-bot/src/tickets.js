@@ -3,8 +3,7 @@ const { loadStore, saveStore, logTo } = require('./util')
 
 const TICKET_TYPES = {
   ticket_genel: { word: 'destek', label: 'Genel Destek' },
-  ticket_partner: { word: 'ortaklik', label: 'İş Birliği' },
-  ticket_clan: { word: 'klan', label: 'Klan Başvurusu' }
+  ticket_partner: { word: 'partnerlik', label: 'Partnerlik' }
 }
 
 function sanitizeName (str) {
@@ -53,14 +52,18 @@ async function sendTicketPanel (interaction) {
   await getTicketResources(interaction.guild)
   const embed = new EmbedBuilder()
     .setColor(0x3e83b8)
-    .setTitle('Monarch Destek')
-    .setDescription('Yardım, iş birliği veya klan başvurusu için uygun seçeneği kullanarak sana özel destek ticketı açabilirsin.')
+    .setTitle('<:ticket1:1542606676790743153> Monarch Destek')
+    .setDescription('Yardım veya partnerlik için uygun seçeneği kullanarak sana özel destek ticketı açabilirsin.')
+    .setImage('attachment://monarch-hero.gif')
   const row = new ActionRowBuilder().addComponents(
     new ButtonBuilder().setCustomId('ticket_genel').setLabel('Genel Destek').setStyle(ButtonStyle.Primary),
-    new ButtonBuilder().setCustomId('ticket_partner').setLabel('İş Birliği').setStyle(ButtonStyle.Success),
-    new ButtonBuilder().setCustomId('ticket_clan').setLabel('Klan Başvurusu').setStyle(ButtonStyle.Secondary)
+    new ButtonBuilder().setCustomId('ticket_partner').setLabel('Partnerlik').setStyle(ButtonStyle.Success)
   )
-  await channel.send({ embeds: [embed], components: [row] })
+  await channel.send({
+    files: [require('path').join(__dirname, '..', 'assets', 'monarch-hero.gif')],
+    embeds: [embed],
+    components: [row]
+  })
   await interaction.reply({ content: `Ticket paneli ${channel} kanalına gönderildi.`, ephemeral: true })
 }
 

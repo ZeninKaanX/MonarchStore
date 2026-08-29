@@ -1,19 +1,19 @@
 <!doctype html>
 <html lang="tr">
   <head>
-    <!-- Monarch Store style reminder: sade Minecraft ürün vitrini; açık zemin, koyu metin, gerçek logo, tek tip ürün görseli ve robot arka planı. -->
+    <!-- Monarch Store style reminder: sade dijital hizmet & ürün vitrini; açık zemin, koyu metin, gerçek logo, robot arka planı. -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
     <meta name="theme-color" content="#f6f7fa" />
-    <meta name="description" content="Monarch Store Minecraft ürünleri ve botları." />
-    <title>Monarch Store | Minecraft Ürünleri</title>
+    <meta name="description" content="Monarch Store Minecraft botları, UI/UX tasarımı ve profesyonel sunum hizmetleri." />
+    <title>Monarch Store | Dijital Hizmetler, Botlar & Tasarım</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
     <script>try { document.documentElement.dataset.theme = localStorage.getItem('monarch-theme') === 'dark' ? 'dark' : 'light'; } catch { document.documentElement.dataset.theme = 'light'; }</script>
     <style>
-      :root { --ink: #171b23; --muted: #687283; --paper: #f7f8fb; --line: #e6e9ee; --blue: #3e83b8; --blue-dark: #286791; --white: #ffffff; --green: #5e9c70; --shadow: 0 14px 35px rgba(23, 27, 35, 0.08); }
-      :root[data-theme="dark"] { --ink: #edf4fb; --muted: #aab9c8; --paper: #0a111b; --line: #283848; --blue: #69b2e9; --blue-dark: #3d91d1; --white: #111c28; --green: #8ccf9b; --shadow: 0 16px 38px rgba(0, 0, 0, .28); color-scheme: dark; }
+      :root { --ink: #171b23; --muted: #687283; --paper: #f7f8fb; --line: #e6e9ee; --blue: #3e83b8; --blue-dark: #286791; --white: #ffffff; --green: #5e9c70; --amber: #d97706; --shadow: 0 14px 35px rgba(23, 27, 35, 0.08); }
+      :root[data-theme="dark"] { --ink: #edf4fb; --muted: #aab9c8; --paper: #0a111b; --line: #283848; --blue: #69b2e9; --blue-dark: #3d91d1; --white: #111c28; --green: #8ccf9b; --amber: #f59e0b; --shadow: 0 16px 38px rgba(0, 0, 0, .28); color-scheme: dark; }
       * { box-sizing: border-box; }
       html { scroll-behavior: smooth; }
       body { margin: 0; color: var(--ink); background: linear-gradient(180deg, #f7f8fb 0%, #f2f4f7 100%); font-family: Manrope, sans-serif; }
@@ -25,11 +25,11 @@
       .status { display: inline-flex; align-items: center; gap: 7px; }
       .status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #8ccf9b; }
       header { position: sticky; z-index: 10; top: 0; border-bottom: 1px solid var(--line); background: #f8f8f8; backdrop-filter: blur(12px); }
-      .nav { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+      .nav { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
       .logo { display: flex; align-items: center; min-width: 202px; gap: 0; }
       .logo img { display: block; width: 174px; height: 53px; object-fit: contain; object-position: left center; }
       .logo .mascot { width: 58px; height: 58px; margin-left: -79px; object-fit: contain; object-position: center; background: transparent; mix-blend-mode: normal; }
-      .links { display: flex; align-items: center; gap: 24px; color: #536071; font-size: 13px; font-weight: 700; }
+      .links { display: flex; align-items: center; gap: 20px; color: #536071; font-size: 13px; font-weight: 700; }
       .links a:hover { color: var(--blue); }
       .nav-actions { display: flex; align-items: center; gap: 9px; }
       .theme-toggle { min-height: 38px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 0 10px; border: 1px solid #c8d0da; color: #405160; background: #fff; font: 700 10px "Space Mono", monospace; letter-spacing: .03em; transition: color .18s, background .18s, border-color .18s, transform .16s; }
@@ -44,7 +44,7 @@
       .account-button.is-signed-in { border-color: #b8c2cd; color: #344454; background: #fff; }
       .cart { min-width: 108px; min-height: 38px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid #c8d0da; color: #263442; background: #fff; font: 700 11px "Space Mono", monospace; letter-spacing: .04em; }
       .cart strong { min-width: 18px; height: 18px; display: grid; place-items: center; border-radius: 50%; color: #fff; background: var(--blue); font-size: 10px; }
-      .order-dialog { width: min(470px, calc(100% - 32px)); padding: 0; border: 1px solid #d3dce5; color: var(--ink); background: #fff; box-shadow: 0 24px 65px rgba(12, 28, 42, .28); }
+      .order-dialog { width: min(490px, calc(100% - 32px)); padding: 0; border: 1px solid #d3dce5; color: var(--ink); background: #fff; box-shadow: 0 24px 65px rgba(12, 28, 42, .28); }
       .order-dialog::backdrop { background: rgba(11, 25, 37, .56); backdrop-filter: blur(3px); }
       .order-panel { padding: 27px; }
       .order-panel h2 { margin: 0; padding-right: 32px; font-size: 26px; }
@@ -53,6 +53,12 @@
       .order-summary ul { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; font-size: 12px; }
       .order-summary li, .order-total { display: flex; justify-content: space-between; gap: 12px; }
       .order-total { margin-top: 12px; padding-top: 11px; border-top: 1px solid #ced9e1; color: #263442; font-size: 13px; }
+      
+      .order-notice { display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; margin-bottom: 12px; border: 1px solid #fed7aa; background: #fffbeb; color: #9a3412; font-size: 12px; line-height: 1.5; border-radius: 4px; }
+      .order-notice strong { display: block; color: #7c2d12; font-size: 12px; margin-bottom: 2px; }
+      .order-notice p { margin: 0; }
+      .notice-icon { font-size: 16px; line-height: 1; flex-shrink: 0; }
+
       .order-form { display: grid; gap: 11px; }
       .order-form label { display: grid; gap: 6px; color: #43505f; font-size: 12px; font-weight: 800; }
       .order-form input { width: 100%; min-height: 43px; padding: 0 12px; border: 1px solid #cbd4de; color: var(--ink); background: #fff; font: inherit; }
@@ -67,8 +73,8 @@
       .hero-layout { position: relative; display: grid; grid-template-columns: minmax(0, 545px) minmax(330px, 430px); justify-content: space-between; align-items: center; gap: 42px; padding: 48px 0; }
       .hero-content { position: relative; max-width: 545px; padding: 18px 0; }
       .tag { display: inline-flex; margin-bottom: 16px; padding: 6px 9px; border: 1px solid rgba(255,255,255,.45); color: #dce9f2; font: 700 10px "Space Mono", monospace; letter-spacing: .08em; text-transform: uppercase; }
-      h1 { margin: 0; font-size: clamp(38px, 5vw, 61px); line-height: .98; letter-spacing: -.055em; }
-      .hero p { max-width: 455px; margin: 20px 0 25px; color: #e0e8ee; font-size: 14px; line-height: 1.75; }
+      h1 { margin: 0; font-size: clamp(34px, 4.5vw, 56px); line-height: 1.05; letter-spacing: -.05em; }
+      .hero p { max-width: 465px; margin: 20px 0 25px; color: #e0e8ee; font-size: 14px; line-height: 1.75; }
       .button { min-height: 46px; display: inline-flex; align-items: center; justify-content: center; padding: 0 18px; border: 1px solid var(--blue); color: #fff; background: var(--blue); font-size: 13px; font-weight: 800; transition: background .18s, transform .18s; }
       .button:hover { background: var(--blue-dark); }
       .button:active { transform: scale(.98); }
@@ -85,29 +91,50 @@
       .robot-help b { display: block; margin-bottom: 3px; color: #fff; font-size: 13px; }
       @media (prefers-reduced-motion: reduce) { .anime-hero-still { animation: none; transform: none; } .anime-hero-video { display: none; animation: none; transform: none; } }
 
-      section { padding: 70px 0; }
+      /* Kategori Barı */
+      .cat-nav { padding: 24px 0 0; }
+      .cat-tabs { display: flex; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid var(--line); padding-bottom: 16px; }
+      .cat-tab { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border: 1px solid var(--line); background: var(--white); color: var(--ink); font: 700 11px "Space Mono", monospace; text-transform: uppercase; letter-spacing: .04em; transition: all .18s; }
+      .cat-tab:hover, .cat-tab.active { border-color: var(--blue); color: var(--blue); background: rgba(62, 131, 184, 0.08); }
+
+      section { padding: 60px 0; }
       .section-head { display: flex; justify-content: space-between; align-items: end; gap: 28px; margin-bottom: 25px; }
       .eyebrow { margin: 0 0 8px; color: var(--blue); font: 700 10px "Space Mono", monospace; letter-spacing: .08em; text-transform: uppercase; }
-      h2 { margin: 0; font-size: clamp(30px, 3.2vw, 42px); letter-spacing: -.045em; }
-      .section-head > p { max-width: 375px; margin: 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
+      h2 { margin: 0; font-size: clamp(28px, 3.2vw, 40px); letter-spacing: -.045em; }
+      .section-head > p { max-width: 420px; margin: 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
 
       .bot-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
-      .product { overflow: hidden; border: 1px solid var(--line); background: var(--white); box-shadow: var(--shadow); }
-      .product-image { position: relative; height: 300px; overflow: hidden; background: #cdd7df; }
+      .product { overflow: hidden; border: 1px solid var(--line); background: var(--white); box-shadow: var(--shadow); display: flex; flex-direction: column; }
+      .product-image { position: relative; height: 260px; overflow: hidden; background: #cdd7df; }
       .product-image img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; transition: transform .35s ease; }
       .product:hover .product-image img { transform: scale(1.025); }
-      .product-image span { position: absolute; top: 12px; left: 12px; padding: 6px 8px; color: #fff; background: rgba(25,31,40,.82); font: 700 9px "Space Mono", monospace; letter-spacing: .06em; }
-      .product-main { padding: 19px; }
-      .product h3 { margin: 0; font-size: 28px; letter-spacing: -.045em; }
+      .product-image span { position: absolute; top: 12px; left: 12px; padding: 6px 8px; color: #fff; background: rgba(25,31,40,.82); font: 700 9px "Space Mono", monospace; letter-spacing: .06em; z-index: 2; }
+      
+      /* Görsel Bekleniyor / Placeholder Alanı */
+      .product-image.is-placeholder {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #eef4f8 0%, #e1ebf3 100%);
+        color: #728498;
+        border-bottom: 1px solid var(--line);
+      }
+      .placeholder-inner { text-align: center; padding: 20px; }
+      .placeholder-icon { font-size: 38px; margin-bottom: 8px; opacity: 0.85; filter: grayscale(0.2); }
+      .placeholder-badge { font: 700 10px "Space Mono", monospace; letter-spacing: .08em; text-transform: uppercase; padding: 5px 10px; border: 1px dashed #a5b9cb; background: rgba(255,255,255,0.7); color: #506477; border-radius: 3px; display: inline-block; }
+
+      .product-main { padding: 19px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+      .product h3 { margin: 0; font-size: 24px; letter-spacing: -.04em; }
       .product p { min-height: 44px; margin: 9px 0 19px; color: var(--muted); font-size: 12px; line-height: 1.65; }
-      .product-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 14px; border-top: 1px solid var(--line); }
+      .product-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 14px; border-top: 1px solid var(--line); margin-top: auto; }
       .price { display: grid; gap: 3px; }
       .price small { color: var(--muted); font: 9px "Space Mono", monospace; text-transform: uppercase; }
       .price b { font-size: 21px; }
       .buy { min-height: 38px; display: inline-flex; align-items: center; justify-content: center; padding: 0 12px; border: 1px solid var(--blue); color: var(--blue); background: #fff; font-size: 11px; font-weight: 800; transition: color .18s, background .18s; }
       .buy:hover { color: #fff; background: var(--blue); }
 
-      .store-note { padding: 0 0 75px; }
+      .store-note { padding: 0 0 60px; }
       .note-card { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 35px; padding: 27px 30px; border: 1px solid #d9e2e8; color: #263442; background: #eef4f7; }
       .note-card h2 { font-size: 25px; }
       .note-card p { margin: 7px 0 0; color: #607181; font-size: 13px; }
@@ -160,8 +187,14 @@
       html[data-theme="dark"] .order-dialog, html[data-theme="dark"] .account-dialog { border-color: #344659; background: #111c28; }
       html[data-theme="dark"] .order-summary { border-color: #314253; background: #0d1722; }
       html[data-theme="dark"] .order-total { border-color: #314253; color: #e7f0f8; }
+      html[data-theme="dark"] .order-notice { border-color: #854d0e; background: #2b1a08; color: #fde68a; }
+      html[data-theme="dark"] .order-notice strong { color: #fef08a; }
       html[data-theme="dark"] .order-form label, html[data-theme="dark"] .account-form label { color: #c4d2df; }
       html[data-theme="dark"] .order-form input, html[data-theme="dark"] .account-form input { border-color: #384a5d; color: #eef5fb; background: #0c1520; }
+      html[data-theme="dark"] .cat-tab { border-color: #2e3f52; background: #111c28; color: #d2e0eb; }
+      html[data-theme="dark"] .cat-tab:hover, html[data-theme="dark"] .cat-tab.active { border-color: var(--blue); color: var(--blue); background: rgba(105, 178, 233, 0.12); }
+      html[data-theme="dark"] .product-image.is-placeholder { background: linear-gradient(135deg, #101c2a 0%, #0c1521 100%); color: #647b93; border-color: #243548; }
+      html[data-theme="dark"] .placeholder-badge { border-color: #34495e; background: rgba(17, 28, 40, 0.8); color: #8ba2b8; }
       html[data-theme="dark"] .buy { background: #111c28; }
       html[data-theme="dark"] .note-card { border-color: #314455; color: #e2edf6; background: #102030; }
       html[data-theme="dark"] .note-card p { color: #b3c3d1; }
@@ -196,7 +229,7 @@
         .section-head { display: block; }
         .section-head > p { margin-top: 12px; }
         .bot-grid { grid-template-columns: 1fr; }
-        .product-image { height: min(94vw, 360px); }
+        .product-image { height: min(94vw, 300px); }
         .note-card { grid-template-columns: 1fr; gap: 19px; padding: 23px; }
         .item-list { justify-content: flex-start; }
         .discord-card { display: grid; justify-content: stretch; gap: 17px; padding: 22px; }
@@ -207,12 +240,26 @@
     </style>
   </head>
   <body>
-    <div class="topline"><div class="container"><span class="status">Monarch Store açık</span><span>Minecraft ürünleri · Discord üzerinden destek</span></div></div>
+    <div class="topline"><div class="container"><span class="status">Monarch Store açık</span><span>Botlar · UI/UX Tasarım · Sunum Hizmetleri</span></div></div>
     <header>
       <nav class="container nav" aria-label="Ana menü">
-        <a class="logo" href="#ana" aria-label="Monarch Store ana sayfa"><img src="/manus-storage/monarch-wordmark-transparent_4d0bf283.png" alt="Monarch Store logosu" /><img class="mascot" src="https://github.com/ZeninKaanX/MonarchStore/releases/download/monarch-hero-assets/monarch-mascot-alpha-clean.png" alt="Monarch Store anime karakteri" /></a>
-        <div class="links"><a href="#botlar">Botlar</a><a href="#urunler">Minecraft Ürünleri</a><a href="#iletisim">İletişim</a></div>
-        <div class="nav-actions"><button class="account-button" id="accountButton" type="button">Hesap oluştur</button><button class="theme-toggle" id="themeToggle" type="button" aria-label="Açık tema seçili. Koyu temaya geç" aria-pressed="false"><svg class="theme-toggle-icon theme-toggle-sun" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="3"></circle><path d="M8 1.25v1.5M8 13.25v1.5M1.25 8h1.5M13.25 8h1.5M3.23 3.23l1.06 1.06M11.71 11.71l1.06 1.06M12.77 3.23l-1.06 1.06M4.29 11.71l-1.06 1.06"></path></svg><svg class="theme-toggle-icon theme-toggle-moon" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.7 10.5A6 6 0 0 1 5.5 2.3 6.2 6.2 0 1 0 13.7 10.5Z" /></svg><span class="theme-toggle-text">Açık</span></button><button class="cart" id="cartButton" type="button" aria-label="Sepet">SEPET <strong id="cartCount">0</strong></button></div>
+        <a class="logo" href="#ana" aria-label="Monarch Store ana sayfa"><img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663457714638/oUTJFXXsgLapGxdp.png" alt="Monarch Store logosu" /><img class="mascot" src="https://github.com/ZeninKaanX/MonarchStore/releases/download/monarch-hero-assets/monarch-mascot-alpha-clean.png" alt="Monarch Store anime karakteri" /></a>
+        <div class="links">
+          <a href="#botlar">Minecraft Botları</a>
+          <a href="#uiux">UI/UX Tasarım</a>
+          <a href="#sunum">Sunum Hizmetleri</a>
+          <a href="#urunler">Oyun İçi</a>
+          <a href="#iletisim">İletişim</a>
+        </div>
+        <div class="nav-actions">
+          <button class="account-button" id="accountButton" type="button">Hesap oluştur</button>
+          <button class="theme-toggle" id="themeToggle" type="button" aria-label="Açık tema seçili. Koyu temaya geç" aria-pressed="false">
+            <svg class="theme-toggle-icon theme-toggle-sun" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="3"></circle><path d="M8 1.25v1.5M8 13.25v1.5M1.25 8h1.5M13.25 8h1.5M3.23 3.23l1.06 1.06M11.71 11.71l1.06 1.06M12.77 3.23l-1.06 1.06M4.29 11.71l-1.06 1.06"></path></svg>
+            <svg class="theme-toggle-icon theme-toggle-moon" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.7 10.5A6 6 0 0 1 5.5 2.3 6.2 6.2 0 1 0 13.7 10.5Z" /></svg>
+            <span class="theme-toggle-text">Açık</span>
+          </button>
+          <button class="cart" id="cartButton" type="button" aria-label="Sepet">SEPET <strong id="cartCount">0</strong></button>
+        </div>
       </nav>
     </header>
 
@@ -221,9 +268,9 @@
         <div class="container hero-layout">
           <div class="hero-content">
             <span class="tag">Monarch Store</span>
-            <h1 id="hero-title">Minecraft dünyan için<br />ihtiyacın olanlar.</h1>
-            <p>Botlar, oyun içi ürünler ve sunucu ihtiyaçları için sade bir mağaza. İstediğin ürünü seç, talebini hızlıca oluştur.</p>
-            <a class="button" href="#botlar">Botları incele</a><a class="button secondary" href="https://discord.gg/sAP3CwA4mP" target="_blank" rel="noreferrer">Discord'a katıl</a>
+            <h1 id="hero-title">Dijital dünyan ve projelerin için<br />ihtiyacın olanlar.</h1>
+            <p>Minecraft otomasyon botları, modern UI/UX arayüz tasarımları ve profesyonel sunum çözümleri için güvenilir mağaza. İstediğin hizmeti seç, talebini hemen oluştur.</p>
+            <a class="button" href="#kategoriler">Hizmetleri incele</a><a class="button secondary" href="https://discord.gg/sAP3CwA4mP" target="_blank" rel="noreferrer">Discord'a katıl</a>
           </div>
           <aside class="robot-panel" aria-label="Hareketli anime karakter sahnesi">
             <span class="robot-label">MONARCH / AKTİF</span>
@@ -234,42 +281,252 @@
         </div>
       </section>
 
+      <!-- Kategori Seçici -->
+      <nav class="container cat-nav" id="kategoriler" aria-label="Kategori Gezintisi">
+        <div class="cat-tabs">
+          <a class="cat-tab active" href="#botlar">🤖 Minecraft Botları</a>
+          <a class="cat-tab" href="#uiux">🎨 UI / UX Tasarım</a>
+          <a class="cat-tab" href="#sunum">📊 Sunum Hizmetleri</a>
+          <a class="cat-tab" href="#urunler">📦 Oyun İçi Ürünler</a>
+        </div>
+      </nav>
+
+      <!-- 1. Kategori: Minecraft Botları -->
       <section class="container" id="botlar" aria-labelledby="bot-title">
         <div class="section-head">
-          <div><p class="eyebrow">Botlar</p><h2 id="bot-title">Otomasyon araçları</h2></div>
-          <p>AFK, kaynak ve çiftlik işlemlerinde yardımcı olacak bot seçeneklerini buradan inceleyebilirsin.</p>
+          <div><p class="eyebrow">Otomasyon & Yazılım</p><h2 id="bot-title">Minecraft Botları</h2></div>
+          <p>AFK, kaynak madenciliği ve çiftlik otomasyonlarında güvenli ve kesintisiz çalışan bot seçenekleri.</p>
         </div>
         <div class="bot-grid">
           <article class="product" data-product="AFK Bot" data-price="50 TL">
-            <div class="product-image"><img src="/manus-storage/monarch-afk-bot_7c0b48b6.jpg" alt="Monarch Store AFK Bot görseli" /><span>MS / AFK</span></div>
-            <div class="product-main"><h3>AFK Bot</h3><p>Oyunda pasif kaldığın süre için pratik yardımcı bot seçeneği.</p><div class="product-row"><div class="price"><small>Fiyat</small><b>50 TL</b></div><button class="buy" type="button" data-add-to-cart="afk_bot">Sepete ekle</button></div></div>
+            <div class="product-image"><img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663457714638/dTrbZHbHfwFOvNdY.jpg" alt="Monarch Store AFK Bot görseli" /><span>MS / AFK</span></div>
+            <div class="product-main"><h3>AFK Bot</h3><p>Grim Anti-Cheat korumalı, otomatik girişli ve kesintisiz çalışan AFK botu.</p><div class="product-row"><div class="price"><small>Fiyat</small><b>50 TL</b></div><button class="buy" type="button" data-add-to-cart="afk_bot">Sepete ekle</button></div></div>
           </article>
           <article class="product" data-product="Miner Bot" data-price="180 TL">
-            <div class="product-image"><img src="/manus-storage/monarch-miner-bot_f037b5a7.jpg" alt="Monarch Store Miner Bot görseli" /><span>MS / MINER</span></div>
-            <div class="product-main"><h3>Miner Bot</h3><p>Kaynak döngüleri için hazırlanmış madencilik odaklı bot seçeneği.</p><div class="product-row"><div class="price"><small>Fiyat</small><b>180 TL</b></div><button class="buy" type="button" data-add-to-cart="miner_bot">Sepete ekle</button></div></div>
+            <div class="product-image"><img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663457714638/WtmnGWNFHlHMPTwQ.jpg" alt="Monarch Store Miner Bot görseli" /><span>MS / MINER</span></div>
+            <div class="product-main"><h3>Miner Bot</h3><p>Kaynak döngüleri ve otomatik madencilik operasyonları için akıllı bot.</p><div class="product-row"><div class="price"><small>Fiyat</small><b>180 TL</b></div><button class="buy" type="button" data-add-to-cart="miner_bot">Sepete ekle</button></div></div>
           </article>
           <article class="product" data-product="Farmer Bot" data-price="390 TL">
-            <div class="product-image"><img src="/manus-storage/monarch-farmer-bot_00c4cb5f.jpg" alt="Monarch Store Farmer Bot görseli" /><span>MS / FARMER</span></div>
-            <div class="product-main"><h3>Farmer Bot</h3><p>Çiftlik işlerini düzenli takip etmek isteyen oyuncular için bot seçeneği.</p><div class="product-row"><div class="price"><small>Fiyat</small><b>390 TL</b></div><button class="buy" type="button" data-add-to-cart="farmer_bot">Sepete ekle</button></div></div>
+            <div class="product-image"><img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663457714638/XxUQofeWPlQiwGHk.jpg" alt="Monarch Store Farmer Bot görseli" /><span>MS / FARMER</span></div>
+            <div class="product-main"><h3>Farmer Bot</h3><p>Çiftlik ürünlerini otomatik hasat edip satan yüksek performanslı tarım botu.</p><div class="product-row"><div class="price"><small>Fiyat</small><b>390 TL</b></div><button class="buy" type="button" data-add-to-cart="farmer_bot">Sepete ekle</button></div></div>
           </article>
         </div>
       </section>
 
-      <section class="container store-note" id="urunler" aria-labelledby="store-title">
-        <div class="note-card"><div><p class="eyebrow">Yakında mağazada</p><h2 id="store-title">Minecraft oyun içi ürünleri</h2><p>Mağazaya eklenmesini planladığın ürünleri bu alanda düzenli şekilde gösterebiliriz.</p></div><div class="item-list" aria-label="Planlanan ürün türleri"><span>VIP Paketleri</span><span>Kasa Anahtarları</span><span>Spawnerlar</span><span>Coin Paketleri</span></div></div>
+      <!-- 2. Kategori: UI / UX Tasarım -->
+      <section class="container" id="uiux" aria-labelledby="uiux-title">
+        <div class="section-head">
+          <div><p class="eyebrow">Tasarım & Deneyim</p><h2 id="uiux-title">UI / UX Tasarımı</h2></div>
+          <p>Web siteleri, mobil uygulamalar, paneller ve SaaS ürünleri için modern, estetik ve kullanıcı odaklı arayüz tasarımları.</p>
+        </div>
+        <div class="bot-grid">
+          <article class="product" data-product="Temel UI/UX Tasarım" data-price="150 TL">
+            <div class="product-image is-placeholder">
+              <span>MS / UI-UX</span>
+              <div class="placeholder-inner">
+                <div class="placeholder-icon">🎨</div>
+                <div class="placeholder-badge">Görsel Alanı</div>
+              </div>
+            </div>
+            <div class="product-main">
+              <h3>Temel UI/UX Tasarım</h3>
+              <p>Tek sayfa, açılış sayfası (landing page) veya temel mobil ekran arayüz tasarımı.</p>
+              <div class="product-row">
+                <div class="price"><small>Fiyat</small><b>150 TL</b></div>
+                <button class="buy" type="button" data-add-to-cart="uiux_starter">Sepete ekle</button>
+              </div>
+            </div>
+          </article>
+          <article class="product" data-product="Gelişmiş Web & Mobil UI/UX" data-price="350 TL">
+            <div class="product-image is-placeholder">
+              <span>MS / UI-UX PRO</span>
+              <div class="placeholder-inner">
+                <div class="placeholder-icon">💻</div>
+                <div class="placeholder-badge">Görsel Alanı</div>
+              </div>
+            </div>
+            <div class="product-main">
+              <h3>Gelişmiş Web & Mobil UI/UX</h3>
+              <p>Çok sayfalı web arayüzü, kontrol paneli (dashboard) veya mobil uygulama UI/UX konsepti.</p>
+              <div class="product-row">
+                <div class="price"><small>Fiyat</small><b>350 TL</b></div>
+                <button class="buy" type="button" data-add-to-cart="uiux_pro">Sepete ekle</button>
+              </div>
+            </div>
+          </article>
+          <article class="product" data-product="Özel Komple Arayüz Tasarımı" data-price="500 TL">
+            <div class="product-image is-placeholder">
+              <span>MS / UI-UX MAX</span>
+              <div class="placeholder-inner">
+                <div class="placeholder-icon">✨</div>
+                <div class="placeholder-badge">Görsel Alanı</div>
+              </div>
+            </div>
+            <div class="product-main">
+              <h3>Özel Komple Arayüz</h3>
+              <p>Kapsamlı tasarım sistemi, Figma bileşenleri, interaktif prototipleme ve tam UX analizi.</p>
+              <div class="product-row">
+                <div class="price"><small>Fiyat</small><b>500 TL</b></div>
+                <button class="buy" type="button" data-add-to-cart="uiux_custom">Sepete ekle</button>
+              </div>
+            </div>
+          </article>
+        </div>
       </section>
-      <section class="container discord-section" aria-labelledby="discord-title"><div class="discord-card"><div><p class="eyebrow">Topluluk ve destek</p><h2 id="discord-title">Monarch Store Discord</h2><p>Duyurular, destek ve sipariş iletişimi için Discord topluluğumuza katıl.</p></div><div class="discord-stat" aria-label="Discord çevrimiçi üye durumu"><strong class="discord-stat-count" id="discordActiveCount" aria-live="polite">—</strong><span class="discord-stat-label">çevrimiçi üye</span><p class="discord-stat-status" id="discordActiveStatus" role="status" data-state="waiting">Canlı durum bekleniyor</p></div><a class="discord-button" href="https://discord.gg/sAP3CwA4mP" target="_blank" rel="noreferrer">Discord'a katıl ↗</a></div></section>
+
+      <!-- 3. Kategori: Sunum Hizmetleri -->
+      <section class="container" id="sunum" aria-labelledby="sunum-title">
+        <div class="section-head">
+          <div><p class="eyebrow">Sunum & Görselleştirme</p><h2 id="sunum-title">Sunum Tasarımı</h2></div>
+          <p>Ödevler, projeler, kurumsal ve akademik sunumlar için profesyonel, etkileyici slayt tasarımları.</p>
+        </div>
+        <div class="bot-grid">
+          <article class="product" data-product="Standart Sunum Tasarımı" data-price="75 TL">
+            <div class="product-image is-placeholder">
+              <span>MS / SLIDES</span>
+              <div class="placeholder-inner">
+                <div class="placeholder-icon">📊</div>
+                <div class="placeholder-badge">Görsel Alanı</div>
+              </div>
+            </div>
+            <div class="product-main">
+              <h3>Standart Sunum</h3>
+              <p>5-10 slaytlık temiz, düzenli ve profesyonel tipografiye sahip temel sunum paketi.</p>
+              <div class="product-row">
+                <div class="price"><small>Fiyat</small><b>75 TL</b></div>
+                <button class="buy" type="button" data-add-to-cart="sunum_basic">Sepete ekle</button>
+              </div>
+            </div>
+          </article>
+          <article class="product" data-product="Proje & Ödev Sunumu" data-price="120 TL">
+            <div class="product-image is-placeholder">
+              <span>MS / SLIDES PRO</span>
+              <div class="placeholder-inner">
+                <div class="placeholder-icon">📑</div>
+                <div class="placeholder-badge">Görsel Alanı</div>
+              </div>
+            </div>
+            <div class="product-main">
+              <h3>Proje & Ödev Sunumu</h3>
+              <p>10-20 slaytlık grafik, infografik, şema ve tema destekli kapsamlı sunum tasarımı.</p>
+              <div class="product-row">
+                <div class="price"><small>Fiyat</small><b>120 TL</b></div>
+                <button class="buy" type="button" data-add-to-cart="sunum_pro">Sepete ekle</button>
+              </div>
+            </div>
+          </article>
+          <article class="product" data-product="Kurumsal Premium Sunum" data-price="200 TL">
+            <div class="product-image is-placeholder">
+              <span>MS / SLIDES VIP</span>
+              <div class="placeholder-inner">
+                <div class="placeholder-icon">🎯</div>
+                <div class="placeholder-badge">Görsel Alanı</div>
+              </div>
+            </div>
+            <div class="product-main">
+              <h3>Kurumsal Premium Sunum</h3>
+              <p>Özel marka kimliğine uygun, animasyon akışlı, yüksek etkili anahtar teslim sunum çözümü.</p>
+              <div class="product-row">
+                <div class="price"><small>Fiyat</small><b>200 TL</b></div>
+                <button class="buy" type="button" data-add-to-cart="sunum_premium">Sepete ekle</button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- 4. Kategori: Minecraft Oyun İçi Ürünleri -->
+      <section class="container store-note" id="urunler" aria-labelledby="store-title">
+        <div class="note-card">
+          <div>
+            <p class="eyebrow">Yakında Mağazada</p>
+            <h2 id="store-title">Minecraft Oyun İçi Ürünleri</h2>
+            <p>Sunucu ihtiyaçlarına özel oyun içi paketler ve içerikler çok yakında mağazamıza eklenecektir.</p>
+          </div>
+          <div class="item-list" aria-label="Planlanan ürün türleri">
+            <span>VIP Paketleri</span>
+            <span>Kasa Anahtarları</span>
+            <span>Spawnerlar</span>
+            <span>Coin Paketleri</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Discord Topluluk Alanı -->
+      <section class="container discord-section" aria-labelledby="discord-title">
+        <div class="discord-card">
+          <div>
+            <p class="eyebrow">Topluluk ve destek</p>
+            <h2 id="discord-title">Monarch Store Discord</h2>
+            <p>Duyurular, sipariş takibi, özel ticket açılışı ve destek için Discord topluluğumuza katılın.</p>
+          </div>
+          <div class="discord-stat" aria-label="Discord çevrimiçi üye durumu">
+            <strong class="discord-stat-count" id="discordActiveCount" aria-live="polite">—</strong>
+            <span class="discord-stat-label">çevrimiçi üye</span>
+            <p class="discord-stat-status" id="discordActiveStatus" role="status" data-state="waiting">Canlı durum bekleniyor</p>
+          </div>
+          <a class="discord-button" href="https://discord.gg/sAP3CwA4mP" target="_blank" rel="noreferrer">Discord'a katıl ↗</a>
+        </div>
+      </section>
     </main>
 
-    <footer id="iletisim"><div class="container footer"><img src="/manus-storage/monarch-wordmark-transparent_4d0bf283.png" alt="Monarch Store logosu" /><span><a href="https://discord.gg/sAP3CwA4mP" target="_blank" rel="noreferrer">Monarch Store Discord</a> · Discord üzerinden bize ulaşabilirsin.</span></div></footer>
+    <footer id="iletisim">
+      <div class="container footer">
+        <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663457714638/oUTJFXXsgLapGxdp.png" alt="Monarch Store logosu" />
+        <span><a href="https://discord.gg/sAP3CwA4mP" target="_blank" rel="noreferrer">Monarch Store Discord</a> · Tüm siparişler ve teslimatlar Discord üzerinden yönetilir.</span>
+      </div>
+    </footer>
+
     <div class="toast" id="toast" role="status" aria-live="polite"><b id="toastTitle">Sepete eklendi</b><span id="toastText"></span></div>
-    <dialog class="order-dialog" id="orderDialog" aria-labelledby="orderTitle"><div class="order-panel"><button class="dialog-close" id="orderClose" type="button" aria-label="Pencereyi kapat">×</button><h2 id="orderTitle">Sipariş talebini onayla</h2><p>Ödeme bilgisi istemiyoruz. Discord sunucusundaki kullanıcı adını doğrulayıp sana özel ticket açacağız.</p><div class="order-summary" id="orderSummary"></div><form class="order-form" id="orderForm"><label>Discord kullanıcı adın<input id="orderDiscordUsername" name="discordUsername" inputmode="text" autocomplete="off" maxlength="32" placeholder="ornek.kullanici" required /></label><small>Discord sunucusuna katılmış olmalısın. Eşleşme bulunamazsa Discord’da ticket veya log oluşturulmaz.</small><button class="order-submit" id="orderSubmit" type="submit">Talebi sıraya al</button></form></div></dialog>
-    <dialog class="account-dialog" id="accountDialog" aria-labelledby="accountTitle"><div class="account-panel"><button class="dialog-close" id="accountClose" type="button" aria-label="Pencereyi kapat">×</button><h2 id="accountTitle">Hesap oluştur</h2><p id="accountDescription">Bu hesap yalnızca bu tarayıcıda saklanır; başka cihazlarda görünmez.</p><form class="account-form" id="accountForm"><label>Kullanıcı adı<input id="accountUsername" name="username" autocomplete="username" minlength="3" maxlength="24" required /></label><label>Şifre<input id="accountPassword" name="password" type="password" autocomplete="new-password" minlength="6" required /></label><label>Şifre tekrar<input id="accountPasswordConfirm" name="passwordConfirm" type="password" autocomplete="new-password" minlength="6" required /></label><button class="account-submit" id="accountSubmit" type="submit">Hesabı oluştur</button></form><button class="account-switch" id="accountSwitch" type="button">Zaten hesabın var mı? Giriş yap</button><button class="account-logout" id="accountLogout" type="button" hidden>Bu cihazda çıkış yap</button><p class="account-note">Bu, sunucu tabanlı veya cihazlar arası çalışan bir üyelik sistemi değildir.</p></div></dialog>
+
+    <!-- Sipariş Penceresi / Modal -->
+    <dialog class="order-dialog" id="orderDialog" aria-labelledby="orderTitle">
+      <div class="order-panel">
+        <button class="dialog-close" id="orderClose" type="button" aria-label="Pencereyi kapat">×</button>
+        <h2 id="orderTitle">Sipariş talebini onayla</h2>
+        <p>Ödeme bilgisi istemiyoruz. Discord sunucusundaki kullanıcı adını doğrulayıp sana özel ticket açacağız.</p>
+        <div class="order-summary" id="orderSummary"></div>
+        <form class="order-form" id="orderForm">
+          <!-- Önemli Discord Uyarısı -->
+          <div class="order-notice" role="alert">
+            <span class="notice-icon">⚠️</span>
+            <div>
+              <strong>Önemli Uyarı:</strong>
+              <p>Eğer Discord'umuzda değilseniz siparişiniz geçersiz sayılır, lütfen gerçek Discord adınızı yazın.</p>
+            </div>
+          </div>
+          <label>
+            Discord kullanıcı adın
+            <input id="orderDiscordUsername" name="discordUsername" inputmode="text" autocomplete="off" maxlength="32" placeholder="ornek.kullanici" required />
+          </label>
+          <small>Discord sunucusuna katılmış olmalısın. Eşleşme bulunamazsa Discord’da ticket veya log oluşturulmaz.</small>
+          <button class="order-submit" id="orderSubmit" type="submit">Talebi sıraya al</button>
+        </form>
+      </div>
+    </dialog>
+
+    <!-- Hesap Penceresi / Modal -->
+    <dialog class="account-dialog" id="accountDialog" aria-labelledby="accountTitle">
+      <div class="account-panel">
+        <button class="dialog-close" id="accountClose" type="button" aria-label="Pencereyi kapat">×</button>
+        <h2 id="accountTitle">Hesap oluştur</h2>
+        <p id="accountDescription">Bu hesap yalnızca bu tarayıcıda saklanır; başka cihazlarda görünmez.</p>
+        <form class="account-form" id="accountForm">
+          <label>Kullanıcı adı<input id="accountUsername" name="username" autocomplete="username" minlength="3" maxlength="24" required /></label>
+          <label>Şifre<input id="accountPassword" name="password" type="password" autocomplete="new-password" minlength="6" required /></label>
+          <label>Şifre tekrar<input id="accountPasswordConfirm" name="passwordConfirm" type="password" autocomplete="new-password" minlength="6" required /></label>
+          <button class="account-submit" id="accountSubmit" type="submit">Hesabı oluştur</button>
+        </form>
+        <button class="account-switch" id="accountSwitch" type="button">Zaten hesabın var mı? Giriş yap</button>
+        <button class="account-logout" id="accountLogout" type="button" hidden>Bu cihazda çıkış yap</button>
+        <p class="account-note">Bu, sunucu tabanlı veya cihazlar arası çalışan bir üyelik sistemi değildir.</p>
+      </div>
+    </dialog>
+
     <script type="module" src="/theme-toggle.js"></script>
-    <script src="/account-local.js"></script>
-    <script type="module" src="/store-orders.js?v=20260827b"></script>
-    <script>
-      window.addEventListener('DOMContentLoaded', () => {
+    <script type="module">
+      import { bindLocalAccountUI } from './account-local.js?v=20260827a';
+      import { bindOrderUI, bindCommunityStats } from './store-orders.js';
       const cartCount = document.querySelector('#cartCount');
       const toast = document.querySelector('#toast');
       const toastTitle = document.querySelector('#toastTitle');
@@ -277,10 +534,9 @@
       let cart = 0;
       let toastTimer;
       const notify = (title, text) => { toastTitle.textContent = title; toastText.textContent = text; toast.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('show'), 2800); };
-      window.bindOrderUI({ cartButton: document.querySelector('#cartButton'), cartCount, dialog: document.querySelector('#orderDialog'), closeButton: document.querySelector('#orderClose'), form: document.querySelector('#orderForm'), discordInput: document.querySelector('#orderDiscordUsername'), summary: document.querySelector('#orderSummary'), submitButton: document.querySelector('#orderSubmit'), notify });
-      window.bindCommunityStats({ countElement: document.querySelector('#discordActiveCount'), statusElement: document.querySelector('#discordActiveStatus') });
+      bindOrderUI({ cartButton: document.querySelector('#cartButton'), cartCount, dialog: document.querySelector('#orderDialog'), closeButton: document.querySelector('#orderClose'), form: document.querySelector('#orderForm'), discordInput: document.querySelector('#orderDiscordUsername'), summary: document.querySelector('#orderSummary'), submitButton: document.querySelector('#orderSubmit'), notify });
+      bindCommunityStats({ countElement: document.querySelector('#discordActiveCount'), statusElement: document.querySelector('#discordActiveStatus') });
       bindLocalAccountUI({ button: document.querySelector('#accountButton'), dialog: document.querySelector('#accountDialog'), closeButton: document.querySelector('#accountClose'), form: document.querySelector('#accountForm'), usernameInput: document.querySelector('#accountUsername'), passwordInput: document.querySelector('#accountPassword'), confirmInput: document.querySelector('#accountPasswordConfirm'), title: document.querySelector('#accountTitle'), description: document.querySelector('#accountDescription'), submitButton: document.querySelector('#accountSubmit'), switchButton: document.querySelector('#accountSwitch'), logoutButton: document.querySelector('#accountLogout'), notify });
-      })
     </script>
   </body>
 </html>

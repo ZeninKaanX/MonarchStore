@@ -1,7 +1,13 @@
 export const PRODUCT_CATALOG = Object.freeze({
   afk_bot: Object.freeze({ name: 'AFK Bot', priceTl: 50 }),
   miner_bot: Object.freeze({ name: 'Miner Bot', priceTl: 180 }),
-  farmer_bot: Object.freeze({ name: 'Farmer Bot', priceTl: 390 })
+  farmer_bot: Object.freeze({ name: 'Farmer Bot', priceTl: 390 }),
+  uiux_starter: Object.freeze({ name: 'Temel UI/UX Tasarım', priceTl: 150 }),
+  uiux_pro: Object.freeze({ name: 'Gelişmiş Web & Mobil UI/UX', priceTl: 350 }),
+  uiux_custom: Object.freeze({ name: 'Özel Komple Arayüz Tasarımı', priceTl: 500 }),
+  sunum_basic: Object.freeze({ name: 'Standart Sunum Tasarımı', priceTl: 75 }),
+  sunum_pro: Object.freeze({ name: 'Proje & Ödev Sunumu', priceTl: 120 }),
+  sunum_premium: Object.freeze({ name: 'Kurumsal Premium Sunum', priceTl: 200 })
 })
 
 export function normalizeDiscordUsername (value) {

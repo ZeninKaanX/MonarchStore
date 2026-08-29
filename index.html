@@ -39,7 +39,7 @@
       .logo-dark-mode { display: none; }
       .logo .mascot { width: 44px; height: 44px; margin-left: 0; object-fit: contain; object-position: center; background: transparent; }
 
-      .links { display: flex; align-items: center; gap: 20px; color: #536071; font-size: 13px; font-weight: 700; }
+      .links { display: flex; align-items: center; gap: 24px; color: #536071; font-size: 13px; font-weight: 700; }
       .links a:hover { color: var(--blue); }
       .nav-actions { display: flex; align-items: center; gap: 9px; }
       .theme-toggle { min-height: 38px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 0 10px; border: 1px solid #c8d0da; color: #405160; background: #fff; font: 700 10px "Space Mono", monospace; letter-spacing: .03em; transition: color .18s, background .18s, border-color .18s, transform .16s; }
@@ -132,13 +132,7 @@
       .buy { min-height: 38px; display: inline-flex; align-items: center; justify-content: center; padding: 0 12px; border: 1px solid var(--blue); color: var(--blue); background: #fff; font-size: 11px; font-weight: 800; transition: color .18s, background .18s; border-radius: 2px; }
       .buy:hover { color: #fff; background: var(--blue); }
 
-      .store-note { padding: 0 0 60px; }
-      .note-card { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 35px; padding: 27px 30px; border: 1px solid #d9e2e8; color: #263442; background: #eef4f7; border-radius: 4px; }
-      .note-card h2 { font-size: 25px; }
-      .note-card p { margin: 7px 0 0; color: #607181; font-size: 13px; }
-      .item-list { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
-      .item-list span { padding: 8px 10px; border: 1px solid #ccdae2; background: #fff; color: #435565; font: 700 10px "Space Mono", monospace; border-radius: 2px; }
-      .discord-section { padding: 0 0 28px; }
+      .discord-section { padding: 10px 0 28px; }
       .discord-card { display: flex; align-items: center; justify-content: space-between; gap: 28px; padding: 22px 28px; border: 1px solid #d8e3eb; color: #274155; background: #fff; border-radius: 4px; }
       .discord-card .eyebrow { margin-bottom: 6px; }
       .discord-card h2 { font-size: 24px; }
@@ -195,9 +189,6 @@
       html[data-theme="dark"] .cat-tab { border-color: #2e3f52; background: #111c28; color: #d2e0eb; }
       html[data-theme="dark"] .cat-tab:hover, html[data-theme="dark"] .cat-tab.active { border-color: var(--blue); color: var(--blue); background: rgba(105, 178, 233, 0.12); box-shadow: 0 4px 14px rgba(105, 178, 233, 0.14); }
       html[data-theme="dark"] .buy { background: #111c28; }
-      html[data-theme="dark"] .note-card { border-color: #314455; color: #e2edf6; background: #102030; }
-      html[data-theme="dark"] .note-card p { color: #b3c3d1; }
-      html[data-theme="dark"] .item-list span { border-color: #34495a; color: #d2e0eb; background: #0c1621; }
       html[data-theme="dark"] .discord-card { border-color: #33495a; color: #e4eef6; background: #111c28; }
       html[data-theme="dark"] .discord-card p, html[data-theme="dark"] .discord-stat-label { color: #aebfce; }
       html[data-theme="dark"] .discord-stat, html[data-theme="dark"] .product-row { border-color: #314354; }
@@ -231,8 +222,6 @@
         .cat-tab-icon { width: 16px; height: 16px; }
         .bot-grid { grid-template-columns: 1fr; }
         .product-image { height: min(94vw, 300px); }
-        .note-card { grid-template-columns: 1fr; gap: 19px; padding: 23px; }
-        .item-list { justify-content: flex-start; }
         .discord-card { display: grid; justify-content: stretch; gap: 17px; padding: 22px; }
         .discord-stat { min-width: 0; padding: 16px 0; border-top: 1px solid #d8e3eb; border-right: 0; border-bottom: 1px solid #d8e3eb; text-align: left; }
         .discord-button { width: 100%; }
@@ -253,7 +242,6 @@
           <a href="#botlar">Minecraft Botları</a>
           <a href="#uiux">UI/UX Tasarım</a>
           <a href="#sunum">Sunum Hizmetleri</a>
-          <a href="#urunler">Oyun İçi</a>
           <a href="#iletisim">İletişim</a>
         </div>
         <div class="nav-actions">
@@ -286,7 +274,7 @@
         </div>
       </section>
 
-      <!-- Kategori Seçici: Özel Renkli Tasarım İkonlar -->
+      <!-- Kategori Seçici -->
       <nav class="container cat-nav" id="kategoriler" aria-label="Kategori Gezintisi">
         <div class="cat-tabs">
           <a class="cat-tab active" href="#botlar">
@@ -318,15 +306,6 @@
               <path d="M12 16v5M8 21h8" stroke="#d97706" stroke-width="2" stroke-linecap="round"/>
             </svg>
             <span>Sunum Hizmetleri</span>
-          </a>
-          <a class="cat-tab" href="#urunler">
-            <svg class="cat-tab-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M12 2l9 4.5-9 4.5-9-4.5z" fill="#38bdf8"/>
-              <path d="M3 6.5V17l9 5V11z" fill="#0284c7"/>
-              <path d="M12 11v11l9-5V6.5z" fill="#0ea5e9"/>
-              <rect x="10" y="9" width="4" height="4" rx="0.5" fill="#facc15"/>
-            </svg>
-            <span>Oyun İçi Ürünler</span>
           </a>
         </div>
       </nav>
@@ -454,23 +433,6 @@
               </div>
             </div>
           </article>
-        </div>
-      </section>
-
-      <!-- 4. Kategori: Minecraft Oyun İçi Ürünleri -->
-      <section class="container store-note" id="urunler" aria-labelledby="store-title">
-        <div class="note-card">
-          <div>
-            <p class="eyebrow">Yakında Mağazada</p>
-            <h2 id="store-title">Minecraft Oyun İçi Ürünleri</h2>
-            <p>Sunucu ihtiyaçlarına özel oyun içi paketler ve içerikler çok yakında mağazamıza eklenecektir.</p>
-          </div>
-          <div class="item-list" aria-label="Planlanan ürün türleri">
-            <span>VIP Paketleri</span>
-            <span>Kasa Anahtarları</span>
-            <span>Spawnerlar</span>
-            <span>Coin Paketleri</span>
-          </div>
         </div>
       </section>
 

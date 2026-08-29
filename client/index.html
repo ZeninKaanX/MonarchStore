@@ -250,41 +250,41 @@
       .toast.show { opacity: 1; transform: translateY(0); }
       .toast b { display: block; margin-bottom: 3px; }
       
-      /* ==================== COLD WAR TACTICAL MONARCH ACCOUNT MODAL ==================== */
+      /* ==================== MONARCH STORE AUTHENTIC ACCOUNT MODAL ==================== */
       .account-dialog { 
         width: min(440px, calc(100% - 24px)); 
         padding: 0; 
-        border: 1px solid rgba(16, 185, 129, 0.4); 
+        border: 1px solid rgba(62, 131, 184, 0.35); 
         color: #f1f5f9; 
-        background: #090e17; 
-        box-shadow: 0 30px 85px rgba(0, 0, 0, 0.85), 0 0 35px rgba(16, 185, 129, 0.18); 
-        border-radius: 12px; 
+        background: #142333; 
+        box-shadow: 0 25px 75px rgba(8, 16, 26, 0.75), 0 0 30px rgba(62, 131, 184, 0.2); 
+        border-radius: 10px; 
         overflow: hidden; 
         position: relative;
       }
       .account-dialog::backdrop { 
-        background: rgba(4, 7, 13, 0.85); 
-        backdrop-filter: blur(6px); 
-        -webkit-backdrop-filter: blur(6px); 
+        background: rgba(8, 16, 26, 0.8); 
+        backdrop-filter: blur(5px); 
+        -webkit-backdrop-filter: blur(5px); 
       }
 
-      /* Cold War Hero Header Banner */
+      /* Hero Header Banner */
       .account-hero-banner {
         position: relative;
-        background: linear-gradient(135deg, #05080e 0%, #0c1522 55%, #13241b 100%);
+        background: linear-gradient(135deg, #0e1a27 0%, #16283c 60%, #1e3854 100%);
         padding: 22px 22px 18px;
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 14px;
-        border-bottom: 1px solid rgba(16, 185, 129, 0.25);
+        border-bottom: 1px solid rgba(62, 131, 184, 0.25);
         overflow: hidden;
       }
       .account-hero-banner::after {
         content: "";
         position: absolute;
         inset: 0;
-        background: radial-gradient(circle at 85% 45%, rgba(16, 185, 129, 0.18) 0%, transparent 65%);
+        background: radial-gradient(circle at 85% 45%, rgba(62, 131, 184, 0.22) 0%, transparent 65%);
         pointer-events: none;
       }
       .account-hero-left {
@@ -297,32 +297,32 @@
         display: inline-flex;
         align-items: center;
         gap: 5px;
-        padding: 2px 7px;
-        background: rgba(16, 185, 129, 0.15);
-        border: 1px solid rgba(16, 185, 129, 0.45);
-        color: #34d399;
-        font: 700 9px "Space Mono", monospace;
+        padding: 2px 8px;
+        background: rgba(62, 131, 184, 0.2);
+        border: 1px solid rgba(62, 131, 184, 0.45);
+        color: #8ec5ee;
+        font: 700 9.5px "Space Mono", monospace;
         border-radius: 4px;
-        letter-spacing: 0.08em;
+        letter-spacing: 0.05em;
         text-transform: uppercase;
         margin-bottom: 8px;
       }
       .account-coldwar-logo {
-        height: 36px;
+        height: 34px;
         width: auto;
-        max-width: 155px;
+        max-width: 145px;
         object-fit: contain;
         display: block;
-        filter: drop-shadow(0 2px 8px rgba(0,0,0,0.6));
+        filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
         margin-bottom: 6px;
       }
       .account-coldwar-status {
         display: flex;
         align-items: center;
         gap: 6px;
-        font: 700 9.5px "Space Mono", monospace;
-        color: #94a3b8;
-        letter-spacing: 0.04em;
+        font: 700 10px "Space Mono", monospace;
+        color: #9fb4c7;
+        letter-spacing: 0.02em;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -331,35 +331,34 @@
         width: 6px;
         height: 6px;
         border-radius: 50%;
-        background: #10b981;
-        box-shadow: 0 0 8px #10b981;
+        background: #3e83b8;
+        box-shadow: 0 0 8px #3e83b8;
         flex-shrink: 0;
-        animation: pulseGreen 1.6s infinite;
+        animation: pulseBlue 1.8s infinite;
       }
-      @keyframes pulseGreen {
+      @keyframes pulseBlue {
         0%, 100% { opacity: 1; transform: scale(1); }
         50% { opacity: 0.4; transform: scale(0.85); }
       }
 
-      /* Biometric HUD Mascot Frame */
+      /* Lena Anime Officer Frame */
       .account-hero-mascot {
         position: relative;
         z-index: 2;
-        width: 72px;
-        height: 72px;
+        width: 70px;
+        height: 70px;
         flex-shrink: 0;
-        border: 2px solid rgba(16, 185, 129, 0.6);
+        border: 2px solid rgba(62, 131, 184, 0.6);
         border-radius: 8px;
-        box-shadow: 0 0 16px rgba(16, 185, 129, 0.35);
+        box-shadow: 0 0 16px rgba(62, 131, 184, 0.35);
         overflow: hidden;
-        background: #060a10;
+        background: #09131d;
       }
       .account-hero-mascot img {
         width: 100%;
         height: 100%;
         object-fit: cover;
         display: block;
-        transform: scale(1.05);
       }
 
       .account-dialog .dialog-close {
@@ -369,7 +368,7 @@
         width: 28px;
         height: 28px;
         border: 1px solid rgba(255, 255, 255, 0.15);
-        background: rgba(0, 0, 0, 0.6);
+        background: rgba(0, 0, 0, 0.5);
         color: #94a3b8;
         font-size: 16px;
         line-height: 1;
@@ -388,7 +387,7 @@
 
       .account-panel { 
         padding: 20px 22px 24px; 
-        background: #090e17;
+        background: #142333;
         position: relative;
         z-index: 12;
       }
@@ -397,72 +396,70 @@
       .account-modal-tab { 
         flex: 1; 
         padding: 10px 12px; 
-        border: 1px solid #1e293b; 
-        background: #060a10; 
-        color: #94a3b8; 
-        font: 700 11px "Space Mono", monospace; 
-        letter-spacing: 0.04em;
-        border-radius: 6px; 
+        border: 1px solid #22374b; 
+        background: #0e1a27; 
+        color: #9fb4c7; 
+        font: 700 11.5px "Space Mono", monospace; 
+        border-radius: 4px; 
         transition: all .16s; 
         text-align: center; 
         cursor: pointer; 
       }
       .account-modal-tab.active, .account-modal-tab:hover { 
-        border-color: #10b981; 
-        color: #10b981; 
-        background: rgba(16, 185, 129, 0.12); 
-        box-shadow: 0 0 14px rgba(16, 185, 129, 0.22); 
+        border-color: var(--blue); 
+        color: #ffffff; 
+        background: var(--blue); 
+        box-shadow: 0 4px 14px rgba(62, 131, 184, 0.35); 
       }
       
       .pwd-input-wrap { position: relative; display: flex; align-items: center; width: 100%; }
       .pwd-input-wrap input { width: 100%; padding-right: 42px !important; }
-      .pwd-toggle-btn { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); width: 30px; height: 30px; border: 0; background: transparent; cursor: pointer; display: grid; place-items: center; font-size: 14px; color: #64748b; border-radius: 4px; }
-      .pwd-toggle-btn:hover { background: rgba(255,255,255,0.08); color: #cbd5e1; }
+      .pwd-toggle-btn { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); width: 30px; height: 30px; border: 0; background: transparent; cursor: pointer; display: grid; place-items: center; font-size: 14px; color: #8a9ba8; border-radius: 4px; }
+      .pwd-toggle-btn:hover { background: rgba(255,255,255,0.08); color: #fff; }
 
       .account-form { display: grid; gap: 12px; }
-      .account-form label { display: grid; gap: 5px; color: #94a3b8; font: 700 11px "Space Mono", monospace; letter-spacing: 0.02em; }
+      .account-form label { display: grid; gap: 5px; color: #d8e3eb; font: 700 11px "Space Mono", monospace; }
       .account-form input { 
         width: 100%; 
         min-height: 42px; 
         padding: 0 12px; 
-        border: 1px solid #1e293b; 
-        color: #f8fafc; 
-        background: #05080f; 
+        border: 1px solid #243c52; 
+        color: #ffffff; 
+        background: #0b1520; 
         font: inherit; 
         font-size: 13px; 
-        border-radius: 6px; 
+        border-radius: 4px; 
         transition: all 0.16s; 
       }
       .account-form input:focus { 
-        border-color: #10b981; 
-        background: #080d17; 
+        border-color: var(--blue); 
+        background: #0f1c2b; 
         outline: none; 
-        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2); 
+        box-shadow: 0 0 0 3px rgba(62, 131, 184, 0.22); 
       }
-      .account-submit, .account-switch, .account-logout { min-height: 44px; border: 0; font-size: 12px; font-weight: 700; font-family: "Space Mono", monospace; letter-spacing: 0.05em; border-radius: 4px; }
+      .account-submit, .account-switch, .account-logout { min-height: 44px; border: 0; font-size: 12px; font-weight: 800; font-family: "Space Mono", monospace; border-radius: 4px; }
       .account-submit { 
         margin-top: 4px; 
-        color: #060911; 
-        background: #10b981; 
-        box-shadow: 0 0 16px rgba(16, 185, 129, 0.4); 
+        color: #ffffff; 
+        background: var(--blue); 
+        box-shadow: 0 4px 14px rgba(62, 131, 184, 0.4); 
         cursor: pointer; 
         transition: all 0.16s; 
       }
       .account-submit:hover { 
-        background: #34d399; 
-        box-shadow: 0 0 22px rgba(16, 185, 129, 0.6); 
+        background: var(--blue-dark); 
       }
       .account-switch { color: #38bdf8; background: transparent; }
-      .account-logout { width: 100%; color: #fff; background: #1e293b; border: 1px solid #334155; }
+      .account-logout { width: 100%; color: #fff; background: #22374b; border: 1px solid #334e68; }
       
       .account-admin-open-btn { width: 100%; min-height: 44px; margin-bottom: 8px; border: 1px solid #7c3aed; color: #fff; background: #6d28d9; font-size: 12px; font-weight: 800; font-family: "Space Mono", monospace; border-radius: 4px; transition: background .18s; cursor: pointer; box-shadow: 0 0 16px rgba(124, 58, 237, 0.4); }
       .account-admin-open-btn:hover { background: #5b21b6; }
       
-      .account-2fa-box { padding: 13px 15px; border: 1px solid #f59e0b; background: rgba(245, 158, 11, 0.1); border-radius: 4px; font-size: 11.5px; color: #fde68a; line-height: 1.5; font-family: "Space Mono", monospace; }
+      .account-2fa-box { padding: 13px 15px; border: 1px solid #f59e0b; background: rgba(245, 158, 11, 0.12); border-radius: 4px; font-size: 11.5px; color: #fde68a; line-height: 1.5; font-family: "Space Mono", monospace; }
       .account-2fa-box b { display: block; color: #fbbf24; font-size: 12px; margin-bottom: 3px; }
       .countdown-pill { display: inline-block; padding: 2px 7px; background: #ea580c; color: #fff; border-radius: 3px; font: 700 11px "Space Mono", monospace; margin-top: 4px; }
 
-      .account-note { margin: 14px 0 0; color: #64748b; font-size: 10.5px; font-family: "Space Mono", monospace; line-height: 1.5; text-align: center; }
+      .account-note { margin: 14px 0 0; color: #7a8fa0; font-size: 10.5px; font-family: "Space Mono", monospace; line-height: 1.5; text-align: center; }
       :focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
 
       /* Admin Dashboard Full Modal */
@@ -951,68 +948,68 @@
     <dialog class="account-dialog" id="accountDialog" aria-labelledby="accountTitle">
       <button class="dialog-close" id="accountClose" type="button" aria-label="Pencereyi kapat">×</button>
 
-      <!-- Cold War Tactical Hero Header with Monarch Logo & Anime Mascot -->
+      <!-- Monarch Store Header with Official Logo & Lena Commander Mascot -->
       <div class="account-hero-banner">
         <div class="account-hero-left">
-          <span class="account-hero-badge">🔒 CLASSIFIED // LEVEL 5</span>
-          <img src="images/logo-light.webp" alt="Monarch Store" class="account-coldwar-logo" width="160" height="38" />
+          <span class="account-hero-badge">👑 MONARCH STORE · GİRİŞ</span>
+          <img src="images/logo-light.webp" alt="Monarch Store" class="account-coldwar-logo" width="145" height="34" />
           <div class="account-coldwar-status">
             <span class="tactical-dot"></span>
-            <span id="accountDescription">OPERATOR AUTH TERMINAL // PROTOCOL: ACTIVE</span>
+            <span id="accountDescription">Kullanıcı adı ve şifrenizle giriş yapın.</span>
           </div>
-          <h2 id="accountTitle" style="display: none;">Operatör Girişi</h2>
+          <h2 id="accountTitle" style="display: none;">Hesap Girişi</h2>
         </div>
-        <div class="account-hero-mascot" title="Biometric Operator Verification">
-          <img src="images/cold-war-avatar.jpg" alt="Monarch Tactical Anime Operator" width="72" height="72" />
+        <div class="account-hero-mascot" title="Monarch Komutanı">
+          <img src="images/lena-officer-avatar.jpg" alt="Monarch Anime Komutanı" width="70" height="70" />
         </div>
       </div>
 
       <div class="account-panel">
         <!-- Giriş / Kayıt Sekmeleri -->
         <div class="account-modal-tabs" id="accountModalTabs">
-          <button type="button" class="account-modal-tab active" id="accountTabLogin">📡 OPERATÖR GİRİŞİ</button>
-          <button type="button" class="account-modal-tab" id="accountTabRegister">⚡ YENİ KAYIT</button>
+          <button type="button" class="account-modal-tab active" id="accountTabLogin">GİRİŞ YAP</button>
+          <button type="button" class="account-modal-tab" id="accountTabRegister">KAYDOL</button>
         </div>
 
         <!-- Admin İçin Panel Açma Butonu -->
-        <button class="account-admin-open-btn" id="accountOpenAdminBtn" type="button" style="display: none;">🛡️ YÖNETİM MERKEZİNİ AÇ (SaaS Command)</button>
+        <button class="account-admin-open-btn" id="accountOpenAdminBtn" type="button" style="display: none;">🛡️ YÖNETİM PANELİNİ AÇ</button>
 
         <form class="account-form" id="accountForm">
           <!-- Standart Giriş/Kayıt Alanları -->
           <div id="accountStandardFields" style="display: grid; gap: 12px;">
-            <label>Kullanıcı Adı (Operator ID)<input id="accountUsername" name="username" autocomplete="username" minlength="3" maxlength="24" placeholder="Kullanıcı adınız..." required /></label>
+            <label>Kullanıcı Adı<input id="accountUsername" name="username" autocomplete="username" minlength="3" maxlength="24" placeholder="Kullanıcı adınız..." required /></label>
             <label>
-              Güvenlik Şifresi (Access Key)
+              Şifre
               <div class="pwd-input-wrap">
                 <input id="accountPassword" name="password" type="password" autocomplete="current-password" minlength="6" placeholder="••••••••" required />
                 <button type="button" class="pwd-toggle-btn" id="accountTogglePwd" title="Şifreyi Göster/Gizle" aria-label="Şifreyi Göster">👁️</button>
               </div>
             </label>
-            <label id="accountDiscordLabel">Discord Kullanıcı Adınız (Discord ID)<input id="accountDiscordUsername" name="discordUsername" autocomplete="off" placeholder="Örn: eververity" /></label>
-            <label id="accountConfirmLabel" style="display: none;">Şifre Tekrar (Confirm Key)<input id="accountPasswordConfirm" name="passwordConfirm" type="password" autocomplete="new-password" minlength="6" disabled /></label>
+            <label id="accountDiscordLabel">Discord Kullanıcı Adınız (Opsiyonel)<input id="accountDiscordUsername" name="discordUsername" autocomplete="off" placeholder="Örn: eververity" /></label>
+            <label id="accountConfirmLabel" style="display: none;">Şifre Tekrar<input id="accountPasswordConfirm" name="passwordConfirm" type="password" autocomplete="new-password" minlength="6" disabled /></label>
           </div>
 
           <!-- Admin İçin Otomatik Açılan 2FA Güvenlik Kodu Alanı -->
           <div id="account2FAFields" style="display: none; gap: 12px;">
             <div class="account-2fa-box">
-              <b>🚨 2FA LEVEL-4 DISPATCH</b>
-              Güvenlik kodu <strong>#admin-2fa</strong> frekansına iletildi ve adınız etiketlendi.
-              <div>KALAN SÜRE: <span class="countdown-pill" id="account2FACountdown">05:00</span></div>
+              <b>🔐 2FA GÜVENLİK DOĞRULAMASI</b>
+              Doğrulama kodu <strong>#admin-2fa</strong> kanalına iletildi ve Discord hesabınız etiketlendi.
+              <div>Kalan Süre: <span class="countdown-pill" id="account2FACountdown">05:00</span></div>
             </div>
             <label>
-              Discord Kullanıcı Adınız (Discord ID)
-              <input id="account2FADiscordUser" name="account2FADiscordUser" type="text" placeholder="Örn: eververity" autocomplete="off" style="width: 100%; min-height: 42px; padding: 0 12px; border: 1px solid #1e293b; border-radius: 6px; color: #f8fafc; background: #05080f; font-family: 'Space Mono', monospace;" />
+              Discord Kullanıcı Adınız
+              <input id="account2FADiscordUser" name="account2FADiscordUser" type="text" placeholder="Örn: eververity" autocomplete="off" style="width: 100%; min-height: 42px; padding: 0 12px; border: 1px solid #243c52; border-radius: 4px; color: #ffffff; background: #0b1520; font-family: 'Space Mono', monospace;" />
             </label>
             <label>
-              6 Haneli Güvenlik Kodu (2FA Key)
-              <input id="account2FACodeInput" name="account2FACode" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="849216" autocomplete="one-time-code" style="letter-spacing: .35em; font-family: 'Space Mono', monospace; font-size: 18px; font-weight: 700; text-align: center; width: 100%; min-height: 46px; border: 2px solid #10b981; border-radius: 6px; color: #34d399; background: #05080f;" />
+              6 Haneli Güvenlik Kodu
+              <input id="account2FACodeInput" name="account2FACode" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="849216" autocomplete="one-time-code" style="letter-spacing: .35em; font-family: 'Space Mono', monospace; font-size: 18px; font-weight: 700; text-align: center; width: 100%; min-height: 46px; border: 2px solid var(--blue); border-radius: 4px; color: #8ec5ee; background: #0b1520;" />
             </label>
           </div>
 
-          <button class="account-submit" id="accountSubmit" type="submit">⚡ GİRİŞ YAP // ACCESS ➔</button>
+          <button class="account-submit" id="accountSubmit" type="submit">Giriş Yap ➔</button>
         </form>
-        <button class="account-logout" id="accountLogout" type="button" style="display: none;">OTURUMU SONLANDIR // ABORT</button>
-        <p class="account-note">MONARCH STORE DEFENSE & LOGISTICS TERMINAL © 2026</p>
+        <button class="account-logout" id="accountLogout" type="button" style="display: none;">Çıkış Yap</button>
+        <p class="account-note">Monarch Store Güvenli Giriş Sistemi © 2026</p>
       </div>
     </dialog>
 

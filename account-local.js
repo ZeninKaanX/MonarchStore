@@ -104,7 +104,7 @@ export function signOutLocalAccount(storage) {
 
 export function bindLocalAccountUI({ button, dialog, closeButton, form, usernameInput, passwordInput, confirmInput, title, description, submitButton, switchButton, logoutButton, notify, onOpenAdminDashboard }) {
   const storage = window.localStorage;
-  let mode = "register";
+  let mode = "login"; // Varsayılan olarak giriş yap modu
   let is2FAActive = false;
   let activeChallengeId = null;
   let countdownInterval = null;
@@ -118,7 +118,7 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
       button.textContent = `Hesap: ${session.username}`;
       button.classList.add("is-signed-in");
     } else {
-      button.textContent = "Hesap oluştur";
+      button.textContent = "Giriş Yap / Kaydol";
       button.classList.remove("is-signed-in");
     }
   };
@@ -149,59 +149,83 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
 
     const session = getLocalSession(storage);
     const signedIn = Boolean(session);
-    form.hidden = signedIn;
-    logoutButton.hidden = !signedIn;
-    switchButton.hidden = signedIn;
+    form.style.display = signedIn ? "none" : "grid";
+    logoutButton.style.display = signedIn ? "block" : "none";
+    switchButton.style.display = signedIn ? "none" : "block";
 
-    // Reset standard form inputs
     const standardFields = document.querySelector("#accountStandardFields");
     const twoFAFields = document.querySelector("#account2FAFields");
     const openAdminBtn = document.querySelector("#accountOpenAdminBtn");
+    const confirmLabel = confirmInput ? confirmInput.closest("label") : null;
+    const codeIn = document.querySelector("#account2FACodeInput");
 
     if (standardFields) standardFields.style.display = "grid";
     if (twoFAFields) twoFAFields.style.display = "none";
     if (openAdminBtn) openAdminBtn.style.display = (session?.isAdmin ? "block" : "none");
 
+    if (usernameInput) usernameInput.disabled = false;
+    if (passwordInput) passwordInput.disabled = false;
+    if (codeIn) {
+      codeIn.disabled = true;
+      codeIn.required = false;
+    }
+
     if (signedIn) {
       if (session.isAdmin) {
         title.textContent = `🛡️ Yetkili: ${session.username}`;
-        description.textContent = "Monarch Store yönetim oturumunuz aktif. Paneli açabilir veya çıkış yapabilirsiniz.";
+        description.textContent = "Monarch Store yönetim oturumunuz aktif. Yönetim panelini açabilir veya çıkış yapabilirsiniz.";
       } else {
         title.textContent = `Merhaba, ${session.username}`;
-        description.textContent = "Bu cihazda yerel hesabınız açık. İsterseniz buradan çıkış yapabilirsiniz.";
+        description.textContent = "Bu tarayıcıda oturumunuz açık. Siparişlerinizi takip edebilir veya çıkış yapabilirsiniz.";
       }
       return;
     }
 
     const isRegister = mode === "register";
-    title.textContent = isRegister ? "Hesap oluştur" : "Hesabına giriş yap";
-    description.textContent = isRegister ? "Mağaza sipariş ve talepleriniz için yerel hesap oluşturun." : "Kullanıcı adı ve şifrenizle giriş yapın.";
-    confirmInput.closest("label").hidden = !isRegister;
-    confirmInput.required = isRegister;
-    submitButton.textContent = isRegister ? "Hesabı oluştur" : "Giriş yap";
-    switchButton.textContent = isRegister ? "Zaten hesabın var mı? Giriş yap" : "Hesabın yok mu? Oluştur";
+    title.textContent = isRegister ? "Yeni Hesap Oluştur" : "Hesabına Giriş Yap";
+    description.textContent = isRegister 
+      ? "Sipariş ve talepleriniz için hesabınızı oluşturun." 
+      : "Kullanıcı adı ve şifrenizi girerek oturum açın.";
+
+    if (confirmLabel) {
+      confirmLabel.style.display = isRegister ? "grid" : "none";
+    }
+    if (confirmInput) {
+      confirmInput.disabled = !isRegister;
+      confirmInput.required = isRegister;
+    }
+
+    submitButton.textContent = isRegister ? "Hesabı Oluştur" : "Giriş Yap";
+    switchButton.textContent = isRegister 
+      ? "Zaten hesabın var mı? Giriş yap" 
+      : "Hesabın yok mu? Kayıt ol";
   };
 
   const show2FAView = (challengeId) => {
     is2FAActive = true;
     activeChallengeId = challengeId;
     title.textContent = "🔐 2FA Güvenlik Doğrulaması";
-    description.textContent = "Admin yetkisi algılandı. Discord güvenlik kodunuzu girin.";
+    description.textContent = "Yetkili hesabı algılandı. Discord güvenlik kodunuzu girin.";
 
     const standardFields = document.querySelector("#accountStandardFields");
     const twoFAFields = document.querySelector("#account2FAFields");
     if (standardFields) standardFields.style.display = "none";
     if (twoFAFields) twoFAFields.style.display = "grid";
 
-    submitButton.textContent = "Doğrula ve Giriş Yap";
-    switchButton.hidden = true;
-    start2FACountdown(300);
+    if (usernameInput) usernameInput.disabled = true;
+    if (passwordInput) passwordInput.disabled = true;
 
     const codeIn = document.querySelector("#account2FACodeInput");
     if (codeIn) {
+      codeIn.disabled = false;
+      codeIn.required = true;
       codeIn.value = "";
       setTimeout(() => codeIn.focus(), 30);
     }
+
+    submitButton.textContent = "Doğrula ve Giriş Yap";
+    switchButton.style.display = "none";
+    start2FACountdown(300);
   };
 
   button.addEventListener("click", () => {
@@ -220,7 +244,7 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
     signOutLocalAccount(storage);
     updateHeader();
     dialog.close();
-    notify("Çıkış yapıldı", "Oturumunuz bu cihazdan kapatıldı.");
+    notify("Çıkış Yapıldı", "Oturumunuz bu cihazdan kapatıldı.");
   });
 
   const openAdminBtn = document.querySelector("#accountOpenAdminBtn");
@@ -248,7 +272,7 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
         form.reset();
         updateHeader();
         dialog.close();
-        notify("Admin Girişi Başarılı", "Yönetim paneline hoş geldiniz.");
+        notify("Giriş Başarılı", "Monarch Store yönetim paneline hoş geldiniz.");
         if (onOpenAdminDashboard) onOpenAdminDashboard();
       } catch (error) {
         notify("Doğrulama Başarısız", error?.message || "Geçersiz veya süresi dolmuş kod.");
@@ -260,18 +284,20 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
       return;
     }
 
-    const username = usernameInput.value;
+    const username = usernameInput.value.trim();
     const password = passwordInput.value;
 
     try {
       submitButton.disabled = true;
+      submitButton.textContent = "Lütfen bekleyin…";
+
       if (mode === "register") {
         if (password !== confirmInput.value) throw new Error("Şifreler eşleşmiyor.");
         const account = await createLocalAccount(storage, username, password);
         form.reset();
         updateHeader();
         dialog.close();
-        notify("Hesap oluşturuldu", `${account.username} olarak oturum açtınız.`);
+        notify("Hesap Oluşturuldu", `${account.username} olarak oturum açtınız.`);
       } else {
         // Giriş Modu: Önce Admin & 2FA Kontrolü Yap
         try {
@@ -283,20 +309,20 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
             return;
           }
         } catch {
-          // Admin eşleşmesi yoksa normal kullanıcı olarak dene
+          // Admin eşleşmesi yoksa normal kullanıcı olarak devam et
         }
 
         const account = await signInLocalAccount(storage, username, password);
         form.reset();
         updateHeader();
         dialog.close();
-        notify("Giriş yapıldı", `${account.username} olarak oturum açtınız.`);
+        notify("Giriş Yapıldı", `${account.username} olarak oturum açtınız.`);
       }
     } catch (error) {
-      notify("İşlem tamamlanamadı", error instanceof Error ? error.message : "Lütfen tekrar deneyin.");
+      notify("İşlem Başarısız", error instanceof Error ? error.message : "Kullanıcı adı veya şifre hatalı.");
     } finally {
       submitButton.disabled = false;
-      if (!is2FAActive) submitButton.textContent = mode === "register" ? "Hesabı oluştur" : "Giriş yap";
+      if (!is2FAActive) submitButton.textContent = mode === "register" ? "Hesabı Oluştur" : "Giriş Yap";
     }
   });
 

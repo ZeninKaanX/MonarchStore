@@ -751,6 +751,7 @@
         <div class="top-bar-actions">
           <button type="button" id="refreshBtn" class="btn-secondary">Yenile</button>
           <button type="button" id="exportBtn" class="btn-secondary">CSV Indir</button>
+          <button type="button" id="deleteAllBtn" class="btn-secondary" style="color: #f87171; border-color: rgba(244,63,94,0.4); background: rgba(244,63,94,0.08);">Tumunu Sil</button>
         </div>
       </header>
 
@@ -836,6 +837,7 @@
     <div style="display: flex; gap: 10px; margin-bottom: 10px;">
       <button type="button" id="modalActionDone" style="flex: 1; min-height: 38px; background: #16a34a; border: 0; color: #fff; font: 700 11px var(--font-mono); border-radius: 4px; cursor: pointer;">Tamamla (Kapat)</button>
       <button type="button" id="modalActionCancel" style="flex: 1; min-height: 38px; background: #e11d48; border: 0; color: #fff; font: 700 11px var(--font-mono); border-radius: 4px; cursor: pointer;">Iptal Et</button>
+      <button type="button" id="modalActionDelete" style="flex: 1; min-height: 38px; background: #7f1d1d; border: 1px solid #b91c1c; color: #fca5a5; font: 700 11px var(--font-mono); border-radius: 4px; cursor: pointer;">Siparisi Sil</button>
     </div>
     <button type="button" id="modalActionCopy" style="width: 100%; min-height: 38px; background: #0284c7; border: 0; color: #fff; font: 700 11px var(--font-mono); border-radius: 4px; cursor: pointer;">Siparis Metnini Kopyala</button>
   </dialog>
@@ -1024,12 +1026,13 @@
     }
 
     function renderMetrics() {
-      document.querySelector('#statTotalOrders').textContent = allOrders.length;
-      const validOrders = allOrders.filter(o => o.status === 'validated' || o.status === 'completed');
+      const activeList = allOrders.filter(o => o.status !== 'deleted');
+      document.querySelector('#statTotalOrders').textContent = activeList.length;
+      const validOrders = activeList.filter(o => o.status === 'validated' || o.status === 'completed');
       const revenue = validOrders.reduce((sum, o) => sum + Number(o.total_price || o.total_tl || 0), 0);
       document.querySelector('#statTotalRevenue').textContent = `${revenue} TL`;
-      document.querySelector('#statPendingOrders').textContent = allOrders.filter(o => o.status === 'pending_validation').length;
-      document.querySelector('#statCompletedOrders').textContent = allOrders.filter(o => o.status === 'completed').length;
+      document.querySelector('#statPendingOrders').textContent = activeList.filter(o => o.status === 'pending_validation').length;
+      document.querySelector('#statCompletedOrders').textContent = activeList.filter(o => o.status === 'completed').length;
     }
 
     function renderTable() {
@@ -1037,7 +1040,7 @@
       const query = document.querySelector('#orderSearchInput').value.trim().toLowerCase();
 
       let filtered = allOrders.filter(o => {
-        const matchFilter = currentFilter === 'all' || o.status === currentFilter;
+        const matchFilter = currentFilter === 'all' ? (o.status !== 'deleted') : o.status === currentFilter;
         const matchSearch = !query || 
           o.order_code?.toLowerCase().includes(query) || 
           o.discord_username?.toLowerCase().includes(query) ||
@@ -1147,6 +1150,38 @@
         loadOrders();
       } catch (err) {
         notify('Hata', err.message);
+      }
+    });
+
+    document.querySelector('#modalActionDelete')?.addEventListener('click', async () => {
+      if (!activeDetailOrder) return;
+      const code = activeDetailOrder.order_code;
+      if (!confirm(`'${code}' kodlu siparisi silmek istediginize emin misiniz?`)) return;
+      try {
+        await updateOrderStatusRPC(activeDetailOrder.id, 'deleted', 'Founder Web Paneli');
+        notify('Silindi', `${code} siparisi silindi.`);
+        document.querySelector('#adminOrderDetailDialog').close();
+        loadOrders();
+      } catch (err) {
+        notify('Hata', err.message);
+      }
+    });
+
+    document.querySelector('#deleteAllBtn')?.addEventListener('click', async () => {
+      const activeList = allOrders.filter(o => o.status !== 'deleted');
+      if (!activeList.length) return notify('Bilgi', 'Silinecek siparis bulunmuyor.');
+      if (!confirm(`DIKKAT: Listedeki ${activeList.length} adet siparisin TUMU silinecek! Onayliyor musunuz?`)) return;
+      
+      notify('Siliniyor', 'Tum siparisler temizleniyor…');
+      try {
+        for (const ord of activeList) {
+          await updateOrderStatusRPC(ord.id, 'deleted', 'Founder Toplu Silme');
+        }
+        notify('Temizlendi', 'Tum siparisler basariyla silindi.');
+        loadOrders();
+      } catch (err) {
+        notify('Hata', err.message);
+        loadOrders();
       }
     });
 

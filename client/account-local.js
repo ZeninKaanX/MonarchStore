@@ -1,31 +1,13 @@
-import { getAdminSession, setAdminSession, clearAdminSession, requestAdmin2FA, verifyAdmin2FA, sha256 } from './admin-panel.js'
+import { sha256, requestAdmin2FA, verifyAdmin2FA, clearAdminSession } from './admin-panel.js';
 
-const ACCOUNTS_KEY = "monarch-store.local-accounts.v1";
-const SESSION_KEY = "monarch-store.local-session.v1";
+const STORAGE_KEY = "monarch_accounts_v1";
+const SESSION_KEY = "monarch_session_v1";
 
-export function normalizeUsername(value) {
-  return String(value ?? "").trim().replace(/\s+/g, " ");
-}
-
-function localFallbackHash(password) {
-  let hash = 2166136261;
-  for (let index = 0; index < password.length; index += 1) {
-    hash ^= password.charCodeAt(index);
-    hash = Math.imul(hash, 16777619);
-  }
-  return `local-${(hash >>> 0).toString(16)}`;
-}
-
-export async function hashPassword(password) {
-  if (!globalThis.crypto?.subtle) {
-    return localFallbackHash(password);
-  }
-  return sha256(password);
-}
-
-function readAccounts(storage) {
+function loadAccounts(storage) {
   try {
-    const parsed = JSON.parse(storage.getItem(ACCOUNTS_KEY) ?? "[]");
+    const raw = storage.getItem(STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
     return Array.isArray(parsed) ? parsed : [];
   } catch {
     return [];
@@ -33,60 +15,65 @@ function readAccounts(storage) {
 }
 
 function saveAccounts(storage, accounts) {
-  storage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
+  storage.setItem(STORAGE_KEY, JSON.stringify(accounts));
 }
 
-function saveSession(storage, username, extra = {}) {
-  storage.setItem(SESSION_KEY, JSON.stringify({ username, ...extra, signedInAt: Date.now() }));
-}
-
-export function getLocalSession(storage) {
-  const adminSession = getAdminSession();
-  if (adminSession) {
-    return { username: adminSession.username, isAdmin: true, discordUsername: sessionStorage.getItem('monarch_admin_discord_user') || null };
-  }
+export function getLocalSession(storage = window.localStorage) {
   try {
-    const session = JSON.parse(storage.getItem(SESSION_KEY) ?? "null");
-    return session && typeof session.username === "string" ? session : null;
+    const raw = storage.getItem(SESSION_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
   } catch {
     return null;
   }
 }
 
-export async function createLocalAccount(storage, usernameInput, password, discordUsername = null) {
-  const username = normalizeUsername(usernameInput);
-  if (username.length < 3 || username.length > 24) {
-    throw new Error("Kullanıcı adı 3–24 karakter olmalı.");
-  }
-  if (password.length < 6) {
-    throw new Error("Şifre en az 6 karakter olmalı.");
-  }
-
-  const accounts = readAccounts(storage);
-  const normalized = username.toLocaleLowerCase("tr-TR");
-  if (accounts.some(account => account.normalized === normalized)) {
-    throw new Error("Bu kullanıcı adı bu cihazda zaten kayıtlı.");
-  }
-
-  const cleanDiscord = discordUsername ? discordUsername.replace(/^@/, '').trim() : null;
-
-  accounts.push({
-    username,
-    normalized,
-    discordUsername: cleanDiscord,
-    passwordHash: await hashPassword(password),
-    createdAt: Date.now(),
-  });
-  saveAccounts(storage, accounts);
-  saveSession(storage, username, { discordUsername: cleanDiscord });
-  return { username, discordUsername: cleanDiscord };
+function saveSession(storage, username, extra = {}) {
+  storage.setItem(
+    SESSION_KEY,
+    JSON.stringify({
+      username,
+      createdAt: new Date().toISOString(),
+      ...extra
+    })
+  );
 }
 
-export async function signInLocalAccount(storage, usernameInput, password) {
-  const username = normalizeUsername(usernameInput);
-  const normalized = username.toLocaleLowerCase("tr-TR");
-  const passwordHash = await hashPassword(password);
-  const account = readAccounts(storage).find(
+export async function createLocalAccount(storage, username, password, discordUsername = "") {
+  const normalized = username.trim().toLowerCase();
+  if (normalized.length < 3 || normalized.length > 24) {
+    throw new Error("Kullanıcı adı 3 ile 24 karakter arasında olmalıdır.");
+  }
+  if (password.length < 6) {
+    throw new Error("Şifre en az 6 karakter olmalıdır.");
+  }
+
+  const accounts = loadAccounts(storage);
+  const exists = accounts.some(acc => acc.normalized === normalized);
+  if (exists) {
+    throw new Error("Bu kullanıcı adı zaten alınmış.");
+  }
+
+  const passwordHash = await sha256(password);
+  const newAccount = {
+    username: username.trim(),
+    normalized,
+    passwordHash,
+    discordUsername: discordUsername.trim(),
+    createdAt: new Date().toISOString()
+  };
+
+  accounts.push(newAccount);
+  saveAccounts(storage, accounts);
+  saveSession(storage, newAccount.username, { discordUsername: newAccount.discordUsername });
+  return { username: newAccount.username, discordUsername: newAccount.discordUsername };
+}
+
+export async function signInLocalAccount(storage, username, password) {
+  const normalized = username.trim().toLowerCase();
+  const passwordHash = await sha256(password);
+  const accounts = loadAccounts(storage);
+  const account = accounts.find(
     candidate => candidate.normalized === normalized && candidate.passwordHash === passwordHash
   );
 
@@ -101,6 +88,7 @@ export async function signInLocalAccount(storage, usernameInput, password) {
 export function signOutLocalAccount(storage) {
   clearAdminSession();
   sessionStorage.removeItem('monarch_admin_discord_user');
+  localStorage.removeItem('monarch_admin_discord_user');
   storage.removeItem(SESSION_KEY);
 }
 
@@ -176,10 +164,12 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
     if (usernameInput) {
       usernameInput.disabled = false;
       usernameInput.readOnly = false;
+      usernameInput.required = true;
     }
     if (passwordInput) {
       passwordInput.disabled = false;
       passwordInput.readOnly = false;
+      passwordInput.required = true;
     }
     if (discordInput) {
       discordInput.disabled = false;
@@ -188,6 +178,7 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
     if (codeIn) {
       codeIn.disabled = false;
       codeIn.readOnly = false;
+      codeIn.required = false;
       codeIn.value = "";
     }
 
@@ -237,6 +228,11 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
     if (standardFields) standardFields.style.display = "none";
     if (twoFAFields) twoFAFields.style.display = "grid";
 
+    // Standard alanların required özelliğini kaldır (gizli element doğrulama hatasını engeller)
+    if (usernameInput) usernameInput.required = false;
+    if (passwordInput) passwordInput.required = false;
+    if (confirmInput) confirmInput.required = false;
+
     const disc2FAIn = document.querySelector("#account2FADiscordUser");
     if (disc2FAIn && passedDiscordUser) {
       disc2FAIn.value = passedDiscordUser;
@@ -271,6 +267,11 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
   }
 
   button.addEventListener("click", () => {
+    const session = getLocalSession(storage);
+    if (session?.isAdmin) {
+      window.open('admin.html', '_blank');
+      return;
+    }
     render();
     dialog.showModal();
   });
@@ -291,7 +292,7 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
   if (openAdminBtn) {
     openAdminBtn.addEventListener("click", () => {
       dialog.close();
-      if (onOpenAdminDashboard) onOpenAdminDashboard();
+      window.open('admin.html', '_blank');
     });
   }
 
@@ -312,13 +313,15 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
         await verifyAdmin2FA(activeChallengeId, code, discordUser);
         if (discordUser) {
           sessionStorage.setItem('monarch_admin_discord_user', discordUser);
+          localStorage.setItem('monarch_admin_discord_user', discordUser);
         }
+        saveSession(storage, 'admin', { isAdmin: true, discordUsername: discordUser });
         clearInterval(countdownInterval);
         form.reset();
         updateHeader();
         dialog.close();
-        notify("Giriş Başarılı", "Monarch Store yönetim paneline hoş geldiniz.");
-        if (onOpenAdminDashboard) onOpenAdminDashboard();
+        notify("Giriş Başarılı", "Monarch Store yönetim paneli yeni sekmede açılıyor...");
+        window.open('admin.html', '_blank');
       } catch (error) {
         notify("Doğrulama Başarısız", error?.message || "Geçersiz veya süresi dolmuş kod.");
         if (codeIn) {
@@ -333,8 +336,8 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
       return;
     }
 
-    const rawUsername = usernameInput.value.trim();
-    const rawPassword = passwordInput.value.trim(); // Boşlukları temizle
+    const rawUsername = usernameInput ? usernameInput.value.trim() : "";
+    const rawPassword = passwordInput ? passwordInput.value.trim() : "";
     const discordInput = document.querySelector("#accountDiscordUsername");
     const discordUser = discordInput ? discordInput.value.trim().replace(/^@/, '') : "";
 
@@ -360,6 +363,7 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
             if (adminReq?.success && adminReq?.challenge_id) {
               if (discordUser) {
                 sessionStorage.setItem('monarch_admin_discord_user', discordUser);
+                localStorage.setItem('monarch_admin_discord_user', discordUser);
               }
               submitButton.disabled = false;
               show2FAView(adminReq.challenge_id, discordUser);
@@ -373,31 +377,22 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
 
         // Normal Kullanıcı Girişi
         try {
-          const adminReq = await requestAdmin2FA(rawUsername, rawPassword, discordUser);
-          if (adminReq?.success && adminReq?.challenge_id) {
-            if (discordUser) {
-              sessionStorage.setItem('monarch_admin_discord_user', discordUser);
-            }
-            submitButton.disabled = false;
-            show2FAView(adminReq.challenge_id, discordUser);
-            notify("2FA Kodu Gönderildi", `Discord #admin-2fa kanalına güvenlik kodu iletildi.`);
-            return;
-          }
-        } catch {
-          // Normal hesap ile giriş dene
+          const userAccount = await signInLocalAccount(storage, rawUsername, rawPassword);
+          form.reset();
+          updateHeader();
+          dialog.close();
+          notify("Giriş Yapıldı", `Hoş geldiniz, ${userAccount.username}`);
+        } catch (normalErr) {
+          throw normalErr;
         }
-
-        const account = await signInLocalAccount(storage, rawUsername, rawPassword);
-        form.reset();
-        updateHeader();
-        dialog.close();
-        notify("Giriş Yapıldı", `${account.username} olarak oturum açtınız.`);
       }
     } catch (error) {
-      notify("Giriş Başarısız", error instanceof Error ? error.message : "Kullanıcı adı veya şifre hatalı.");
+      notify("İşlem Başarısız", error?.message || "Giriş yapılamadı.");
     } finally {
-      submitButton.disabled = false;
-      if (!is2FAActive) submitButton.textContent = mode === "register" ? "Hesabı Oluştur ➔" : "Giriş Yap ➔";
+      if (!is2FAActive) {
+        submitButton.disabled = false;
+        submitButton.textContent = mode === "register" ? "Hesabı Oluştur ➔" : "Giriş Yap ➔";
+      }
     }
   });
 

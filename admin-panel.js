@@ -27,8 +27,8 @@ export async function sha256 (plainText) {
 }
 
 export function getAdminSession () {
-  const token = sessionStorage.getItem(SESSION_STORAGE_KEY)
-  const exp = sessionStorage.getItem(EXPIRES_STORAGE_KEY)
+  const token = localStorage.getItem(SESSION_STORAGE_KEY) || sessionStorage.getItem(SESSION_STORAGE_KEY)
+  const exp = localStorage.getItem(EXPIRES_STORAGE_KEY) || sessionStorage.getItem(EXPIRES_STORAGE_KEY)
   if (!token || !exp) return null
   if (new Date(exp).getTime() <= Date.now()) {
     clearAdminSession()
@@ -36,19 +36,27 @@ export function getAdminSession () {
   }
   return {
     token,
-    username: sessionStorage.getItem(USERNAME_STORAGE_KEY) || 'admin',
-    discordUsername: sessionStorage.getItem('monarch_admin_discord_user') || null,
+    username: localStorage.getItem(USERNAME_STORAGE_KEY) || sessionStorage.getItem(USERNAME_STORAGE_KEY) || 'admin',
+    discordUsername: localStorage.getItem('monarch_admin_discord_user') || sessionStorage.getItem('monarch_admin_discord_user') || null,
     expiresAt: exp
   }
 }
 
 export function setAdminSession (token, username, expiresAt) {
+  const exp = expiresAt || new Date(Date.now() + 12 * 3600 * 1000).toISOString()
+  localStorage.setItem(SESSION_STORAGE_KEY, token)
+  localStorage.setItem(USERNAME_STORAGE_KEY, username)
+  localStorage.setItem(EXPIRES_STORAGE_KEY, exp)
   sessionStorage.setItem(SESSION_STORAGE_KEY, token)
   sessionStorage.setItem(USERNAME_STORAGE_KEY, username)
-  sessionStorage.setItem(EXPIRES_STORAGE_KEY, expiresAt || new Date(Date.now() + 12 * 3600 * 1000).toISOString())
+  sessionStorage.setItem(EXPIRES_STORAGE_KEY, exp)
 }
 
 export function clearAdminSession () {
+  localStorage.removeItem(SESSION_STORAGE_KEY)
+  localStorage.removeItem(USERNAME_STORAGE_KEY)
+  localStorage.removeItem(EXPIRES_STORAGE_KEY)
+  localStorage.removeItem('monarch_admin_discord_user')
   sessionStorage.removeItem(SESSION_STORAGE_KEY)
   sessionStorage.removeItem(USERNAME_STORAGE_KEY)
   sessionStorage.removeItem(EXPIRES_STORAGE_KEY)

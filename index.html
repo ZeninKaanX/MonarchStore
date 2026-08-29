@@ -1191,9 +1191,9 @@
 
     <script type="module" src="./theme-toggle.js"></script>
     <script type="module">
-      import { bindLocalAccountUI } from './account-local.js?v=20260829_mascot_svg_v1';
+      import { bindLocalAccountUI } from './account-local.js?v=20260829_admin_tab_v2';
       import { bindOrderUI, bindCommunityStats } from './store-orders.js';
-      import { initAdminDashboardUI } from './admin-panel.js?v=20260829_mascot_svg_v1';
+      import { initAdminDashboardUI } from './admin-panel.js?v=20260829_admin_tab_v2';
 
       const cartCount = document.querySelector('#cartCount');
       const toast = document.querySelector('#toast');
@@ -1222,7 +1222,7 @@
         switchButton: document.querySelector('#accountSwitch'), 
         logoutButton: document.querySelector('#accountLogout'), 
         notify,
-        onOpenAdminDashboard: () => adminDashboard.openDashboard()
+        onOpenAdminDashboard: () => window.open('admin.html', '_blank')
       });
 
       // Kategori sekme tıklama etkileşimi

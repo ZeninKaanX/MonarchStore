@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,25 +7,26 @@
   <link rel="icon" type="image/webp" href="images/mascot.webp">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   
   <style>
     :root {
-      --bg: #0b0f17;
-      --bg-surface: #111827;
-      --bg-card: #1e293b;
-      --border: #334155;
+      --bg: #070d14;
+      --bg-surface: #0c1622;
+      --bg-card: #111e2e;
+      --bg-card-hover: #16263a;
+      --border: #1f3347;
       --border-light: rgba(255, 255, 255, 0.08);
-      --primary: #7c3aed;
-      --primary-hover: #6d28d9;
-      --primary-glow: rgba(124, 58, 237, 0.35);
+      --primary: #38bdf8;
+      --primary-hover: #0284c7;
+      --primary-glow: rgba(56, 189, 248, 0.25);
       --blue: #38bdf8;
       --green: #10b981;
       --amber: #f59e0b;
       --rose: #f43f5e;
-      --text: #f8fafc;
-      --text-muted: #94a3b8;
-      --font-main: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --text: #edf4fb;
+      --text-muted: #8da2b5;
+      --font-main: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       --font-mono: "Space Mono", monospace;
     }
 
@@ -40,1026 +41,806 @@
       overflow-x: hidden;
     }
 
-    /* Fullscreen Application Container */
-    #adminAppRoot {
-      display: none;
-      width: 100vw;
-      height: 100vh;
-      grid-template-columns: 280px 1fr;
-      overflow: hidden;
-    }
-    #adminAppRoot.active {
-      display: grid;
-    }
-
-    /* ================= SIDEBAR ================= */
-    .app-sidebar {
-      background: #090d16;
-      border-right: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      padding: 22px 18px;
-      user-select: none;
-    }
-
-    .brand-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding-bottom: 20px;
-      border-bottom: 1px solid var(--border-light);
-      margin-bottom: 18px;
-    }
-    .brand-logo-wrap {
-      width: 38px;
-      height: 38px;
-      border-radius: 8px;
-      background: linear-gradient(135deg, var(--primary), #3b82f6);
-      padding: 2px;
-      box-shadow: 0 0 15px var(--primary-glow);
-      flex-shrink: 0;
-    }
-    .brand-logo-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 6px;
-      display: block;
-    }
-    .brand-title strong {
-      display: block;
-      font: 700 14px var(--font-mono);
-      letter-spacing: 0.05em;
-      color: #fff;
-    }
-    .brand-title small {
-      display: block;
-      font: 10px var(--font-mono);
-      color: var(--text-muted);
-    }
-
-    /* Profile Badge */
-    .profile-card {
-      background: #131d2e;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 12px 14px;
-      margin-bottom: 22px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .profile-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      border: 2px solid var(--primary);
-      padding: 2px;
-      background: #000;
-      flex-shrink: 0;
-    }
-    .profile-avatar img {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      object-fit: cover;
-      display: block;
-    }
-    .profile-meta {
-      flex: 1;
-      min-width: 0;
-    }
-    .profile-meta strong {
-      display: block;
-      font-size: 13px;
-      font-weight: 700;
-      color: #fff;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .profile-meta .role-pill {
-      display: inline-block;
-      padding: 1px 7px;
-      background: rgba(124, 58, 237, 0.3);
-      border: 1px solid var(--primary);
-      color: #c4b5fd;
-      font: 700 9px var(--font-mono);
-      border-radius: 4px;
-      text-transform: uppercase;
-      margin-top: 2px;
-    }
-    .profile-meta .discord-tag {
-      display: block;
-      font: 10.5px var(--font-mono);
-      color: var(--blue);
-      margin-top: 4px;
-    }
-
-    /* Nav Tabs */
-    .nav-tabs {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      flex: 1;
-    }
-    .nav-tab-btn {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 14px;
-      border-radius: 8px;
-      border: 1px solid transparent;
-      background: transparent;
-      color: var(--text-muted);
-      font: 700 12.5px var(--font-mono);
-      cursor: pointer;
-      transition: all 0.18s ease;
-      text-align: left;
-    }
-    .nav-tab-btn:hover {
-      background: #152033;
-      color: #fff;
-    }
-    .nav-tab-btn.active {
-      background: var(--primary);
-      color: #fff;
-      box-shadow: 0 4px 18px var(--primary-glow);
-    }
-    .nav-tab-btn svg {
-      width: 18px;
-      height: 18px;
-      stroke-width: 2;
-      flex-shrink: 0;
-    }
-
-    /* Sidebar Footer */
-    .sidebar-footer {
-      border-top: 1px solid var(--border-light);
-      padding-top: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .live-clock-badge {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 7px 10px;
-      background: rgba(56, 189, 248, 0.08);
-      border: 1px solid rgba(56, 189, 248, 0.2);
-      border-radius: 6px;
-      color: var(--blue);
-      font: 700 11px var(--font-mono);
-    }
-    .db-status-badge {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--green);
-      font: 11px var(--font-mono);
-    }
-    .db-status-badge::before {
-      content: "";
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--green);
-      box-shadow: 0 0 8px var(--green);
-    }
-    .btn-return-store {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 9px;
-      background: #1e293b;
-      border: 1px solid var(--border);
-      color: #fff;
-      font: 700 11.5px var(--font-mono);
-      border-radius: 6px;
-      text-decoration: none;
-      transition: all 0.16s;
-    }
-    .btn-return-store:hover {
-      background: #334155;
-      border-color: #64748b;
-    }
-    .btn-logout {
-      width: 100%;
-      padding: 9px;
-      background: rgba(244, 63, 94, 0.12);
-      border: 1px solid rgba(244, 63, 94, 0.3);
-      color: #fda4af;
-      font: 700 11.5px var(--font-mono);
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.16s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-    .btn-logout:hover {
-      background: var(--rose);
-      color: #fff;
-    }
-
-    /* ================= MAIN CONTENT ================= */
-    .app-main {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      overflow: hidden;
-      background: #0d121d;
-    }
-
-    /* Topbar */
-    .app-topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 16px 28px;
-      background: #111827;
-      border-bottom: 1px solid var(--border);
-      flex-wrap: wrap;
-    }
-    .topbar-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex: 1;
-      max-width: 600px;
-    }
-    .search-wrap {
-      position: relative;
-      width: 100%;
-    }
-    .search-input {
-      width: 100%;
-      min-height: 42px;
-      padding: 0 14px 0 38px;
-      background: #090d16;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: #fff;
-      font-size: 13px;
-      font-family: var(--font-main);
-      transition: all 0.18s;
-    }
-    .search-input:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px var(--primary-glow);
-      background: #111827;
-    }
-    .search-icon {
-      position: absolute;
-      left: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 16px;
-      height: 16px;
-      color: var(--text-muted);
-      pointer-events: none;
-    }
-
-    .topbar-right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .select-styled {
-      min-height: 42px;
-      padding: 0 12px;
-      background: #090d16;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: #f8fafc;
-      font-size: 12px;
-      font-weight: 600;
-      font-family: var(--font-main);
-      cursor: pointer;
-    }
-    .select-styled:focus {
-      outline: none;
-      border-color: var(--primary);
-    }
-    .btn-top-action {
-      min-height: 42px;
-      padding: 0 16px;
-      background: #1e293b;
-      border: 1px solid var(--border);
-      color: #fff;
-      font: 700 12px var(--font-mono);
-      border-radius: 8px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.16s;
-    }
-    .btn-top-action:hover {
-      border-color: var(--primary);
-      color: #c4b5fd;
-      background: #2e1065;
-    }
-    .btn-top-action.spinning svg {
-      animation: spin 0.6s linear infinite;
-    }
-    @keyframes spin { 100% { transform: rotate(360deg); } }
-
-    /* Scroll Area */
-    .app-content-scroll {
-      flex: 1;
-      overflow-y: auto;
-      padding: 26px 28px;
-    }
-
-    .view-section {
-      display: none;
-      animation: fadeIn 0.2s ease-in-out;
-    }
-    .view-section.active {
-      display: block;
-    }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
-
-    /* ================= SECTION 1: OVERVIEW ================= */
-    .stats-grid-elite {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-    .stat-card-elite {
-      background: #111827;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      transition: transform 0.16s, border-color 0.16s;
-    }
-    .stat-card-elite:hover {
-      transform: translateY(-2px);
-      border-color: #64748b;
-    }
-    .stat-card-elite small {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      color: var(--text-muted);
-      font: 700 11px var(--font-mono);
-      text-transform: uppercase;
-    }
-    .stat-card-elite strong {
-      font: 800 24px var(--font-mono);
-      color: #fff;
-    }
-
-    .overview-split {
-      display: grid;
-      grid-template-columns: 1fr 1.2fr;
-      gap: 20px;
-    }
-    @media (max-width: 1024px) {
-      .overview-split { grid-template-columns: 1fr; }
-    }
-
-    .card-box {
-      background: #111827;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 20px;
-    }
-    .card-box h3 {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 18px;
-      font: 700 14px var(--font-mono);
-      color: #fff;
-    }
-
-    .cat-progress-item { margin-bottom: 16px; }
-    .cat-progress-meta { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px; color: #e2e8f0; }
-    .cat-bar-bg { height: 8px; background: #1e293b; border-radius: 4px; overflow: hidden; }
-    .cat-bar-fill { height: 100%; border-radius: 4px; transition: width 0.4s ease; }
-
-    /* ================= SECTION 2: DATA TABLE ================= */
-    .table-container {
-      background: #111827;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      overflow: hidden;
-    }
-    .data-table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-      font-size: 13px;
-    }
-    .data-table th {
-      background: #162032;
-      padding: 14px 18px;
-      color: #94a3b8;
-      font: 700 11.5px var(--font-mono);
-      text-transform: uppercase;
-      border-bottom: 1px solid var(--border);
-    }
-    .data-table td {
-      padding: 14px 18px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      color: #e2e8f0;
-      vertical-align: middle;
-    }
-    .data-table tr:hover td {
-      background: rgba(124, 58, 237, 0.06);
-    }
-
-    /* Badges */
-    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 3px 8px;
-      border-radius: 4px;
-      font: 700 10.5px var(--font-mono);
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-    .status-pending { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
-    .status-processing { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
-    .status-validated { background: rgba(124, 58, 237, 0.15); color: #c4b5fd; border: 1px solid rgba(124, 58, 237, 0.3); }
-    .status-queued { background: rgba(99, 102, 241, 0.15); color: #818cf8; border: 1px solid rgba(99, 102, 241, 0.3); }
-    .status-progress { background: rgba(14, 165, 233, 0.15); color: #38bdf8; border: 1px solid rgba(14, 165, 233, 0.3); }
-    .status-closed { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
-    .status-cancelled { background: rgba(244, 63, 94, 0.15); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.3); }
-
-    .code-pill {
-      font-family: var(--font-mono);
-      font-weight: 700;
-      color: #a78bfa;
-      cursor: pointer;
-      padding: 2px 6px;
-      background: rgba(167, 139, 250, 0.1);
-      border-radius: 4px;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .code-pill:hover {
-      background: rgba(167, 139, 250, 0.2);
-    }
-
-    .btn-action-small {
-      padding: 5px 10px;
-      background: #1e293b;
-      border: 1px solid var(--border);
-      color: #fff;
-      font: 700 11px var(--font-mono);
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.16s;
-    }
-    .btn-action-small:hover {
-      background: var(--primary);
-      border-color: var(--primary);
-    }
-
-    /* ================= STANDALONE LOGIN SCREEN ================= */
+    /* ================= LOGIN ROOT ================= */
     #adminLoginRoot {
       display: flex;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
-      background: radial-gradient(circle at 50% 30%, #1e1b4b 0%, #0b0f17 70%);
-      padding: 20px;
-    }
-    .login-card {
-      width: min(440px, 100%);
-      background: rgba(17, 24, 39, 0.85);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(124, 58, 237, 0.3);
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 30px rgba(124, 58, 237, 0.2);
-      border-radius: 12px;
-      padding: 32px;
-    }
-    .login-brand {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      margin-bottom: 24px;
-    }
-    .login-avatar-wrap {
-      width: 84px;
-      height: 84px;
-      margin-bottom: 12px;
-      filter: drop-shadow(0 4px 18px var(--primary-glow));
-      animation: floatMascot 3s ease-in-out infinite alternate;
-    }
-    @keyframes floatMascot {
-      0% { transform: translateY(0); }
-      100% { transform: translateY(-4px); }
-    }
-    .login-avatar-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-    }
-    .login-brand h2 {
-      font: 800 20px var(--font-mono);
-      color: #fff;
-      letter-spacing: 0.04em;
-    }
-    .login-brand p {
-      color: var(--text-muted);
-      font-size: 12.5px;
-      margin-top: 4px;
+      padding: 24px;
+      background: radial-gradient(circle at 50% 20%, rgba(56, 189, 248, 0.12) 0%, transparent 60%),
+                  linear-gradient(180deg, #070d14 0%, #03070b 100%);
     }
 
-    .form-group { display: grid; gap: 14px; }
-    .form-label { display: grid; gap: 6px; font-size: 12px; font-weight: 700; color: #cbd5e1; }
+    .login-box {
+      width: 100%;
+      max-width: 460px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65), 0 0 35px var(--primary-glow);
+      overflow: hidden;
+      animation: loginFadeIn 0.35s ease-out;
+    }
+
+    @keyframes loginFadeIn {
+      from { opacity: 0; transform: translateY(12px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Tactical Anime Hero Banner */
+    .login-hero-banner {
+      position: relative;
+      padding: 20px 24px;
+      background: linear-gradient(135deg, #0e1b2a 0%, #15273c 100%);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .login-hero-left {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .login-hero-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 8px;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-radius: 3px;
+      color: var(--blue);
+      font: 700 9px var(--font-mono);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      width: fit-content;
+    }
+
+    .login-logo-img {
+      height: 32px;
+      width: auto;
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
+    }
+
+    .login-hero-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
+      font-size: 11px;
+    }
+
+    .tactical-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981;
+      animation: pulseDot 2s infinite ease-in-out;
+    }
+
+    @keyframes pulseDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    .login-hero-mascot {
+      width: 64px;
+      height: 64px;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 2px solid var(--primary);
+      box-shadow: 0 4px 18px var(--primary-glow);
+      flex-shrink: 0;
+      background: #000;
+    }
+
+    .login-hero-mascot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .login-body {
+      padding: 24px;
+    }
+
+    .form-group {
+      display: grid;
+      gap: 14px;
+    }
+
+    .form-label {
+      display: grid;
+      gap: 6px;
+      color: var(--text-muted);
+      font: 700 11px var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
     .form-input {
       width: 100%;
-      min-height: 44px;
-      padding: 0 14px;
-      background: #090d16;
+      min-height: 42px;
+      padding: 0 12px;
+      background: #070d14;
       border: 1px solid var(--border);
-      border-radius: 6px;
+      border-radius: 4px;
       color: #fff;
       font: inherit;
-      transition: all 0.16s;
+      font-size: 13px;
+      transition: border-color 0.15s, box-shadow 0.15s;
     }
+
     .form-input:focus {
       outline: none;
       border-color: var(--primary);
       box-shadow: 0 0 0 3px var(--primary-glow);
     }
-    .pwd-wrap { position: relative; }
-    .pwd-wrap .form-input { padding-right: 42px; }
+
+    .pwd-wrap {
+      position: relative;
+      display: flex;
+    }
+
+    .pwd-wrap input {
+      padding-right: 70px;
+    }
+
     .pwd-toggle {
       position: absolute;
-      right: 6px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 32px;
-      height: 32px;
-      border: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      padding: 0 12px;
       background: transparent;
-      cursor: pointer;
+      border: 0;
       color: var(--text-muted);
-      font-size: 14px;
+      font: 700 10px var(--font-mono);
+      cursor: pointer;
+      letter-spacing: 0.05em;
+    }
+
+    .pwd-toggle:hover {
+      color: var(--primary);
     }
 
     .login-2fa-box {
       padding: 14px;
-      border: 1px solid #f97316;
-      background: rgba(249, 115, 22, 0.1);
+      background: rgba(56, 189, 248, 0.08);
+      border: 1px solid rgba(56, 189, 248, 0.3);
       border-radius: 6px;
       font-size: 12px;
-      color: #fdba74;
       line-height: 1.5;
-    }
-    .countdown-badge {
-      display: inline-block;
-      padding: 2px 8px;
-      background: #ea580c;
-      color: #fff;
-      border-radius: 4px;
-      font: 700 11px var(--font-mono);
-      margin-top: 4px;
+      color: #e2f2ff;
+      display: grid;
+      gap: 6px;
     }
 
-    .btn-login-submit {
+    .login-2fa-box strong {
+      color: var(--primary);
+      font: 700 11px var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .countdown-pill {
+      display: inline-block;
+      padding: 2px 8px;
+      background: #0b1724;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      color: var(--amber);
+      font: 700 11px var(--font-mono);
+    }
+
+    .btn-submit {
       width: 100%;
-      min-height: 46px;
+      min-height: 44px;
+      margin-top: 6px;
       background: var(--primary);
       border: 0;
-      color: #fff;
-      font: 700 13px var(--font-mono);
-      border-radius: 6px;
+      border-radius: 4px;
+      color: #070d14;
+      font: 800 12px var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
       cursor: pointer;
-      box-shadow: 0 4px 15px var(--primary-glow);
-      transition: background 0.16s;
-      margin-top: 6px;
+      transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+      box-shadow: 0 4px 14px var(--primary-glow);
     }
-    .btn-login-submit:hover { background: var(--primary-hover); }
+
+    .btn-submit:hover {
+      background: #7dd3fc;
+      transform: translateY(-1px);
+    }
+
+    .btn-submit:active {
+      transform: scale(0.99);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ================= DASHBOARD APP ROOT ================= */
+    #adminAppRoot {
+      display: none;
+      width: 100vw;
+      height: 100vh;
+      grid-template-columns: 270px 1fr;
+      overflow: hidden;
+    }
+
+    #adminAppRoot.active {
+      display: grid;
+    }
+
+    .app-sidebar {
+      background: #08101a;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .sidebar-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sidebar-mascot {
+      width: 44px;
+      height: 44px;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid var(--primary);
+      background: #000;
+      flex-shrink: 0;
+    }
+
+    .sidebar-mascot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .sidebar-title strong {
+      display: block;
+      font: 800 13px var(--font-mono);
+      letter-spacing: 0.04em;
+      color: #fff;
+    }
+
+    .sidebar-title small {
+      font: 700 9px var(--font-mono);
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .sidebar-nav {
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 4px;
+      color: var(--text-muted);
+      font: 700 11px var(--font-mono);
+      text-decoration: none;
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+
+    .nav-item:hover, .nav-item.active {
+      background: rgba(56, 189, 248, 0.09);
+      color: var(--primary);
+      border-left: 2px solid var(--primary);
+    }
+
+    .sidebar-footer {
+      padding: 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #050b12;
+    }
+
+    .user-tag {
+      font: 700 11px var(--font-mono);
+      color: #fff;
+    }
+
+    .user-role {
+      font-size: 10px;
+      color: var(--text-muted);
+      display: block;
+    }
+
+    .btn-logout {
+      padding: 6px 10px;
+      background: rgba(244, 63, 94, 0.15);
+      border: 1px solid rgba(244, 63, 94, 0.35);
+      border-radius: 3px;
+      color: #fca5a5;
+      font: 700 10px var(--font-mono);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-logout:hover {
+      background: rgba(244, 63, 94, 0.3);
+    }
+
+    /* Main Area */
+    .app-main {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    .top-bar {
+      height: 64px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-surface);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      gap: 16px;
+    }
+
+    .top-bar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .clock-pill {
+      padding: 4px 10px;
+      background: #070d14;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font: 700 11px var(--font-mono);
+      color: var(--primary);
+    }
+
+    .top-bar-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-secondary {
+      padding: 8px 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text);
+      font: 700 11px var(--font-mono);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .content-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px;
+      display: grid;
+      gap: 20px;
+    }
+
+    /* Metric Cards */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .metric-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 16px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .metric-title {
+      font: 700 10px var(--font-mono);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .metric-value {
+      font-size: 24px;
+      font-weight: 800;
+      color: #fff;
+      font-family: var(--font-mono);
+    }
+
+    /* Table Container */
+    .table-container {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .table-head-bar {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      background: #09131f;
+    }
+
+    .search-input {
+      min-width: 240px;
+      height: 36px;
+      padding: 0 12px;
+      background: #060b12;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: #fff;
+      font-size: 12px;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: 6px;
+    }
+
+    .filter-tab {
+      padding: 6px 12px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      color: var(--text-muted);
+      font: 700 10px var(--font-mono);
+      cursor: pointer;
+    }
+
+    .filter-tab.active, .filter-tab:hover {
+      background: rgba(56, 189, 248, 0.12);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+    }
+
+    th {
+      text-align: left;
+      padding: 12px 16px;
+      background: #070e17;
+      color: var(--text-muted);
+      font: 700 10px var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: #e2e8f0;
+    }
+
+    tr:hover td {
+      background: rgba(56, 189, 248, 0.03);
+    }
+
+    .order-code {
+      font: 700 12px var(--font-mono);
+      color: var(--primary);
+    }
+
+    .price-tag {
+      font: 700 12px var(--font-mono);
+      color: var(--green);
+    }
+
+    .badge {
+      display: inline-flex;
+      padding: 3px 8px;
+      border-radius: 3px;
+      font: 700 9px var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .badge-pending { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .badge-validated { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
+    .badge-completed { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge-cancelled { background: rgba(244, 63, 94, 0.15); color: #f87171; border: 1px solid rgba(244, 63, 94, 0.3); }
+
+    .btn-action {
+      padding: 5px 10px;
+      background: #112030;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      color: #fff;
+      font: 700 10px var(--font-mono);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-action:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* Modal / Dialog */
+    .detail-dialog {
+      width: min(520px, calc(100% - 32px));
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 25px 70px rgba(0,0,0,0.8), 0 0 35px var(--primary-glow);
+      padding: 24px;
+      margin: auto;
+    }
+
+    .detail-dialog::backdrop {
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+    }
 
     /* Toast */
     .toast-box {
       position: fixed;
       bottom: 24px;
       right: 24px;
-      padding: 14px 20px;
-      background: #1e293b;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      background: #091522;
+      border: 1px solid var(--primary);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      padding: 12px 18px;
+      border-radius: 6px;
       color: #fff;
       font-size: 13px;
+      display: none;
       z-index: 100;
-      opacity: 0;
-      transform: translateY(10px);
-      transition: all 0.2s;
-      pointer-events: none;
+      animation: toastSlide 0.25s ease-out;
     }
-    .toast-box.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
-    .toast-box b { display: block; font-family: var(--font-mono); margin-bottom: 2px; }
 
-    /* Modal Drawer */
-    .detail-dialog {
-      width: min(520px, calc(100% - 32px));
-      border: 1px solid var(--border);
-      background: #111827;
-      color: #fff;
-      border-radius: 12px;
-      box-shadow: 0 25px 70px rgba(0,0,0,0.7);
-      padding: 24px;
-      margin: auto;
-    }
-    .detail-dialog::backdrop { background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px); }
+    .toast-box.show { display: block; }
+    .toast-box b { display: block; color: var(--primary); font: 700 11px var(--font-mono); text-transform: uppercase; margin-bottom: 2px; }
   </style>
 </head>
 <body>
 
-  <!-- ================= STANDALONE LOGIN SCREEN ================= -->
+  <!-- ================= 1. GİRİŞ EKRANI (STANDALONE LOGIN) ================= -->
   <div id="adminLoginRoot">
-    <div class="login-card">
-      <div class="login-brand">
-        <div class="login-avatar-wrap">
-          <img src="images/mascot-clean.png" alt="Monarch Anime Mascot Girl" width="84" height="84">
+    <div class="login-box">
+      <!-- Tactical Header with Logo & Lena Officer Mascot -->
+      <div class="login-hero-banner">
+        <div class="login-hero-left">
+          <span class="login-hero-badge">MONARCH STORE // FOUNDER</span>
+          <img src="images/logo-light.webp" alt="Monarch Store" class="login-logo-img" width="145" height="34" />
+          <div class="login-hero-status">
+            <span class="tactical-dot"></span>
+            <span id="loginDesc">Yonetim Paneli Guvenli Girisi</span>
+          </div>
         </div>
-        <h2>MONARCH SUITE</h2>
-        <p id="loginDesc">Enterprise Yönetim Paneli Girişi</p>
+        <div class="login-hero-mascot" title="Monarch Komutani">
+          <img src="images/lena-officer-avatar.jpg" alt="Monarch Anime Komutani" width="64" height="64" />
+        </div>
       </div>
 
-      <form id="standaloneLoginForm" class="form-group">
-        <!-- Normal Alanlar -->
-        <div id="loginStandardWrap" style="display: grid; gap: 14px;">
-          <label class="form-label">
-            Kullanıcı Adı
-            <input type="text" id="loginUsername" class="form-input" value="admin" required autocomplete="username">
-          </label>
-          <label class="form-label">
-            Şifre
-            <div class="pwd-wrap">
-              <input type="password" id="loginPassword" class="form-input" required autocomplete="current-password">
-              <button type="button" id="loginTogglePwd" class="pwd-toggle" title="Şifreyi Göster">GÖSTER</button>
-            </div>
-          </label>
-          <label class="form-label">
-            Discord Kullanıcı Adınız
-            <input type="text" id="loginDiscordUser" class="form-input" placeholder="Örn: eververity" autocomplete="off">
-          </label>
-        </div>
-
-        <!-- 2FA Alanları -->
-        <div id="login2FAWrap" style="display: none; gap: 14px;">
-          <div class="login-2fa-box">
-            <strong>2FA Doğrulaması Gönderildi</strong>
-            <p>Discord sunucusundaki <b>#admin-2fa</b> kanalına güvenlik kodu iletildi ve adınız etiketlendi.</p>
-            <div>Kalan Süre: <span id="loginCountdown" class="countdown-badge">05:00</span></div>
+      <div class="login-body">
+        <form id="standaloneLoginForm" class="form-group">
+          <!-- Standart Kullanici Adi ve Sifre -->
+          <div id="loginStandardWrap" style="display: grid; gap: 14px;">
+            <label class="form-label">
+              Kullanici Adi
+              <input type="text" id="loginUsername" class="form-input" value="admin" required autocomplete="username">
+            </label>
+            <label class="form-label">
+              Sifre
+              <div class="pwd-wrap">
+                <input type="password" id="loginPassword" class="form-input" value="Monarch3327" required autocomplete="current-password">
+                <button type="button" id="loginTogglePwd" class="pwd-toggle" title="Sifreyi Goster">GOSTER</button>
+              </div>
+            </label>
+            <label class="form-label">
+              Discord Kullanici Adiniz
+              <input type="text" id="loginDiscordUser" class="form-input" value="eververity" placeholder="Orn: eververity" autocomplete="off">
+            </label>
           </div>
-          <label class="form-label">
-            6 Haneli Güvenlik Kodu
-            <input type="text" id="login2FACode" class="form-input" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="849216" style="letter-spacing: .3em; font-family: var(--font-mono); font-size: 18px; text-align: center;">
-          </label>
-        </div>
 
-        <button type="submit" id="loginSubmitBtn" class="btn-login-submit">Giriş Yap</button>
-      </form>
+          <!-- 2FA Guvenlik Alani -->
+          <div id="login2FAWrap" style="display: none; gap: 14px;">
+            <div class="login-2fa-box">
+              <strong>2FA GUVENLIK DOGRULAMASI</strong>
+              <p>Dogrulama kodu Discord sunucusundaki <b>#admin-2fa</b> kanalina gonderildi.</p>
+              <div>Kalan Sure: <span id="loginCountdown" class="countdown-pill">05:00</span></div>
+            </div>
+            <label class="form-label">
+              6 Haneli Guvenlik Kodu
+              <input type="text" id="login2FACode" class="form-input" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="849216" style="letter-spacing: .35em; font-family: var(--font-mono); font-size: 18px; text-align: center; border-color: var(--primary); color: var(--primary);">
+            </label>
+          </div>
+
+          <button type="submit" id="loginSubmitBtn" class="btn-submit">Giris Yap</button>
+        </form>
+      </div>
     </div>
   </div>
 
-  <!-- ================= FULLSCREEN SAAS DASHBOARD ================= -->
+  <!-- ================= 2. DASHBOARD ANA EKRANI ================= -->
   <div id="adminAppRoot">
     <!-- Sidebar -->
     <aside class="app-sidebar">
-      <div class="brand-header">
-        <div class="brand-logo-wrap">
-          <img src="images/mascot.webp" alt="Monarch Mascot">
+      <div class="sidebar-header">
+        <div class="sidebar-mascot">
+          <img src="images/lena-officer-avatar.jpg" alt="Monarch Komutani">
         </div>
-        <div class="brand-title">
-          <strong>MONARCH SUITE</strong>
-          <small>v2.6 Enterprise Control</small>
-        </div>
-      </div>
-
-      <!-- Profile -->
-      <div class="profile-card">
-        <div class="profile-avatar">
-          <img src="images/mascot.webp" alt="Founder Avatar">
-        </div>
-        <div class="profile-meta">
-          <strong id="dashAdminUser">admin</strong>
-          <span class="role-pill">FOUNDER</span>
-          <span class="discord-tag" id="dashDiscordTag">@yetkili</span>
+        <div class="sidebar-title">
+          <strong>MONARCH STORE</strong>
+          <small>Founder Suite</small>
         </div>
       </div>
 
-      <!-- Nav Tabs -->
-      <nav class="nav-tabs">
-        <button type="button" class="nav-tab-btn" data-tab="overview">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
-          <span>Genel Bakış</span>
-        </button>
-        <button type="button" class="nav-tab-btn active" data-tab="orders" id="tabOrdersBtn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-          <span>Siparişler & Destek</span>
-        </button>
-        <button type="button" class="nav-tab-btn" data-tab="clients">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          <span>Müşteri Dizini</span>
-        </button>
-        <button type="button" class="nav-tab-btn" data-tab="system">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
-          <span>Sistem & Bot</span>
-        </button>
+      <nav class="sidebar-nav">
+        <a class="nav-item active" data-tab="orders">Siparis Yonetimi</a>
+        <a class="nav-item" data-tab="metrics">Istatistikler & Finans</a>
+        <a class="nav-item" data-tab="security">2FA & Guvenlik</a>
+        <a class="nav-item" href="http://astralissaga.xyz/" target="_blank">Magazaya Don ↗</a>
       </nav>
 
-      <!-- Sidebar Bottom -->
       <div class="sidebar-footer">
-        <div class="live-clock-badge">
-          <span>İstanbul</span>
-          <span id="dashClock">12:00:00</span>
+        <div>
+          <span class="user-tag" id="dashAdminUser">admin</span>
+          <span class="user-role" id="dashDiscordTag">@eververity</span>
         </div>
-        <div class="db-status-badge">Supabase DB Aktif</div>
-        <a href="index.html" class="btn-return-store">Mağazaya Dön</a>
-        <button type="button" class="btn-logout" id="dashLogoutBtn">Güvenli Çıkış</button>
+        <button type="button" id="dashLogoutBtn" class="btn-logout">Cikis</button>
       </div>
     </aside>
 
     <!-- Main View -->
     <main class="app-main">
-      <!-- Topbar -->
-      <div class="app-topbar">
-        <div class="topbar-left">
-          <div class="search-wrap">
-            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input type="search" class="search-input" id="adminSearchInput" placeholder="Sipariş kodu, Discord kullanıcı adı veya ID ile ara…">
+      <!-- Top Bar -->
+      <header class="top-bar">
+        <div class="top-bar-left">
+          <span class="tactical-dot"></span>
+          <h1 style="font-size: 15px; font-weight: 800; font-family: var(--font-mono); text-transform: uppercase;">Siparis Kontrol Merkezi</h1>
+          <span class="clock-pill" id="dashClock">--:--:--</span>
+        </div>
+        <div class="top-bar-actions">
+          <button type="button" id="refreshBtn" class="btn-secondary">Yenile</button>
+          <button type="button" id="exportBtn" class="btn-secondary">CSV Indir</button>
+        </div>
+      </header>
+
+      <!-- Content -->
+      <div class="content-area">
+        <!-- Top Metrics -->
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <span class="metric-title">Toplam Siparis</span>
+            <span class="metric-value" id="statTotalOrders">0</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-title">Onaylanan Ciro</span>
+            <span class="metric-value" id="statTotalRevenue">0 TL</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-title">Bekleyen Talepler</span>
+            <span class="metric-value" id="statPendingOrders" style="color: var(--amber);">0</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-title">Tamamlanan</span>
+            <span class="metric-value" id="statCompletedOrders" style="color: var(--green);">0</span>
           </div>
         </div>
 
-        <div class="topbar-right">
-          <select class="select-styled" id="adminStatusFilterSelect">
-            <option value="all">Filtre: Tüm Durumlar</option>
-            <option value="pending">Bekleyenler</option>
-            <option value="active">Aktif / Sırada / Ticket Açık</option>
-            <option value="closed">Tamamlanan / Kapalı</option>
-            <option value="cancelled">İptal Edilenler</option>
-          </select>
-
-          <select class="select-styled" id="adminSortSelect">
-            <option value="newest">Sırala: En Yeni</option>
-            <option value="oldest">Sırala: En Eski</option>
-            <option value="price_high">Sırala: Fiyat Azalan</option>
-            <option value="price_low">Sırala: Fiyat Artan</option>
-          </select>
-
-          <button type="button" class="btn-top-action" id="adminRefreshBtn" title="Canlı Verileri Yenile">
-            <svg style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-            <span>Yenile</span>
-          </button>
-
-          <button type="button" class="btn-top-action" id="adminExportCsvBtn" title="Excel / CSV Formatında İndir">
-            <svg style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            <span>CSV</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Content Scroll -->
-      <div class="app-content-scroll">
-        <!-- SECTION 1: GENEL BAKIŞ -->
-        <section class="view-section" id="admSection_overview">
-          <div class="stats-grid-elite">
-            <div class="stat-card-elite">
-              <small>
-                <span>Toplam Ciro</span>
-                <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-              </small>
-              <strong id="admStatTotalRevenue" style="color: #10b981;">0 TL</strong>
-            </div>
-            <div class="stat-card-elite">
-              <small>
-                <span>Toplam Talep</span>
-                <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-              </small>
-              <strong id="admStatTotalOrders">0</strong>
-            </div>
-            <div class="stat-card-elite">
-              <small>
-                <span>Ortalama Sepet</span>
-                <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-              </small>
-              <strong id="admStatAvgOrder">0 TL</strong>
-            </div>
-            <div class="stat-card-elite">
-              <small>
-                <span>Bekleyen</span>
-                <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              </small>
-              <strong id="admStatPending" style="color: #f59e0b;">0</strong>
-            </div>
-            <div class="stat-card-elite">
-              <small>
-                <span>İşlemde / Sırada</span>
-                <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-              </small>
-              <strong id="admStatValidated" style="color: #3b82f6;">0</strong>
-            </div>
-            <div class="stat-card-elite">
-              <small>
-                <span>Tamamlanan</span>
-                <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-              </small>
-              <strong id="admStatCompleted" style="color: #16a34a;">0</strong>
+        <!-- Orders Table Card -->
+        <div class="table-container">
+          <div class="table-head-bar">
+            <input type="text" id="orderSearchInput" class="search-input" placeholder="Siparis kodu veya Discord ara...">
+            <div class="filter-tabs">
+              <button type="button" class="filter-tab active" data-filter="all">Tumu</button>
+              <button type="button" class="filter-tab" data-filter="pending_validation">Bekleyen</button>
+              <button type="button" class="filter-tab" data-filter="validated">Onayli</button>
+              <button type="button" class="filter-tab" data-filter="completed">Tamamlanan</button>
+              <button type="button" class="filter-tab" data-filter="cancelled">Iptal</button>
             </div>
           </div>
 
-          <div class="overview-split">
-            <div class="card-box">
-              <h3>
-                <span>Hizmet Satış Dağılımı</span>
-                <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-              </h3>
-              <div class="cat-progress-item">
-                <div class="cat-progress-meta">
-                  <span>Minecraft Botları</span>
-                  <span id="admValBots">0 Adet (%0)</span>
-                </div>
-                <div class="cat-bar-bg">
-                  <div class="cat-bar-fill" id="admBarBots" style="width: 0%; background: #3b82f6;"></div>
-                </div>
-              </div>
-              <div class="cat-progress-item">
-                <div class="cat-progress-meta">
-                  <span>UI/UX Tasarım</span>
-                  <span id="admValUiUx">0 Adet (%0)</span>
-                </div>
-                <div class="cat-bar-bg">
-                  <div class="cat-bar-fill" id="admBarUiUx" style="width: 0%; background: #8b5cf6;"></div>
-                </div>
-              </div>
-              <div class="cat-progress-item">
-                <div class="cat-progress-meta">
-                  <span>Sunum Hizmetleri</span>
-                  <span id="admValSlides">0 Adet (%0)</span>
-                </div>
-                <div class="cat-bar-bg">
-                  <div class="cat-bar-fill" id="admBarSlides" style="width: 0%; background: #ec4899;"></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="card-box">
-              <h3>
-                <span>Son Aktiviteler</span>
-                <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 10"/></svg>
-              </h3>
-              <table class="data-table">
-                <thead>
-                  <tr>
-                    <th>Kod</th>
-                    <th>Kullanıcı</th>
-                    <th>Tutar</th>
-                    <th>Durum</th>
-                  </tr>
-                </thead>
-                <tbody id="admRecentActivitiesBody">
-                  <tr><td colspan="4" style="text-align: center; color: var(--text-muted);">Yükleniyor…</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
-        <!-- SECTION 2: SİPARİŞLER & DESTEK -->
-        <section class="view-section active" id="admSection_orders">
-          <div class="table-container">
-            <table class="data-table">
+          <div style="overflow-x: auto;">
+            <table>
               <thead>
                 <tr>
-                  <th>Talep Kodu</th>
-                  <th>Discord Kullanıcısı</th>
-                  <th>Hizmet / Kalemler</th>
+                  <th>Siparis Kodu</th>
+                  <th>Musteri (Discord)</th>
+                  <th>Urunler</th>
                   <th>Tutar</th>
                   <th>Durum</th>
-                  <th>İşlem</th>
+                  <th>Tarih</th>
+                  <th>Islem</th>
                 </tr>
               </thead>
-              <tbody id="adminOrdersTableBody">
-                <tr><td colspan="6" style="text-align: center; padding: 30px; color: var(--text-muted);">Siparişler yükleniyor…</td></tr>
+              <tbody id="ordersTableBody">
+                <tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 30px;">Siparisler yukleniyor...</td></tr>
               </tbody>
             </table>
           </div>
-        </section>
-
-        <!-- SECTION 3: MÜŞTERİ DİZİNİ -->
-        <section class="view-section" id="admSection_clients">
-          <div class="table-container">
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th>Müşteri (Discord)</th>
-                  <th>Discord ID</th>
-                  <th>Sipariş Adedi</th>
-                  <th>Toplam Harcama</th>
-                  <th>Son Sipariş</th>
-                </tr>
-              </thead>
-              <tbody id="adminClientsTableBody">
-                <tr><td colspan="5" style="text-align: center; padding: 30px; color: var(--text-muted);">Müşteri dizini yükleniyor…</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
-
-        <!-- SECTION 4: SİSTEM & BOT -->
-        <section class="view-section" id="admSection_system">
-          <div class="overview-split">
-            <div class="card-box">
-              <h3>Sistem & Veritabanı Durumu</h3>
-              <div style="display: grid; gap: 12px; font-size: 13px;">
-                <div style="display: flex; justify-content: space-between; padding-bottom: 8px; border-bottom: 1px solid var(--border-light);">
-                  <span style="color: var(--text-muted);">Veritabanı Sağlayıcı:</span>
-                  <strong>Supabase Cloud (PostgreSQL 15)</strong>
-                </div>
-                <div style="display: flex; justify-content: space-between; padding-bottom: 8px; border-bottom: 1px solid var(--border-light);">
-                  <span style="color: var(--text-muted);">Bağlantı Durumu:</span>
-                  <strong style="color: var(--green);">Bağlı ve Aktif</strong>
-                </div>
-                <div style="display: flex; justify-content: space-between; padding-bottom: 8px; border-bottom: 1px solid var(--border-light);">
-                  <span style="color: var(--text-muted);">Discord Ticket Bot:</span>
-                  <strong style="color: var(--blue);">MonarchAuth#0327 (Online)</strong>
-                </div>
-                <div style="display: flex; justify-content: space-between;">
-                  <span style="color: var(--text-muted);">2FA Güvenlik Kanalı:</span>
-                  <strong style="color: var(--primary);">#admin-2fa</strong>
-                </div>
-              </div>
-            </div>
-
-            <div class="card-box">
-              <h3>Oturum Bilgileri</h3>
-              <div style="display: grid; gap: 12px; font-size: 13px;">
-                <div style="display: flex; justify-content: space-between; padding-bottom: 8px; border-bottom: 1px solid var(--border-light);">
-                  <span style="color: var(--text-muted);">Yetkili Kullanıcı:</span>
-                  <strong id="sysAdminUser">admin</strong>
-                </div>
-                <div style="display: flex; justify-content: space-between; padding-bottom: 8px; border-bottom: 1px solid var(--border-light);">
-                  <span style="color: var(--text-muted);">Discord Doğrulama:</span>
-                  <strong id="sysDiscordUser" style="color: var(--blue);">—</strong>
-                </div>
-                <div style="display: flex; justify-content: space-between;">
-                  <span style="color: var(--text-muted);">Oturum Geçerlilik:</span>
-                  <strong style="color: var(--green);">12 Saatlik Güvenli Token</strong>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        </div>
       </div>
     </main>
   </div>
 
-  <!-- Order Detail Dialog -->
+  <!-- ================= DETAY MODAL ================= -->
   <dialog class="detail-dialog" id="adminOrderDetailDialog">
-    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
-      <h3 style="font: 700 16px var(--font-mono); color: #fff;">Sipariş Detayları</h3>
-      <button type="button" onclick="document.querySelector('#adminOrderDetailDialog').close()" style="background: transparent; border: 0; color: #94a3b8; font-size: 22px; cursor: pointer;">×</button>
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+      <div>
+        <span class="login-hero-badge" style="margin-bottom: 4px;">SIPARIS DETAYI</span>
+        <h3 id="modalOrderCode" style="font-family: var(--font-mono); font-size: 20px; color: var(--primary);">—</h3>
+      </div>
+      <button type="button" onclick="document.querySelector('#adminOrderDetailDialog').close()" style="background: transparent; border: 0; color: var(--text-muted); font-size: 22px; cursor: pointer;">×</button>
     </div>
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 12.5px; margin-bottom: 18px;">
-      <div><span style="color: var(--text-muted); display: block;">Talep Kodu:</span><strong id="modalOrderCode" style="color: #a78bfa; font-family: var(--font-mono); font-size: 14px;">—</strong></div>
-      <div><span style="color: var(--text-muted); display: block;">Toplam Tutar:</span><strong id="modalOrderPrice" style="color: #10b981; font-family: var(--font-mono); font-size: 14px;">—</strong></div>
-      <div><span style="color: var(--text-muted); display: block;">Müşteri:</span><strong id="modalOrderUser">—</strong></div>
-      <div><span style="color: var(--text-muted); display: block;">Discord ID:</span><strong id="modalOrderUserId" style="font-family: var(--font-mono);">—</strong></div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; font-size: 12.5px;">
+      <div><span style="color: var(--text-muted); display: block;">Musteri:</span><strong id="modalOrderUser">—</strong></div>
+      <div><span style="color: var(--text-muted); display: block;">Toplam Tutar:</span><strong id="modalOrderPrice" class="price-tag">—</strong></div>
       <div style="grid-column: span 2;"><span style="color: var(--text-muted); display: block;">Tarih:</span><strong id="modalOrderDate">—</strong></div>
     </div>
+
     <div style="margin-bottom: 16px;">
-      <span style="color: var(--text-muted); display: block; font-size: 11px; text-transform: uppercase; font-family: var(--font-mono); margin-bottom: 6px;">Sipariş Kalemleri:</span>
-      <div id="modalOrderItemsList" style="background: #090d16; border: 1px solid var(--border); border-radius: 6px; padding: 10px; max-height: 140px; overflow-y: auto; font-size: 12px;"></div>
+      <span style="color: var(--text-muted); display: block; font: 700 10px var(--font-mono); text-transform: uppercase; margin-bottom: 6px;">Siparis Kalemleri:</span>
+      <div id="modalOrderItemsList" style="background: #070d14; border: 1px solid var(--border); border-radius: 4px; padding: 10px; max-height: 140px; overflow-y: auto; font-size: 12px;"></div>
     </div>
-    <div style="display: flex; gap: 10px;">
-      <button type="button" id="modalActionDone" style="flex: 1; padding: 10px; background: #16a34a; border: 0; color: #fff; font: 700 12px var(--font-mono); border-radius: 6px; cursor: pointer;">Tamamla (Kapat)</button>
-      <button type="button" id="modalActionCancel" style="flex: 1; padding: 10px; background: #e11d48; border: 0; color: #fff; font: 700 12px var(--font-mono); border-radius: 6px; cursor: pointer;">Iptal Et</button>
+
+    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+      <button type="button" id="modalActionDone" style="flex: 1; min-height: 38px; background: #16a34a; border: 0; color: #fff; font: 700 11px var(--font-mono); border-radius: 4px; cursor: pointer;">Tamamla (Kapat)</button>
+      <button type="button" id="modalActionCancel" style="flex: 1; min-height: 38px; background: #e11d48; border: 0; color: #fff; font: 700 11px var(--font-mono); border-radius: 4px; cursor: pointer;">Iptal Et</button>
     </div>
-    <div style="margin-top: 10px;">
-      <button type="button" id="modalActionCopy" style="width: 100%; padding: 10px; background: #3b82f6; border: 0; color: #fff; font: 700 12px var(--font-mono); border-radius: 6px; cursor: pointer;">Siparis Detaylarini Kopyala</button>
-    </div>
+    <button type="button" id="modalActionCopy" style="width: 100%; min-height: 38px; background: #0284c7; border: 0; color: #fff; font: 700 11px var(--font-mono); border-radius: 4px; cursor: pointer;">Siparis Metnini Kopyala</button>
   </dialog>
 
   <!-- Toast -->
   <div class="toast-box" id="adminToast">
     <b id="adminToastTitle">Bildirim</b>
-    <span id="adminToastText">İşlem yapıldı.</span>
+    <span id="adminToastText">Islem yapildi.</span>
   </div>
 
   <script type="module">
@@ -1072,7 +853,7 @@
       updateOrderStatusRPC, 
       exportOrdersToCSV, 
       getStatusBadgeHTML 
-    } from './admin-panel.js?v=20260829_standalone_v1';
+    } from './admin-panel.js?v=20260829_v2';
 
     const loginRoot = document.querySelector('#adminLoginRoot');
     const appRoot = document.querySelector('#adminAppRoot');
@@ -1105,10 +886,8 @@
         loginRoot.style.display = 'none';
         appRoot.classList.add('active');
         document.querySelector('#dashAdminUser').textContent = session.username;
-        document.querySelector('#sysAdminUser').textContent = session.username;
         const disc = session.discordUsername ? `@${session.discordUsername}` : '@yetkili';
         document.querySelector('#dashDiscordTag').textContent = disc;
-        document.querySelector('#sysDiscordUser').textContent = disc;
         loadOrders();
       } else {
         loginRoot.style.display = 'flex';
@@ -1116,7 +895,7 @@
       }
     }
 
-    // Giriş Formu ve 2FA Mantığı
+    // Giriş & 2FA Formu
     let activeChallengeId = null;
     let countdownTimer = null;
 
@@ -1134,7 +913,7 @@
       togglePwdBtn.addEventListener('click', () => {
         const isPwd = passwordInput.type === 'password';
         passwordInput.type = isPwd ? 'text' : 'password';
-        togglePwdBtn.textContent = isPwd ? 'GİZLE' : 'GÖSTER';
+        togglePwdBtn.textContent = isPwd ? 'GIZLE' : 'GOSTER';
       });
     }
 
@@ -1148,14 +927,14 @@
         if (!code) return;
 
         submitBtn.disabled = true;
-        submitBtn.textContent = 'Doğrulanıyor…';
+        submitBtn.textContent = 'Dogrulaniyor…';
         try {
           await verifyAdmin2FA(activeChallengeId, code, discUser);
           clearInterval(countdownTimer);
-          notify('Giriş Başarılı', 'Monarch Store Yönetim Paneline hoş geldiniz.');
+          notify('Giris Basarili', 'Monarch Store Yonetim Paneline hos geldiniz.');
           checkAuth();
         } catch (err) {
-          notify('Hata', err.message || 'Geçersiz 2FA kodu.');
+          notify('Hata', err.message || 'Gecersiz 2FA kodu.');
           codeInput.focus();
         } finally {
           submitBtn.disabled = false;
@@ -1185,7 +964,6 @@
           notify('2FA Kodu Gonderildi', 'Discord #admin-2fa kanalina guvenlik kodunuz iletildi.');
           codeInput.focus();
 
-          // Geri sayım
           let remain = 300;
           const cdEl = document.querySelector('#loginCountdown');
           countdownTimer = setInterval(() => {
@@ -1194,228 +972,162 @@
             if (cdEl) cdEl.textContent = `${min}:${sec < 10 ? '0' : ''}${sec}`;
             if (remain <= 0) {
               clearInterval(countdownTimer);
-              if (cdEl) cdEl.textContent = 'Süre Doldu';
+              if (cdEl) cdEl.textContent = 'Sure Doldu';
             }
             remain--;
           }, 1000);
         }
       } catch (err) {
-        notify('Hata', err.message || 'Kullanıcı adı veya şifre hatalı.');
+        notify('Hata', err.message || 'Kullanici adi veya sifre hatali.');
       } finally {
         submitBtn.disabled = false;
       }
     });
 
-    // Çıkış Butonu
+    // Çıkış
     document.querySelector('#dashLogoutBtn').addEventListener('click', () => {
       clearAdminSession();
+      activeChallengeId = null;
+      clearInterval(countdownTimer);
+      standardWrap.style.display = 'grid';
+      twoFAWrap.style.display = 'none';
+      usernameInput.required = true;
+      passwordInput.required = true;
+      codeInput.required = false;
+      submitBtn.textContent = 'Giris Yap';
+      notify('Cikis Yapildi', 'Oturum sonlandirildi.');
       checkAuth();
-      notify('Çıkış Yapıldı', 'Yönetim oturumunuz güvenle kapatıldı.');
     });
 
-    // Tab Geçişleri
-    document.querySelectorAll('.nav-tab-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
-        btn.classList.add('active');
-        const tab = btn.dataset.tab;
-        const target = document.querySelector(`#admSection_${tab}`);
-        if (target) target.classList.add('active');
-      });
-    });
-
-    // Sipariş Yükleme & Tablo Render
-    let currentOrders = [];
+    // Siparişleri Yükleme & Tablo
+    let allOrders = [];
+    let currentFilter = 'all';
+    let activeDetailOrder = null;
 
     async function loadOrders() {
-      const refreshBtn = document.querySelector('#adminRefreshBtn');
-      if (refreshBtn) refreshBtn.classList.add('spinning');
-
+      const tbody = document.querySelector('#ordersTableBody');
       try {
         const res = await fetchAdminOrders();
-        currentOrders = res.orders || [];
-        renderOverview(res);
-        renderTable(currentOrders);
-        renderClients(currentOrders);
+        allOrders = res.orders || [];
+        renderMetrics();
+        renderTable();
       } catch (err) {
-        notify('Yükleme Hatası', err.message);
-      } finally {
-        if (refreshBtn) refreshBtn.classList.remove('spinning');
+        notify('Hata', err.message);
+        if (err.message.includes('Oturum') || err.message.includes('Yetkisiz')) {
+          clearAdminSession();
+          checkAuth();
+        }
       }
     }
 
-    function renderOverview(data) {
-      const stats = data.stats || {};
-      document.querySelector('#admStatTotalRevenue').textContent = `${(stats.total_revenue || 0).toLocaleString('tr-TR')} TL`;
-      document.querySelector('#admStatTotalOrders').textContent = stats.total_orders || 0;
-      document.querySelector('#admStatAvgOrder').textContent = `${(stats.avg_order_value || 0).toLocaleString('tr-TR')} TL`;
-      document.querySelector('#admStatPending').textContent = stats.pending_count || 0;
-      document.querySelector('#admStatValidated').textContent = (stats.validated_count || 0) + (stats.processing_count || 0);
-      document.querySelector('#admStatCompleted').textContent = stats.closed_count || 0;
-
-      const cats = data.category_distribution || {};
-      const total = stats.total_orders || 1;
-      const bPct = Math.round(((cats.bots || 0) / total) * 100);
-      const uPct = Math.round(((cats.uiux || 0) / total) * 100);
-      const sPct = Math.round(((cats.slides || 0) / total) * 100);
-
-      document.querySelector('#admValBots').textContent = `${cats.bots || 0} Adet (%${bPct})`;
-      document.querySelector('#admBarBots').style.width = `${bPct}%`;
-      document.querySelector('#admValUiUx').textContent = `${cats.uiux || 0} Adet (%${uPct})`;
-      document.querySelector('#admBarUiUx').style.width = `${uPct}%`;
-      document.querySelector('#admValSlides').textContent = `${cats.slides || 0} Adet (%${sPct})`;
-      document.querySelector('#admBarSlides').style.width = `${sPct}%`;
-
-      const recentBody = document.querySelector('#admRecentActivitiesBody');
-      const recent = (data.orders || []).slice(0, 5);
-      if (!recent.length) {
-        recentBody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--text-muted);">Henüz sipariş yok.</td></tr>';
-      } else {
-        recentBody.innerHTML = recent.map(o => `
-          <tr>
-            <td><span class="code-pill">${o.order_code}</span></td>
-            <td>${o.discord_username || '—'}</td>
-            <td><strong>${o.total_price} TL</strong></td>
-            <td>${getStatusBadgeHTML(o.status)}</td>
-          </tr>
-        `).join('');
-      }
+    function renderMetrics() {
+      document.querySelector('#statTotalOrders').textContent = allOrders.length;
+      const validOrders = allOrders.filter(o => o.status === 'validated' || o.status === 'completed');
+      const revenue = validOrders.reduce((sum, o) => sum + Number(o.total_price || o.total_tl || 0), 0);
+      document.querySelector('#statTotalRevenue').textContent = `${revenue} TL`;
+      document.querySelector('#statPendingOrders').textContent = allOrders.filter(o => o.status === 'pending_validation').length;
+      document.querySelector('#statCompletedOrders').textContent = allOrders.filter(o => o.status === 'completed').length;
     }
 
-    function renderTable(orders) {
-      const tbody = document.querySelector('#adminOrdersTableBody');
-      if (!orders.length) {
-        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 30px; color: var(--text-muted);">Kayıt bulunamadı.</td></tr>';
+    function renderTable() {
+      const tbody = document.querySelector('#ordersTableBody');
+      const query = document.querySelector('#orderSearchInput').value.trim().toLowerCase();
+
+      let filtered = allOrders.filter(o => {
+        const matchFilter = currentFilter === 'all' || o.status === currentFilter;
+        const matchSearch = !query || 
+          o.order_code?.toLowerCase().includes(query) || 
+          o.discord_username?.toLowerCase().includes(query) ||
+          (Array.isArray(o.items) && o.items.some(i => (i.title || i.name || '').toLowerCase().includes(query)));
+        return matchFilter && matchSearch;
+      });
+
+      if (!filtered.length) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 30px;">Kriterlere uygun siparis bulunamadi.</td></tr>`;
         return;
       }
 
-      tbody.innerHTML = orders.map(o => {
-        const items = Array.isArray(o.items) ? o.items.map(i => `${i.title || i.name} (${i.quantity || 1})`).join(', ') : '—';
+      tbody.innerHTML = filtered.map(order => {
+        const items = Array.isArray(order.items) 
+          ? order.items.map(i => `${i.title || i.name || 'Urun'} (x${i.quantity || 1})`).join(', ') 
+          : '—';
+        const dateStr = new Date(order.created_at).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' });
+        const badgeHTML = getStatusBadgeHTML(order.status);
+
         return `
           <tr>
-            <td><span class="code-pill" onclick="navigator.clipboard.writeText('${o.order_code}');">${o.order_code}</span></td>
+            <td><strong class="order-code">${order.order_code}</strong></td>
+            <td><strong>@${order.discord_username || 'Bilinmiyor'}</strong></td>
+            <td style="max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${items}</td>
+            <td><b class="price-tag">${order.total_price || order.total_tl || 0} TL</b></td>
+            <td>${badgeHTML}</td>
+            <td style="font-size: 11px; color: var(--text-muted);">${dateStr}</td>
             <td>
-              <div><strong>${o.discord_username || 'Bilinmiyor'}</strong></div>
-              <small style="color: var(--text-muted); font-family: var(--font-mono); font-size: 11px;">ID: ${o.discord_user_id || '—'}</small>
-            </td>
-            <td style="max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${items}</td>
-            <td><strong style="color: #10b981; font-family: var(--font-mono);">${o.total_price} TL</strong></td>
-            <td>${getStatusBadgeHTML(o.status)}</td>
-            <td>
-              <button type="button" class="btn-action-small" onclick="window.openDetailModal('${o.order_code}')">İncele</button>
+              <button type="button" class="btn-action" data-order-id="${order.id}">Detay</button>
             </td>
           </tr>
         `;
       }).join('');
-    }
 
-    function renderClients(orders) {
-      const clientsMap = {};
-      orders.forEach(o => {
-        const user = o.discord_username || 'Misafir';
-        if (!clientsMap[user]) {
-          clientsMap[user] = {
-            username: user,
-            userId: o.discord_user_id || '—',
-            count: 0,
-            totalSpent: 0,
-            lastDate: o.created_at
-          };
-        }
-        clientsMap[user].count++;
-        clientsMap[user].totalSpent += Number(o.total_price) || 0;
+      tbody.querySelectorAll('.btn-action').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.dataset.orderId;
+          const order = allOrders.find(o => o.id === id);
+          if (order) openDetailModal(order);
+        });
       });
-
-      const list = Object.values(clientsMap).sort((a, b) => b.totalSpent - a.totalSpent);
-      const tbody = document.querySelector('#adminClientsTableBody');
-      if (!list.length) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 30px; color: var(--text-muted);">Müşteri kaydı yok.</td></tr>';
-        return;
-      }
-
-      tbody.innerHTML = list.map(c => `
-        <tr>
-          <td><strong>${c.username}</strong></td>
-          <td style="font-family: var(--font-mono); font-size: 11.5px; color: var(--text-muted);">${c.userId}</td>
-          <td><span class="code-pill">${c.count} Sipariş</span></td>
-          <td><strong style="color: #10b981; font-family: var(--font-mono);">${c.totalSpent.toLocaleString('tr-TR')} TL</strong></td>
-          <td style="font-size: 12px; color: var(--text-muted);">${new Date(c.lastDate).toLocaleDateString('tr-TR')}</td>
-        </tr>
-      `).join('');
     }
 
-    // Arama ve Filtre
-    function filterOrders() {
-      const query = document.querySelector('#adminSearchInput').value.trim().toLowerCase();
-      const statusFilter = document.querySelector('#adminStatusFilterSelect').value;
-      const sort = document.querySelector('#adminSortSelect').value;
-
-      let filtered = currentOrders.filter(o => {
-        const matchQ = !query || 
-          (o.order_code && o.order_code.toLowerCase().includes(query)) ||
-          (o.discord_username && o.discord_username.toLowerCase().includes(query)) ||
-          (o.discord_user_id && o.discord_user_id.includes(query));
-
-        let matchS = true;
-        if (statusFilter === 'pending') matchS = o.status === 'pending';
-        else if (statusFilter === 'active') matchS = ['validated', 'queued', 'in_progress'].includes(o.status);
-        else if (statusFilter === 'closed') matchS = o.status === 'closed';
-        else if (statusFilter === 'cancelled') matchS = o.status === 'cancelled';
-
-        return matchQ && matchS;
-      });
-
-      if (sort === 'oldest') filtered.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
-      else if (sort === 'price_high') filtered.sort((a, b) => b.total_price - a.total_price);
-      else if (sort === 'price_low') filtered.sort((a, b) => a.total_price - b.total_price);
-      else filtered.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-
-      renderTable(filtered);
-    }
-
-    document.querySelector('#adminSearchInput').addEventListener('input', filterOrders);
-    document.querySelector('#adminStatusFilterSelect').addEventListener('change', filterOrders);
-    document.querySelector('#adminSortSelect').addEventListener('change', filterOrders);
-    document.querySelector('#adminRefreshBtn').addEventListener('click', loadOrders);
-    document.querySelector('#adminExportCsvBtn').addEventListener('click', () => {
-      exportOrdersToCSV(currentOrders);
-      notify('CSV İndirildi', 'Sipariş listesi Excel formatında kaydedildi.');
-    });
-
-    // Detay Modal
-    let activeDetailOrder = null;
-    window.openDetailModal = (orderCode) => {
-      const order = currentOrders.find(o => o.order_code === orderCode);
-      if (!order) return;
+    function openDetailModal(order) {
       activeDetailOrder = order;
-
       document.querySelector('#modalOrderCode').textContent = order.order_code;
-      document.querySelector('#modalOrderPrice').textContent = `${order.total_price} TL`;
-      document.querySelector('#modalOrderUser').textContent = order.discord_username || '—';
-      document.querySelector('#modalOrderUserId').textContent = order.discord_user_id || '—';
+      document.querySelector('#modalOrderUser').textContent = `@${order.discord_username || 'Musteri'}`;
+      document.querySelector('#modalOrderPrice').textContent = `${order.total_price || order.total_tl || 0} TL`;
       document.querySelector('#modalOrderDate').textContent = new Date(order.created_at).toLocaleString('tr-TR');
 
-      const itemsList = document.querySelector('#modalOrderItemsList');
-      if (Array.isArray(order.items)) {
-        itemsList.innerHTML = order.items.map(i => `
-          <div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid var(--border-light);">
-            <span>• ${i.title || i.name}</span>
-            <strong>${i.price || '—'} TL (x${i.quantity || 1})</strong>
+      const itemsContainer = document.querySelector('#modalOrderItemsList');
+      if (Array.isArray(order.items) && order.items.length) {
+        itemsContainer.innerHTML = order.items.map(i => `
+          <div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.04);">
+            <span>${i.title || i.name || 'Urun'} <small style="color: var(--text-muted);">(x${i.quantity || 1})</small></span>
+            <strong style="color: var(--primary); font-family: var(--font-mono);">${i.price_tl || i.unit_price || 0} TL</strong>
           </div>
         `).join('');
       } else {
-        itemsList.innerHTML = '<div>Kalem bulunamadı.</div>';
+        itemsContainer.innerHTML = '<span style="color: var(--text-muted);">Urun bilgisi yok.</span>';
       }
 
       document.querySelector('#adminOrderDetailDialog').showModal();
-    };
+    }
 
+    // Arama & Filtreler
+    document.querySelector('#orderSearchInput').addEventListener('input', () => renderTable());
+    document.querySelectorAll('.filter-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentFilter = tab.dataset.filter;
+        renderTable();
+      });
+    });
+
+    document.querySelector('#refreshBtn').addEventListener('click', () => {
+      loadOrders();
+      notify('Yenilendi', 'Siparis listesi guncellendi.');
+    });
+
+    document.querySelector('#exportBtn').addEventListener('click', () => {
+      if (!allOrders.length) return notify('Uyari', 'Indirilecek siparis yok.');
+      exportOrdersToCSV(allOrders);
+      notify('Indirildi', 'Siparisler CSV olarak indirildi.');
+    });
+
+    // Modal Butonları
     document.querySelector('#modalActionDone').addEventListener('click', async () => {
       if (!activeDetailOrder) return;
       try {
-        await updateOrderStatusRPC(activeDetailOrder.id, 'closed', 'Founder Web Paneli');
-        notify('Başarılı', `${activeDetailOrder.order_code} siparişi tamamlandı olarak işaretlendi.`);
+        await updateOrderStatusRPC(activeDetailOrder.id, 'completed', 'Founder Web Paneli');
+        notify('Tamamlandi', `${activeDetailOrder.order_code} siparisi tamamlandi.`);
         document.querySelector('#adminOrderDetailDialog').close();
         loadOrders();
       } catch (err) {
@@ -1427,7 +1139,7 @@
       if (!activeDetailOrder) return;
       try {
         await updateOrderStatusRPC(activeDetailOrder.id, 'cancelled', 'Founder Web Paneli');
-        notify('Sipariş İptal Edildi', `${activeDetailOrder.order_code} siparişi iptal edildi.`);
+        notify('Iptal Edildi', `${activeDetailOrder.order_code} siparisi iptal edildi.`);
         document.querySelector('#adminOrderDetailDialog').close();
         loadOrders();
       } catch (err) {

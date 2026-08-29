@@ -122,6 +122,40 @@ export async function updateOrderStatus (orderCode, newStatus, notes = null) {
   return data
 }
 
+export const updateOrderStatusRPC = updateOrderStatus
+
+export function getStatusBadgeHTML (status) {
+  const map = {
+    'pending_validation': { label: 'Bekliyor', class: 'badge-pending' },
+    'validated': { label: 'Onayli', class: 'badge-validated' },
+    'completed': { label: 'Tamamlandi', class: 'badge-completed' },
+    'cancelled': { label: 'Iptal', class: 'badge-cancelled' }
+  }
+  const item = map[status] || { label: status || 'Bilinmiyor', class: 'badge-pending' }
+  return `<span class="badge ${item.class}">${item.label}</span>`
+}
+
+export function exportOrdersToCSV (orders) {
+  if (!orders || !orders.length) return
+  const headers = ['Siparis Kodu', 'Discord Kullanici', 'Toplam Tutar', 'Durum', 'Tarih', 'Kalemler']
+  const rows = orders.map(o => [
+    o.order_code,
+    o.discord_username || '',
+    o.total_price || o.total_tl || 0,
+    o.status,
+    new Date(o.created_at).toISOString(),
+    Array.isArray(o.items) ? o.items.map(i => `${i.title || i.name} (x${i.quantity || 1})`).join('; ') : ''
+  ])
+  const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(e => e.map(val => `"${String(val).replace(/"/g, '""')}"`).join(','))].join('\n')
+  const encodedUri = encodeURI(csvContent)
+  const link = document.createElement('a')
+  link.setAttribute('href', encodedUri)
+  link.setAttribute('download', `monarch_orders_${new Date().toISOString().slice(0, 10)}.csv`)
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+}
+
 function escapeHtml (value) {
   return String(value ?? '').replace(/[&<>'"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[char]))
 }

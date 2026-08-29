@@ -184,7 +184,7 @@
 - [x] Kullanıcının sağladığı hero videosundaki görünür Gemini logosunu, karakter ve sahne düzenini koruyarak kaldırmak. _(Sağ alt köşedeki logo alanı onarıldı; doğrulamada görünür logo/filigran kalmadı.)_
 - [x] Temizlenmiş videoyu Monarch Store hero paneline yerleştirip masaüstü/mobilde doğrulamak ve GitHub Pages’e aktarmak. _(10 saniyelik temiz MP4, statik poster yedeği ve hareket azaltma tercihi desteğiyle üç HTML kopyasına eklendi; masaüstü/mobil önizleme ve üretim derlemesi geçti.)_
 
-- [x] Mağazadaki tüm Discord katılım bağlantılarını `https://discord.gg/sAP3CwA4mP` davetine güncelleyip GitHub Pages’te doğrulamak. _(Hero, topluluk kartı ve alt bilgi bağlantıları üç HTML kopyasında güncellendi; davet Discord’a 301 yönlendirmesiyle yanıt veriyor, GitHub Pages canlı HTML’i eski daveti içermiyor.)_
+- [x] Mağazadaki tüm Discord katılım bağlantılarını `https://discord.gg/monarchstoretr` davetine güncelleyip GitHub Pages’te doğrulamak. _(Hero, topluluk kartı ve alt bilgi bağlantıları üç HTML kopyasında güncellendi; davet Discord’a 301 yönlendirmesiyle yanıt veriyor, GitHub Pages canlı HTML’i eski daveti içermiyor.)_
 
 - [x] Kullanıcının sağladığı topçu ve kırmızı arazi görselini Monarch Store ana banner arka planına yerleştirip beyaz saçlı karakter videosunu korumak. _(Görsel, GitHub sürüm varlığı üzerinden üç HTML kopyasının ana hero arka planına uygulandı; sağ paneldeki karakter videosu korundu.)_
 - [x] Yeni banner görünümünü masaüstü/mobilde test edip GitHub Pages’te doğrulamak. _(Masaüstü ve mobil önizleme başarılı; GitHub Pages canlı HTML’i yeni banner URL’sini içeriyor.)_

@@ -137,24 +137,30 @@
       .links { display: flex; align-items: center; gap: 24px; color: #536071; font-size: 13px; font-weight: 700; }
       .links a:hover { color: var(--blue); }
       .nav-actions { display: flex; align-items: center; gap: 9px; }
-      .theme-toggle { min-height: 38px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 0 10px; border: 1px solid #c8d0da; color: #405160; background: #fff; font: 700 10px "Space Mono", monospace; letter-spacing: .03em; transition: color .18s, background .18s, border-color .18s, transform .16s; }
+      
+      /* Admin Nav Button (Gizli / Oturum Açıldığında Görünür) */
+      .admin-nav-btn { display: none; align-items: center; justify-content: center; gap: 5px; min-height: 38px; padding: 0 12px; border: 1px solid #7c3aed; color: #fff; background: #7c3aed; font: 700 11px "Space Mono", monospace; letter-spacing: .02em; border-radius: 3px; transition: all .18s; }
+      .admin-nav-btn:hover { background: #6d28d9; }
+
+      .theme-toggle { min-height: 38px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 0 10px; border: 1px solid #c8d0da; color: #405160; background: #fff; font: 700 10px "Space Mono", monospace; letter-spacing: .03em; transition: color .18s, background .18s, border-color .18s, transform .16s; border-radius: 3px; }
       .theme-toggle:hover { border-color: var(--blue); color: var(--blue-dark); }
       .theme-toggle:active { transform: scale(.97); }
       .theme-toggle-icon { width: 13px; height: 13px; fill: currentColor; }
       .theme-toggle-sun { display: inline-block; fill: none; stroke: currentColor; stroke-width: 1.7; }
       .theme-toggle-moon { display: none; }
-      .account-button { min-height: 38px; display: inline-flex; align-items: center; justify-content: center; padding: 0 12px; border: 1px solid #3e83b8; color: #fff; background: #3e83b8; font-size: 11px; font-weight: 800; white-space: nowrap; transition: background .18s, transform .18s; }
+      .account-button { min-height: 38px; display: inline-flex; align-items: center; justify-content: center; padding: 0 12px; border: 1px solid #3e83b8; color: #fff; background: #3e83b8; font-size: 11px; font-weight: 800; white-space: nowrap; transition: background .18s, transform .18s; border-radius: 3px; }
       .account-button:hover { background: #286791; }
       .account-button:active { transform: scale(.98); }
       .account-button.is-signed-in { border-color: #b8c2cd; color: #344454; background: #fff; }
-      .cart { min-width: 108px; min-height: 38px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid #c8d0da; color: #263442; background: #fff; font: 700 11px "Space Mono", monospace; letter-spacing: .04em; }
+      .cart { min-width: 108px; min-height: 38px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid #c8d0da; color: #263442; background: #fff; font: 700 11px "Space Mono", monospace; letter-spacing: .04em; border-radius: 3px; }
       .cart strong { min-width: 18px; height: 18px; display: grid; place-items: center; border-radius: 50%; color: #fff; background: var(--blue); font-size: 10px; }
-      .order-dialog { width: min(490px, calc(100% - 32px)); padding: 0; border: 1px solid #d3dce5; color: var(--ink); background: #fff; box-shadow: 0 24px 65px rgba(12, 28, 42, .28); }
+      
+      .order-dialog { width: min(490px, calc(100% - 32px)); padding: 0; border: 1px solid #d3dce5; color: var(--ink); background: #fff; box-shadow: 0 24px 65px rgba(12, 28, 42, .28); border-radius: 6px; }
       .order-dialog::backdrop { background: rgba(11, 25, 37, .56); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
       .order-panel { padding: 27px; }
       .order-panel h2 { margin: 0; padding-right: 32px; font-size: 26px; }
       .order-panel > p { margin: 9px 0 17px; color: var(--muted); font-size: 13px; line-height: 1.65; }
-      .order-summary { margin: 0 0 17px; padding: 12px; border: 1px solid #dce4ea; background: #f5f8fa; }
+      .order-summary { margin: 0 0 17px; padding: 12px; border: 1px solid #dce4ea; background: #f5f8fa; border-radius: 3px; }
       .order-summary ul { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; font-size: 12px; }
       .order-summary li, .order-total { display: flex; justify-content: space-between; gap: 12px; }
       .order-total { margin-top: 12px; padding-top: 11px; border-top: 1px solid #ced9e1; color: #263442; font-size: 13px; }
@@ -166,10 +172,10 @@
 
       .order-form { display: grid; gap: 11px; }
       .order-form label { display: grid; gap: 6px; color: #43505f; font-size: 12px; font-weight: 800; }
-      .order-form input { width: 100%; min-height: 43px; padding: 0 12px; border: 1px solid #cbd4de; color: var(--ink); background: #fff; font: inherit; }
+      .order-form input { width: 100%; min-height: 43px; padding: 0 12px; border: 1px solid #cbd4de; color: var(--ink); background: #fff; font: inherit; border-radius: 3px; }
       .order-form input:focus { border-color: var(--blue); outline: 2px solid rgba(62, 131, 184, .16); }
       .order-form small { margin-top: -3px; color: #778392; font-size: 11px; line-height: 1.45; }
-      .order-submit { min-height: 43px; margin-top: 4px; border: 0; color: #fff; background: var(--blue); font-size: 12px; font-weight: 800; }
+      .order-submit { min-height: 43px; margin-top: 4px; border: 0; color: #fff; background: var(--blue); font-size: 12px; font-weight: 800; border-radius: 3px; }
       .order-submit:disabled { cursor: not-allowed; opacity: .65; }
 
       .hero { position: relative; min-height: 470px; display: flex; align-items: center; overflow: hidden; color: #fff; background: #142333 url("images/hero-banner.webp") center/cover no-repeat; }
@@ -180,7 +186,7 @@
       .tag { display: inline-flex; margin-bottom: 16px; padding: 6px 9px; border: 1px solid rgba(255,255,255,.45); color: #dce9f2; font: 700 10px "Space Mono", monospace; letter-spacing: .08em; text-transform: uppercase; }
       h1 { margin: 0; font-size: clamp(34px, 4.5vw, 56px); line-height: 1.05; letter-spacing: -.05em; }
       .hero p { max-width: 465px; margin: 20px 0 25px; color: #e0e8ee; font-size: 14px; line-height: 1.75; }
-      .button { min-height: 46px; display: inline-flex; align-items: center; justify-content: center; padding: 0 18px; border: 1px solid var(--blue); color: #fff; background: var(--blue); font-size: 13px; font-weight: 800; transition: background .18s, transform .18s; }
+      .button { min-height: 46px; display: inline-flex; align-items: center; justify-content: center; padding: 0 18px; border: 1px solid var(--blue); color: #fff; background: var(--blue); font-size: 13px; font-weight: 800; transition: background .18s, transform .18s; border-radius: 3px; }
       .button:hover { background: var(--blue-dark); }
       .button:active { transform: scale(.98); }
       .button.secondary { margin-left: 8px; border-color: rgba(255,255,255,.66); color: #fff; background: rgba(8,18,27,.38); }
@@ -244,13 +250,14 @@
       footer { border-top: 1px solid var(--line); background: #fff; }
       .footer { min-height: 90px; display: flex; align-items: center; justify-content: space-between; gap: 20px; color: var(--muted); font-size: 11px; }
       .footer-logo { height: 28px; width: auto; object-fit: contain; }
-      .toast { position: fixed; z-index: 20; right: 22px; bottom: 22px; width: min(345px, calc(100% - 44px)); padding: 14px 16px; border: 1px solid #afd1e6; pointer-events: none; opacity: 0; transform: translateY(10px); color: #24445b; background: #f1f9fe; box-shadow: 0 15px 30px rgba(17,40,56,.14); font-size: 12px; transition: opacity .2s, transform .2s; border-radius: 4px; }
+      .toast { position: fixed; z-index: 50; right: 22px; bottom: 22px; width: min(345px, calc(100% - 44px)); padding: 14px 16px; border: 1px solid #afd1e6; pointer-events: none; opacity: 0; transform: translateY(10px); color: #24445b; background: #f1f9fe; box-shadow: 0 15px 30px rgba(17,40,56,.14); font-size: 12px; transition: opacity .2s, transform .2s; border-radius: 4px; }
       .toast.show { opacity: 1; transform: translateY(0); }
       .toast b { display: block; margin-bottom: 3px; }
+      
       .account-dialog { width: min(430px, calc(100% - 32px)); padding: 0; border: 1px solid #d3dce5; color: var(--ink); background: #fff; box-shadow: 0 24px 65px rgba(12, 28, 42, .28); border-radius: 6px; }
       .account-dialog::backdrop { background: rgba(11, 25, 37, .56); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
       .account-panel { padding: 27px; }
-      .dialog-close { position: absolute; top: 12px; right: 13px; width: 34px; height: 34px; border: 0; color: #5e6b79; background: transparent; font-size: 24px; line-height: 1; }
+      .dialog-close { position: absolute; top: 12px; right: 13px; width: 34px; height: 34px; border: 0; color: #5e6b79; background: transparent; font-size: 24px; line-height: 1; cursor: pointer; }
       .account-panel h2 { margin: 0; padding-right: 32px; font-size: 26px; }
       .account-panel > p { margin: 9px 0 20px; color: var(--muted); font-size: 13px; line-height: 1.65; }
       .account-form { display: grid; gap: 13px; }
@@ -261,9 +268,70 @@
       .account-submit { margin-top: 4px; color: #fff; background: var(--blue); }
       .account-switch { color: var(--blue-dark); background: transparent; }
       .account-logout { width: 100%; color: #fff; background: #32485c; }
+      .admin-link-btn { width: 100%; min-height: 38px; margin-top: 6px; border: 1px dashed #7c3aed; color: #7c3aed; background: rgba(124, 58, 237, 0.05); font-size: 11px; font-weight: 800; border-radius: 2px; transition: all .18s; }
+      .admin-link-btn:hover { background: rgba(124, 58, 237, 0.12); border-color: #6d28d9; }
       .account-note { margin: 15px 0 0; color: #7a8591; font-size: 11px; line-height: 1.55; }
       :focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+
+      /* ==================== ADMIN PANEL & 2FA STYLES ==================== */
+      .admin-auth-dialog { width: min(450px, calc(100% - 32px)); padding: 0; border: 1px solid #7c3aed; color: var(--ink); background: #fff; box-shadow: 0 24px 65px rgba(124, 58, 237, .24); border-radius: 8px; z-index: 30; }
+      .admin-auth-dialog::backdrop { background: rgba(15, 23, 42, .75); backdrop-filter: blur(4px); }
+      .admin-auth-panel { padding: 28px; }
+      .admin-auth-panel h2 { margin: 0 0 6px; font-size: 24px; color: #7c3aed; }
+      .admin-auth-panel p { margin: 0 0 18px; color: var(--muted); font-size: 12.5px; line-height: 1.6; }
+      .admin-2fa-box { padding: 14px; border: 1px solid #ddd6fe; background: #f5f3ff; border-radius: 6px; margin-bottom: 14px; font-size: 12px; color: #5b21b6; }
+      .admin-2fa-box b { display: block; font-size: 13px; margin-bottom: 4px; }
+      .countdown-tag { display: inline-block; padding: 2px 7px; background: #7c3aed; color: #fff; border-radius: 3px; font: 700 11px "Space Mono", monospace; margin-top: 4px; }
+
+      /* Admin Dashboard Full Modal */
+      .admin-dashboard-dialog { width: min(1200px, calc(100% - 24px)); height: min(90vh, 850px); max-height: 90vh; padding: 0; border: 1px solid #7c3aed; color: var(--ink); background: #ffffff; box-shadow: 0 30px 80px rgba(0, 0, 0, .35); border-radius: 8px; z-index: 35; display: flex; flex-direction: column; }
+      .admin-dashboard-dialog::backdrop { background: rgba(10, 15, 25, .82); backdrop-filter: blur(5px); }
+      .admin-dash-panel { display: flex; flex-direction: column; height: 100%; overflow: hidden; padding: 24px; }
+      .admin-dash-header { display: flex; align-items: center; justify-content: space-between; gap: 15px; border-bottom: 1px solid var(--line); padding-bottom: 16px; margin-bottom: 20px; }
+      .admin-dash-header h2 { margin: 0; font-size: 24px; display: flex; align-items: center; gap: 9px; }
+      .admin-dash-actions { display: flex; align-items: center; gap: 8px; }
+      .admin-btn-action { min-height: 36px; padding: 0 12px; border: 1px solid var(--line); background: var(--white); color: var(--ink); font: 700 11px "Space Mono", monospace; border-radius: 4px; transition: all .16s; }
+      .admin-btn-action:hover { border-color: var(--blue); color: var(--blue); }
+      .admin-btn-logout { border-color: #fca5a5; color: #dc2626; background: #fef2f2; }
+      .admin-btn-logout:hover { background: #fee2e2; }
+
+      .admin-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+      .admin-stat-card { padding: 14px 18px; border: 1px solid var(--line); background: #f8fafc; border-radius: 6px; }
+      .admin-stat-card small { display: block; color: var(--muted); font: 700 10px "Space Mono", monospace; text-transform: uppercase; margin-bottom: 4px; }
+      .admin-stat-card strong { font-size: 24px; color: var(--ink); font-family: "Space Mono", monospace; }
+
+      .admin-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 14px; margin-bottom: 14px; flex-wrap: wrap; }
+      .admin-filter-tabs { display: flex; gap: 6px; }
+      .admin-filter-tab { padding: 6px 12px; border: 1px solid var(--line); background: #fff; font: 700 11px "Space Mono", monospace; border-radius: 4px; cursor: pointer; color: var(--muted); transition: all .16s; }
+      .admin-filter-tab.active, .admin-filter-tab:hover { border-color: #7c3aed; color: #7c3aed; background: rgba(124, 58, 237, 0.08); }
+      .admin-search-input { min-width: 260px; min-height: 36px; padding: 0 12px; border: 1px solid var(--line); background: #fff; font-size: 12px; border-radius: 4px; }
+
+      .admin-table-container { flex: 1; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: #fff; }
+      .admin-table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; }
+      .admin-table th { position: sticky; top: 0; background: #f1f5f9; color: #475569; font: 700 10px "Space Mono", monospace; text-transform: uppercase; padding: 11px 14px; border-bottom: 1px solid var(--line); z-index: 2; }
+      .admin-table td { padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+      .admin-table tr:hover td { background: #f8fafc; }
+      .admin-code { font: 700 12px "Space Mono", monospace; color: #1e293b; }
+      .admin-user-tag { font-weight: 700; color: #0284c7; }
+      .admin-uid { display: block; font: 9px "Space Mono", monospace; color: #64748b; }
+      .admin-uid-none { display: block; font: 9px "Space Mono", monospace; color: #f59e0b; }
+      .admin-item-pill { display: inline-block; padding: 2px 6px; background: #e2e8f0; color: #1e293b; font-size: 10px; border-radius: 3px; margin: 1px 2px; }
+      .admin-price { font-size: 13px; color: #0f172a; font-family: "Space Mono", monospace; }
+      .admin-date { font: 10px "Space Mono", monospace; color: #64748b; white-space: nowrap; }
       
+      .admin-badge { display: inline-block; padding: 4px 8px; border-radius: 3px; font: 700 9px "Space Mono", monospace; text-transform: uppercase; letter-spacing: .04em; white-space: nowrap; }
+      .badge-pending { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+      .badge-processing { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
+      .badge-validated { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+      .badge-queued { background: #f3e8ff; color: #6b21a8; border: 1px solid #e9d5ff; }
+      .badge-progress { background: #ffedd5; color: #c2410c; border: 1px solid #fed7aa; }
+      .badge-closed { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
+      .badge-cancelled { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+      .badge-default { background: #e2e8f0; color: #334155; }
+
+      .admin-status-select { min-height: 28px; font-size: 11px; padding: 0 6px; border: 1px solid var(--line); border-radius: 3px; background: #fff; cursor: pointer; }
+      .admin-loading, .admin-empty { text-align: center; padding: 35px 0 !important; color: var(--muted); font-size: 13px; }
+
       /* Dark Theme */
       html[data-theme="dark"] body { background: radial-gradient(circle at 82% 0%, rgba(44, 96, 139, .22), transparent 31%), linear-gradient(180deg, #0a111b 0%, #0d1723 100%); }
       html[data-theme="dark"] header { background: #05080c; }
@@ -291,6 +359,25 @@
       html[data-theme="dark"] footer { background: #0d1722; }
       html[data-theme="dark"] .toast { border-color: #31556e; color: #dcecf7; background: #102235; }
       html[data-theme="dark"] .dialog-close { color: #c7d6e1; }
+      
+      /* Dark Theme for Admin Components */
+      html[data-theme="dark"] .admin-auth-dialog, html[data-theme="dark"] .admin-dashboard-dialog { background: #0c1522; border-color: #8b5cf6; color: #f1f5f9; }
+      html[data-theme="dark"] .admin-2fa-box { background: #1e1b4b; border-color: #4338ca; color: #c7d2fe; }
+      html[data-theme="dark"] .admin-stat-card { background: #111e2e; border-color: #1e2e42; }
+      html[data-theme="dark"] .admin-stat-card strong { color: #f8fafc; }
+      html[data-theme="dark"] .admin-filter-tab { background: #111e2e; border-color: #1e2e42; color: #94a3b8; }
+      html[data-theme="dark"] .admin-filter-tab.active { background: rgba(139, 92, 246, 0.18); border-color: #8b5cf6; color: #a78bfa; }
+      html[data-theme="dark"] .admin-search-input { background: #0b1420; border-color: #243548; color: #f1f5f9; }
+      html[data-theme="dark"] .admin-table-container { background: #0c1522; border-color: #1e2e42; }
+      html[data-theme="dark"] .admin-table th { background: #132030; color: #94a3b8; border-color: #1e2e42; }
+      html[data-theme="dark"] .admin-table td { border-color: #1e2e42; color: #e2e8f0; }
+      html[data-theme="dark"] .admin-table tr:hover td { background: #101c2b; }
+      html[data-theme="dark"] .admin-code { color: #38bdf8; }
+      html[data-theme="dark"] .admin-item-pill { background: #1e293b; color: #cbd5e1; }
+      html[data-theme="dark"] .admin-price { color: #f8fafc; }
+      html[data-theme="dark"] .admin-status-select { background: #111e2e; border-color: #243548; color: #f1f5f9; }
+      html[data-theme="dark"] .admin-btn-action { background: #111e2e; border-color: #1e2e42; color: #cbd5e1; }
+      html[data-theme="dark"] .admin-btn-logout { background: #3b1418; border-color: #7f1d1d; color: #fca5a5; }
 
       @media (max-width: 720px) {
         .container { width: min(100% - 30px, 1120px); }
@@ -321,6 +408,9 @@
         .discord-stat { min-width: 0; padding: 16px 0; border-top: 1px solid #d8e3eb; border-right: 0; border-bottom: 1px solid #d8e3eb; text-align: left; }
         .discord-button { width: 100%; }
         .footer { min-height: 104px; flex-direction: column; justify-content: center; align-items: flex-start; }
+        .admin-stats-grid { grid-template-columns: repeat(2, 1fr); }
+        .admin-toolbar { flex-direction: column; align-items: stretch; }
+        .admin-search-input { width: 100%; }
       }
     </style>
   </head>
@@ -340,6 +430,9 @@
           <a href="#iletisim">İletişim</a>
         </div>
         <div class="nav-actions">
+          <!-- Admin Butonu (Yalnızca Giriş Yapıldığında Görünür) -->
+          <button class="admin-nav-btn" id="adminNavButton" type="button">🛡️ Admin</button>
+          
           <button class="account-button" id="accountButton" type="button">Hesap oluştur</button>
           <button class="theme-toggle" id="themeToggle" type="button" aria-label="Açık tema seçili. Koyu temaya geç" aria-pressed="false">
             <svg class="theme-toggle-icon theme-toggle-sun" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="3"></circle><path d="M8 1.25v1.5M8 13.25v1.5M1.25 8h1.5M13.25 8h1.5M3.23 3.23l1.06 1.06M11.71 11.71l1.06 1.06M12.77 3.23l-1.06 1.06M4.29 11.71l-1.06 1.06"></path></svg>
@@ -601,7 +694,112 @@
         </form>
         <button class="account-switch" id="accountSwitch" type="button">Zaten hesabın var mı? Giriş yap</button>
         <button class="account-logout" id="accountLogout" type="button" hidden>Bu cihazda çıkış yap</button>
+        <!-- Yetkili Girişi Butonu -->
+        <button class="admin-link-btn" id="openAdminAuthFromAccount" type="button">🔒 Yetkili Girişi (Admin & 2FA)</button>
         <p class="account-note">Bu, sunucu tabanlı veya cihazlar arası çalışan bir üyelik sistemi değildir.</p>
+      </div>
+    </dialog>
+
+    <!-- 1. ADMIN AUTH & 2FA MODALI -->
+    <dialog class="admin-auth-dialog" id="adminAuthDialog" aria-labelledby="adminAuthTitle">
+      <div class="admin-auth-panel">
+        <button class="dialog-close" onclick="document.querySelector('#adminAuthDialog').close()" type="button" aria-label="Kapat">×</button>
+        <h2 id="adminAuthTitle">🛡️ Yetkili Girişi</h2>
+        <p>Monarch Store yönetim paneline erişmek için yetkili bilgilerinizi ve Discord 2FA kodunuzu girin.</p>
+        
+        <form class="account-form" id="adminAuthForm">
+          <!-- 1. Adım: Kullanıcı Adı ve Şifre -->
+          <div id="adminStep1" style="display: grid; gap: 13px;">
+            <label>
+              Admin Kullanıcı Adı
+              <input id="adminUsername" name="adminUsername" autocomplete="username" placeholder="admin" required />
+            </label>
+            <label>
+              Admin Şifresi
+              <input id="adminPassword" name="adminPassword" type="password" autocomplete="current-password" placeholder="••••••••" required />
+            </label>
+            <button class="account-submit" style="background: #7c3aed;" type="submit">2FA Kodu Gönder ➔</button>
+          </div>
+
+          <!-- 2. Adım: 2FA Discord Güvenlik Kodu -->
+          <div id="adminStep2" style="display: none; gap: 13px;">
+            <div class="admin-2fa-box">
+              <b>🔐 2FA Kodu Gönderildi!</b>
+              Kod Discord sunucusundaki <strong>#admin-2fa</strong> kanalına iletildi. Yalnızca <strong>Founder</strong> ve <strong>Destek</strong> rollerine görünür.
+              <div>Kalan Süre: <span class="countdown-tag" id="admin2FACountdown">05:00</span></div>
+            </div>
+            <label>
+              6 Haneli Güvenlik Kodu
+              <input id="admin2FACode" name="admin2FACode" inputmode="numeric" maxlength="6" placeholder="Örn: 849216" style="letter-spacing: .2em; font-family: 'Space Mono', monospace; font-size: 16px; text-align: center;" />
+            </label>
+            <button class="account-submit" style="background: #7c3aed;" type="submit">Doğrula ve Giriş Yap 🔓</button>
+          </div>
+        </form>
+      </div>
+    </dialog>
+
+    <!-- 2. ADMIN DASHBOARD MODALI -->
+    <dialog class="admin-dashboard-dialog" id="adminDashboardDialog" aria-labelledby="adminDashTitle">
+      <div class="admin-dash-panel">
+        <div class="admin-dash-header">
+          <h2 id="adminDashTitle">🛡️ Monarch Store Yönetim Paneli</h2>
+          <div class="admin-dash-actions">
+            <button class="admin-btn-action" id="adminRefreshBtn" type="button">🔄 Yenile</button>
+            <button class="admin-btn-action admin-btn-logout" id="adminLogoutBtn" type="button">Çıkış Yap</button>
+            <button class="dialog-close" onclick="document.querySelector('#adminDashboardDialog').close()" style="position: static; font-size: 20px;" type="button" aria-label="Kapat">×</button>
+          </div>
+        </div>
+
+        <!-- Özet İstatistikler -->
+        <div class="admin-stats-grid">
+          <div class="admin-stat-card">
+            <small>Toplam Sipariş</small>
+            <strong id="adminStatTotalOrders">0</strong>
+          </div>
+          <div class="admin-stat-card">
+            <small>Toplam Gelir</small>
+            <strong id="adminStatTotalRevenue">0 TL</strong>
+          </div>
+          <div class="admin-stat-card">
+            <small>Bekleyen Talepler</small>
+            <strong id="adminStatPending" style="color: #d97706;">0</strong>
+          </div>
+          <div class="admin-stat-card">
+            <small>Doğrulanan / Sırada</small>
+            <strong id="adminStatValidated" style="color: #16a34a;">0</strong>
+          </div>
+        </div>
+
+        <!-- Toolbar: Filtreler & Arama -->
+        <div class="admin-toolbar">
+          <div class="admin-filter-tabs">
+            <button class="admin-filter-tab active" data-filter="all" type="button">Tümü</button>
+            <button class="admin-filter-tab" data-filter="pending" type="button">Bekleyenler</button>
+            <button class="admin-filter-tab" data-filter="validated" type="button">Doğrulanan / Sırada</button>
+            <button class="admin-filter-tab" data-filter="closed" type="button">Tamamlanan / Kapalı</button>
+          </div>
+          <input class="admin-search-input" id="adminSearchInput" type="search" placeholder="Kod veya Discord adıyla ara…" />
+        </div>
+
+        <!-- Sipariş & Destek Tablosu -->
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Talep Kodu</th>
+                <th>Discord Üyesi</th>
+                <th>Ürünler</th>
+                <th>Tutar</th>
+                <th>Durum</th>
+                <th>Tarih</th>
+                <th>İşlemler</th>
+              </tr>
+            </thead>
+            <tbody id="adminOrdersTableBody">
+              <tr><td colspan="7" class="admin-loading">Veriler yükleniyor…</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </dialog>
 
@@ -609,6 +807,8 @@
     <script type="module">
       import { bindLocalAccountUI } from './account-local.js?v=20260827a';
       import { bindOrderUI, bindCommunityStats } from './store-orders.js';
+      import { initAdminUI } from './admin-panel.js';
+
       const cartCount = document.querySelector('#cartCount');
       const toast = document.querySelector('#toast');
       const toastTitle = document.querySelector('#toastTitle');
@@ -616,9 +816,13 @@
       let cart = 0;
       let toastTimer;
       const notify = (title, text) => { toastTitle.textContent = title; toastText.textContent = text; toast.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('show'), 2800); };
+      
       bindOrderUI({ cartButton: document.querySelector('#cartButton'), cartCount, dialog: document.querySelector('#orderDialog'), closeButton: document.querySelector('#orderClose'), form: document.querySelector('#orderForm'), discordInput: document.querySelector('#orderDiscordUsername'), summary: document.querySelector('#orderSummary'), submitButton: document.querySelector('#orderSubmit'), notify });
       bindCommunityStats({ countElement: document.querySelector('#discordActiveCount'), statusElement: document.querySelector('#discordActiveStatus') });
       bindLocalAccountUI({ button: document.querySelector('#accountButton'), dialog: document.querySelector('#accountDialog'), closeButton: document.querySelector('#accountClose'), form: document.querySelector('#accountForm'), usernameInput: document.querySelector('#accountUsername'), passwordInput: document.querySelector('#accountPassword'), confirmInput: document.querySelector('#accountPasswordConfirm'), title: document.querySelector('#accountTitle'), description: document.querySelector('#accountDescription'), submitButton: document.querySelector('#accountSubmit'), switchButton: document.querySelector('#accountSwitch'), logoutButton: document.querySelector('#accountLogout'), notify });
+
+      // Admin Paneli & 2FA Başlatma
+      initAdminUI({ notify });
 
       // Kategori sekme tıklama etkileşimi
       document.querySelectorAll('.cat-tab').forEach(tab => {

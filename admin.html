@@ -731,11 +731,17 @@
       </nav>
 
       <div class="sidebar-footer">
-        <div>
-          <span class="user-tag" id="dashAdminUser">admin</span>
-          <span class="user-role" id="dashDiscordTag">@eververity</span>
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+          <img id="dashAdminAvatar" src="images/lena-officer-avatar.jpg" alt="Avatar" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #38bdf8; box-shadow: 0 0 10px rgba(56,189,248,0.3);" />
+          <div style="overflow: hidden;">
+            <span class="user-tag" id="dashAdminUser" style="font-weight: 700; display: block; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">admin</span>
+            <span class="user-role" id="dashDiscordTag" style="font-size: 11px; color: var(--text-muted); display: block;">@eververity</span>
+          </div>
         </div>
-        <button type="button" id="dashLogoutBtn" class="btn-logout">Cikis</button>
+        <div style="display: flex; gap: 6px;">
+          <button type="button" id="dashProfileBtn" style="flex: 1; min-height: 32px; background: rgba(56,189,248,0.12); border: 1px solid rgba(56,189,248,0.35); color: #38bdf8; font: 700 11px var(--font-mono); border-radius: 4px; cursor: pointer; transition: all 0.15s;">⚙️ Profil</button>
+          <button type="button" id="dashLogoutBtn" class="btn-logout" style="min-height: 32px;">Çıkış</button>
+        </div>
       </div>
     </aside>
 
@@ -745,13 +751,14 @@
       <header class="top-bar">
         <div class="top-bar-left">
           <span class="tactical-dot"></span>
-          <h1 style="font-size: 15px; font-weight: 800; font-family: var(--font-mono); text-transform: uppercase;">Siparis Kontrol Merkezi</h1>
+          <h1 style="font-size: 15px; font-weight: 800; font-family: var(--font-mono); text-transform: uppercase;">Sipariş & Destek Kontrol Merkezi</h1>
           <span class="clock-pill" id="dashClock">--:--:--</span>
         </div>
         <div class="top-bar-actions">
+          <button type="button" id="adminTopProfileBtn" class="btn-secondary" style="color: #38bdf8; border-color: rgba(56,189,248,0.4); background: rgba(56,189,248,0.08);">👤 Profilimi Düzenle</button>
           <button type="button" id="refreshBtn" class="btn-secondary">Yenile</button>
-          <button type="button" id="exportBtn" class="btn-secondary">CSV Indir</button>
-          <button type="button" id="deleteAllBtn" class="btn-secondary" style="color: #f87171; border-color: rgba(244,63,94,0.4); background: rgba(244,63,94,0.08);">Tumunu Sil</button>
+          <button type="button" id="exportBtn" class="btn-secondary">CSV İndir</button>
+          <button type="button" id="deleteAllBtn" class="btn-secondary" style="color: #f87171; border-color: rgba(244,63,94,0.4); background: rgba(244,63,94,0.08);">Tümünü Sil</button>
         </div>
       </header>
 
@@ -760,7 +767,7 @@
         <!-- Top Metrics -->
         <div class="metrics-grid">
           <div class="metric-card">
-            <span class="metric-title">Toplam Siparis</span>
+            <span class="metric-title">Toplam Sipariş & Talep</span>
             <span class="metric-value" id="statTotalOrders">0</span>
           </div>
           <div class="metric-card">
@@ -780,14 +787,14 @@
         <!-- Orders Table Card -->
         <div class="table-container">
           <div class="table-head-bar">
-            <input type="text" id="orderSearchInput" class="search-input" placeholder="Siparis kodu veya Discord ara...">
+            <input type="text" id="orderSearchInput" class="search-input" placeholder="Sipariş kodu veya Discord ara...">
             <div class="filter-tabs">
-              <button type="button" class="filter-tab active" data-filter="all">Tumu</button>
-              <button type="button" class="filter-tab" data-filter="support">Destek</button>
+              <button type="button" class="filter-tab active" data-filter="all">Tümü</button>
+              <button type="button" class="filter-tab" data-filter="support">Destek Talepleri</button>
               <button type="button" class="filter-tab" data-filter="pending_validation">Bekleyen</button>
-              <button type="button" class="filter-tab" data-filter="validated">Onayli</button>
+              <button type="button" class="filter-tab" data-filter="validated">Onaylı</button>
               <button type="button" class="filter-tab" data-filter="completed">Tamamlanan</button>
-              <button type="button" class="filter-tab" data-filter="cancelled">Iptal</button>
+              <button type="button" class="filter-tab" data-filter="cancelled">İptal</button>
             </div>
           </div>
 
@@ -795,17 +802,17 @@
             <table>
               <thead>
                 <tr>
-                  <th>Siparis Kodu</th>
-                  <th>Musteri (Discord)</th>
-                  <th>Urunler</th>
+                  <th>Sipariş / Talep Kodu</th>
+                  <th>Müşteri (Discord)</th>
+                  <th>Tür & Kalemler</th>
                   <th>Tutar</th>
                   <th>Durum</th>
                   <th>Tarih</th>
-                  <th>Islem</th>
+                  <th>İşlem</th>
                 </tr>
               </thead>
               <tbody id="ordersTableBody">
-                <tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 30px;">Siparisler yukleniyor...</td></tr>
+                <tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 30px;">Siparişler yükleniyor...</td></tr>
               </tbody>
             </table>
           </div>
@@ -814,40 +821,147 @@
     </main>
   </div>
 
-  <!-- ================= DETAY MODAL ================= -->
-  <dialog class="detail-dialog" id="adminOrderDetailDialog">
-    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
-      <div>
-        <span class="login-hero-badge" style="margin-bottom: 4px;">SIPARIS DETAYI</span>
-        <h3 id="modalOrderCode" style="font-family: var(--font-mono); font-size: 20px; color: var(--primary);">—</h3>
+  <!-- ================= DETAY & DESTEK YÖNETİM MODALI (FERAH & GENİŞLETİLMİŞ) ================= -->
+  <dialog class="detail-dialog" id="adminOrderDetailDialog" style="max-width: 1240px; width: 95vw; max-height: 92vh; background: #070d14; border: 1px solid var(--border); border-radius: 8px; color: var(--text); padding: 24px; box-shadow: 0 25px 80px rgba(0,0,0,0.85), 0 0 50px rgba(56,189,248,0.15);">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 14px;">
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <span class="login-hero-badge" style="margin: 0;">MONARCH WORKSPACE</span>
+        <h3 id="modalOrderCode" style="font-family: var(--font-mono); font-size: 22px; color: var(--primary); margin: 0;">—</h3>
+        <span id="modalHeaderStatusBadge"></span>
       </div>
-      <button type="button" onclick="document.querySelector('#adminOrderDetailDialog').close()" style="background: transparent; border: 0; color: var(--text-muted); font-size: 22px; cursor: pointer;">×</button>
+      <button type="button" onclick="document.querySelector('#adminOrderDetailDialog').close()" style="background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 4px; color: var(--text-muted); font-size: 18px; width: 34px; height: 34px; cursor: pointer; display: grid; place-items: center;">✕</button>
     </div>
 
-    <div id="modalNormalInfoGrid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; font-size: 12.5px;">
-      <div><span style="color: var(--text-muted); display: block;">Musteri:</span><strong id="modalOrderUser">—</strong></div>
-      <div><span style="color: var(--text-muted); display: block;">Toplam Tutar:</span><strong id="modalOrderPrice" class="price-tag">—</strong></div>
-      <div style="grid-column: span 2;"><span style="color: var(--text-muted); display: block;">Tarih:</span><strong id="modalOrderDate">—</strong></div>
+    <!-- Standart Siparişler İçin Özet Alanı -->
+    <div id="modalNormalInfoGrid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 18px; font-size: 13px;">
+      <div style="background: #0a111b; border: 1px solid var(--border); border-radius: 6px; padding: 12px;"><span style="color: var(--text-muted); display: block; font: 700 10px var(--font-mono); text-transform: uppercase;">Müşteri:</span><strong id="modalOrderUser" style="color: #38bdf8;">—</strong></div>
+      <div style="background: #0a111b; border: 1px solid var(--border); border-radius: 6px; padding: 12px;"><span style="color: var(--text-muted); display: block; font: 700 10px var(--font-mono); text-transform: uppercase;">Toplam Tutar:</span><strong id="modalOrderPrice" class="price-tag" style="font-size: 15px;">—</strong></div>
+      <div style="background: #0a111b; border: 1px solid var(--border); border-radius: 6px; padding: 12px;"><span style="color: var(--text-muted); display: block; font: 700 10px var(--font-mono); text-transform: uppercase;">Oluşturulma Tarihi:</span><strong id="modalOrderDate" style="color: var(--text);">—</strong></div>
     </div>
 
-    <div style="margin-bottom: 16px;">
-      <span id="modalItemsTitle" style="color: var(--text-muted); display: block; font: 700 10px var(--font-mono); text-transform: uppercase; margin-bottom: 6px;">Siparis Kalemleri / Destek Mesajlari:</span>
-      <div id="modalOrderItemsList" style="background: #070d14; border: 1px solid var(--border); border-radius: 4px; padding: 10px; max-height: 200px; overflow-y: auto; font-size: 12px;"></div>
+    <!-- İçerik Alanı (Sipariş Kalemleri veya Ferah Destek Konuşma Akışı) -->
+    <div style="margin-bottom: 20px;">
+      <span id="modalItemsTitle" style="color: var(--text-muted); display: block; font: 700 11px var(--font-mono); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.05em;">Sipariş Kalemleri / Canlı Destek Akışı:</span>
+      <div id="modalOrderItemsList" style="background: #070d14; border: 1px solid var(--border); border-radius: 6px; padding: 14px; font-size: 13px;"></div>
     </div>
 
     <!-- Destek Yanıtlama Alanı (Sadece Destek Taleplerinde Görünür) -->
-    <div id="modalSupportReplySection" style="display: none; margin-bottom: 14px; background: rgba(56,189,248,0.05); border: 1px solid rgba(56,189,248,0.3); border-radius: 4px; padding: 12px;">
-      <span style="color: #38bdf8; display: block; font: 700 11px var(--font-mono); text-transform: uppercase; margin-bottom: 6px;">Yönetici Yanıtı Yaz:</span>
-      <textarea id="modalAdminReplyText" rows="2" placeholder="Kullanıcıya iletilecek destek yanıtınızı yazın..." style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px; background: #070d14; color: var(--text); font-family: var(--font-body); font-size: 12px; margin-bottom: 8px; resize: vertical;"></textarea>
-      <button type="button" id="modalAdminSendReplyBtn" style="width: 100%; min-height: 36px; background: #0284c7; border: 0; color: #fff; font: 700 11px var(--font-mono); border-radius: 4px; cursor: pointer;">Yanıtı Gönder (Site & Discord)</button>
+    <div id="modalSupportReplySection" style="display: none; margin-bottom: 18px; background: rgba(56,189,248,0.04); border: 1px solid rgba(56,189,248,0.3); border-radius: 8px; padding: 18px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <span style="color: #38bdf8; font: 700 12px var(--font-mono); text-transform: uppercase;">🛡️ Yönetici Yanıtı İlet (Site & Discord):</span>
+        <span style="color: var(--text-muted); font-size: 11px;">Mesajınız Discord ticket kanalına Embed olarak yansıtılacaktır.</span>
+      </div>
+
+      <!-- Yönetici Hızlı Yanıt Preset Çipleri -->
+      <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
+        <button type="button" class="admin-quick-chip" data-text="Merhaba, Monarch Destek Ekibi olarak talebinizi aldık. Nasıl yardımcı olabiliriz?" style="background: #0a111b; border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-size: 11px; padding: 5px 10px; cursor: pointer;">👋 Karşılama</button>
+        <button type="button" class="admin-quick-chip" data-text="İşleminiz başarıyla tamamlanmıştır. Lütfen kontrol sağlayınız." style="background: #0a111b; border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-size: 11px; padding: 5px 10px; cursor: pointer;">✅ Tamamlandı</button>
+        <button type="button" class="admin-quick-chip" data-text="Gerekli yetkilendirme ve rol tanımlamalarınız Discord sunucumuzda yapılmıştır." style="background: #0a111b; border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-size: 11px; padding: 5px 10px; cursor: pointer;">🔑 Rol/Yetki Verildi</button>
+        <button type="button" class="admin-quick-chip" data-text="Talebiniz teknik ekibimiz tarafından incelenmektedir, lütfen kısa bir süre bekleyiniz." style="background: #0a111b; border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-size: 11px; padding: 5px 10px; cursor: pointer;">⏳ İnceleniyor</button>
+      </div>
+
+      <textarea id="modalAdminReplyText" rows="4" placeholder="Müşteriye iletilecek resmi destek yanıtınızı detaylı olarak buraya yazın..." style="width: 100%; min-height: 100px; padding: 12px; border: 1px solid var(--border); border-radius: 6px; background: #070d14; color: var(--text); font-family: var(--font-body); font-size: 13px; margin-bottom: 12px; resize: vertical; line-height: 1.5;"></textarea>
+      
+      <div style="display: flex; gap: 10px;">
+        <button type="button" id="modalAdminSendReplyBtn" style="flex: 2; min-height: 42px; background: #0284c7; border: 0; color: #fff; font: 700 12px var(--font-mono); border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">🚀 Yanıtı Gönder (Site & Discord)</button>
+        <button type="button" id="modalAdminCloseTicketBtn" style="flex: 1; min-height: 42px; background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.4); color: #ef4444; font: 700 12px var(--font-mono); border-radius: 4px; cursor: pointer;">🔒 Talebi Çöz & Kapat</button>
+      </div>
     </div>
 
+    <!-- Aksiyon Butonları -->
     <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-      <button type="button" id="modalActionDone" style="flex: 1; min-height: 38px; background: #16a34a; border: 0; color: #fff; font: 700 11px var(--font-mono); border-radius: 4px; cursor: pointer;">Tamamla (Kapat)</button>
-      <button type="button" id="modalActionCancel" style="flex: 1; min-height: 38px; background: #e11d48; border: 0; color: #fff; font: 700 11px var(--font-mono); border-radius: 4px; cursor: pointer;">Iptal Et</button>
-      <button type="button" id="modalActionDelete" style="flex: 1; min-height: 38px; background: #7f1d1d; border: 1px solid #b91c1c; color: #fca5a5; font: 700 11px var(--font-mono); border-radius: 4px; cursor: pointer;">Siparisi Sil</button>
+      <button type="button" id="modalActionDone" style="flex: 1; min-height: 40px; background: #16a34a; border: 0; color: #fff; font: 700 11px var(--font-mono); border-radius: 4px; cursor: pointer;">Siparişi Onayla</button>
+      <button type="button" id="modalActionCancel" style="flex: 1; min-height: 40px; background: #e11d48; border: 0; color: #fff; font: 700 11px var(--font-mono); border-radius: 4px; cursor: pointer;">İptal Et</button>
+      <button type="button" id="modalActionDelete" style="flex: 1; min-height: 40px; background: #7f1d1d; border: 1px solid #b91c1c; color: #fca5a5; font: 700 11px var(--font-mono); border-radius: 4px; cursor: pointer;">Kaydı Sil</button>
+      <button type="button" id="modalActionCopy" style="flex: 1; min-height: 40px; background: #112030; border: 1px solid var(--border); color: #38bdf8; font: 700 11px var(--font-mono); border-radius: 4px; cursor: pointer;">Metni Kopyala</button>
     </div>
-    <button type="button" id="modalActionCopy" style="width: 100%; min-height: 38px; background: #0284c7; border: 0; color: #fff; font: 700 11px var(--font-mono); border-radius: 4px; cursor: pointer;">Siparis Metnini Kopyala</button>
+  </dialog>
+
+  <!-- ================= 3. GELİŞMİŞ YÖNETİCİ PROFİL DÜZENLEME MODALI ================= -->
+  <dialog class="detail-dialog" id="adminProfileDialog" style="max-width: 680px; width: 92vw; background: #070d14; border: 1px solid var(--border); border-radius: 8px; color: var(--text); padding: 24px; box-shadow: 0 25px 80px rgba(0,0,0,0.85), 0 0 50px rgba(56,189,248,0.2);">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
+      <div>
+        <span class="login-hero-badge" style="margin-bottom: 2px;">ADMIN CONTROL</span>
+        <h3 style="font-family: var(--font-mono); font-size: 18px; color: var(--primary); margin: 0;">Yönetici Profil Özelleştirme</h3>
+      </div>
+      <button type="button" onclick="document.querySelector('#adminProfileDialog').close()" style="background: transparent; border: 0; color: var(--text-muted); font-size: 22px; cursor: pointer;">✕</button>
+    </div>
+
+    <form id="adminProfileForm" style="display: grid; gap: 16px;">
+      <!-- Canlı Profil Banner Önizlemesi -->
+      <div style="background: linear-gradient(135deg, rgba(56,189,248,0.12), rgba(15,23,42,0.6)); border: 1px solid var(--border); border-radius: 8px; padding: 16px; display: flex; align-items: center; gap: 16px;">
+        <div style="position: relative;">
+          <img id="adminProfilePreviewAvatar" src="images/lena-officer-avatar.jpg" alt="Admin Avatar" style="width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 3px solid #38bdf8; box-shadow: 0 0 20px rgba(56,189,248,0.4);" />
+          <span style="position: absolute; bottom: 0; right: 0; width: 14px; height: 14px; background: #22c55e; border: 2px solid #070d14; border-radius: 50%;"></span>
+        </div>
+        <div>
+          <strong id="adminProfilePreviewName" style="font-size: 17px; color: var(--text); display: block;">admin</strong>
+          <span id="adminProfilePreviewRole" class="badge" style="background: rgba(34,197,94,0.15); color: #22c55e; border: 1px solid rgba(34,197,94,0.3); font-size: 10px; padding: 2px 8px; margin-top: 4px;">Kurucu / Founder</span>
+        </div>
+      </div>
+
+      <!-- Avatar Seçici Galeri -->
+      <div>
+        <label style="font: 700 11px var(--font-mono); color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 8px;">Avatar Seçimi:</label>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+          <button type="button" class="admin-avatar-btn active" data-url="images/default-avatar.jpg" data-name="Anime Karakteri" style="background: #0a111b; border: 2px solid var(--border); border-radius: 6px; padding: 8px; cursor: pointer; text-align: center;">
+            <img src="images/default-avatar.jpg" alt="Anime" width="44" height="44" style="border-radius: 50%; display: block; margin: 0 auto 4px; object-fit: cover;" />
+            <span style="font-size: 10px; color: var(--text); display: block;">L / Anime</span>
+          </button>
+          <button type="button" class="admin-avatar-btn" data-url="images/lena-officer-avatar.jpg" data-name="Lena Komutanı" style="background: #0a111b; border: 2px solid var(--border); border-radius: 6px; padding: 8px; cursor: pointer; text-align: center;">
+            <img src="images/lena-officer-avatar.jpg" alt="Lena" width="44" height="44" style="border-radius: 4px; display: block; margin: 0 auto 4px; object-fit: cover;" />
+            <span style="font-size: 10px; color: var(--text); display: block;">Lena</span>
+          </button>
+          <button type="button" class="admin-avatar-btn" data-url="images/mascot.webp" data-name="Monarch Maskot" style="background: #0a111b; border: 2px solid var(--border); border-radius: 6px; padding: 8px; cursor: pointer; text-align: center;">
+            <img src="images/mascot.webp" alt="Maskot" width="44" height="44" style="border-radius: 4px; display: block; margin: 0 auto 4px; object-fit: cover;" />
+            <span style="font-size: 10px; color: var(--text); display: block;">Maskot</span>
+          </button>
+          <button type="button" class="admin-avatar-btn" data-url="images/hero-whitehair.webp" data-name="Saha Operatörü" style="background: #0a111b; border: 2px solid var(--border); border-radius: 6px; padding: 8px; cursor: pointer; text-align: center;">
+            <img src="images/hero-whitehair.webp" alt="Operatör" width="44" height="44" style="border-radius: 4px; display: block; margin: 0 auto 4px; object-fit: cover;" />
+            <span style="font-size: 10px; color: var(--text); display: block;">Operatör</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Bilgi Girişleri -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+        <label style="font: 700 11px var(--font-mono); color: var(--text-muted);">
+          Görünen Ad / Yetkili Nick
+          <input type="text" id="adminProfileDisplayInput" style="width: 100%; min-height: 38px; padding: 0 10px; border: 1px solid var(--border); border-radius: 4px; background: #0a111b; color: var(--text); margin-top: 4px;" />
+        </label>
+        <label style="font: 700 11px var(--font-mono); color: var(--text-muted);">
+          Unvan / Rol
+          <select id="adminProfileRoleInput" style="width: 100%; min-height: 38px; padding: 0 10px; border: 1px solid var(--border); border-radius: 4px; background: #0a111b; color: var(--text); margin-top: 4px;">
+            <option value="Kurucu / Founder">Kurucu / Founder</option>
+            <option value="Sistem Yöneticisi">Sistem Yöneticisi</option>
+            <option value="Destek Sorumlusu">Destek Sorumlusu</option>
+            <option value="Saha Operatörü">Saha Operatörü</option>
+          </select>
+        </label>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+        <label style="font: 700 11px var(--font-mono); color: var(--text-muted);">
+          Discord Kullanıcı Adı
+          <input type="text" id="adminProfileDiscordInput" placeholder="Örn: eververity" style="width: 100%; min-height: 38px; padding: 0 10px; border: 1px solid var(--border); border-radius: 4px; background: #0a111b; color: var(--text); margin-top: 4px;" />
+        </label>
+        <label style="font: 700 11px var(--font-mono); color: var(--text-muted);">
+          E-Posta Adresi
+          <input type="email" id="adminProfileEmailInput" placeholder="admin@monarchstore.com" style="width: 100%; min-height: 38px; padding: 0 10px; border: 1px solid var(--border); border-radius: 4px; background: #0a111b; color: var(--text); margin-top: 4px;" />
+        </label>
+      </div>
+
+      <!-- Şifre Değiştirme -->
+      <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 6px; padding: 12px;">
+        <span style="font: 700 10.5px var(--font-mono); color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 8px;">Admin Şifresini Değiştir (İsteğe Bağlı):</span>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <input type="password" id="adminProfileNewPwd" placeholder="Yeni şifre (en az 6 karakter)..." style="min-height: 38px; padding: 0 10px; border: 1px solid var(--border); border-radius: 4px; background: #0a111b; color: var(--text);" />
+          <input type="password" id="adminProfileConfirmPwd" placeholder="Yeni şifre tekrar..." style="min-height: 38px; padding: 0 10px; border: 1px solid var(--border); border-radius: 4px; background: #0a111b; color: var(--text);" />
+        </div>
+      </div>
+
+      <button type="submit" id="adminProfileSaveBtn" style="width: 100%; min-height: 42px; background: #0284c7; border: 0; color: #fff; font: 700 12px var(--font-mono); border-radius: 4px; cursor: pointer;">Değişiklikleri Kaydet</button>
+    </form>
   </dialog>
 
   <!-- Toast -->
@@ -867,8 +981,11 @@
       cancelSingleOrder,
       cancelAllActiveOrders,
       exportOrdersToCSV, 
-      getStatusBadgeHTML 
-    } from './admin-panel.js?v=20260829_atomic_v4';
+      getStatusBadgeHTML,
+      appendAdminTicketReply,
+      getAdminProfileData,
+      saveAdminProfileData
+    } from './admin-panel.js?v=20260829_atomic_v5';
 
     const loginRoot = document.querySelector('#adminLoginRoot');
     const appRoot = document.querySelector('#adminAppRoot');
@@ -894,14 +1011,17 @@
       }
     }, 1000);
 
-    // Oturum Kontrolü
+    // Oturum Kontrolü & Profil Senkronizasyonu
     function checkAuth() {
       const session = getAdminSession();
       if (session) {
         loginRoot.style.display = 'none';
         appRoot.classList.add('active');
-        document.querySelector('#dashAdminUser').textContent = session.username;
-        const disc = session.discordUsername ? `@${session.discordUsername}` : '@yetkili';
+        const profile = getAdminProfileData(session.username);
+        const avatarEl = document.querySelector('#dashAdminAvatar');
+        if (avatarEl) avatarEl.src = profile.avatarUrl || 'images/lena-officer-avatar.jpg';
+        document.querySelector('#dashAdminUser').textContent = profile.username || session.username;
+        const disc = profile.discordUsername || session.discordUsername ? `@${profile.discordUsername || session.discordUsername}` : '@yetkili';
         document.querySelector('#dashDiscordTag').textContent = disc;
         loadOrders();
       } else {
@@ -909,6 +1029,91 @@
         appRoot.classList.remove('active');
       }
     }
+
+    // Admin Profil Düzenleme Açılışı
+    const openAdminProfile = () => {
+      const session = getAdminSession();
+      if (!session) return;
+      const profile = getAdminProfileData(session.username);
+      const dialog = document.querySelector('#adminProfileDialog');
+      if (!dialog) return;
+
+      document.querySelector('#adminProfilePreviewAvatar').src = profile.avatarUrl || 'images/lena-officer-avatar.jpg';
+      document.querySelector('#adminProfilePreviewName').textContent = profile.username || session.username;
+      document.querySelector('#adminProfilePreviewRole').textContent = profile.role || 'Kurucu / Founder';
+      document.querySelector('#adminProfileDisplayInput').value = profile.username || session.username;
+      document.querySelector('#adminProfileRoleInput').value = profile.role || 'Kurucu / Founder';
+      document.querySelector('#adminProfileDiscordInput').value = profile.discordUsername || session.discordUsername || '';
+      document.querySelector('#adminProfileEmailInput').value = profile.email || '';
+      document.querySelector('#adminProfileNewPwd').value = '';
+      document.querySelector('#adminProfileConfirmPwd').value = '';
+
+      dialog.querySelectorAll('.admin-avatar-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.url === profile.avatarUrl);
+      });
+
+      dialog.showModal();
+    };
+
+    document.querySelector('#dashProfileBtn')?.addEventListener('click', openAdminProfile);
+    document.querySelector('#adminTopProfileBtn')?.addEventListener('click', openAdminProfile);
+
+    // Admin Avatar Seçimi
+    document.querySelectorAll('.admin-avatar-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.admin-avatar-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const previewAvatar = document.querySelector('#adminProfilePreviewAvatar');
+        if (previewAvatar) previewAvatar.src = btn.dataset.url;
+      });
+    });
+
+    // Admin Profil Formu Kaydetme
+    document.querySelector('#adminProfileForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const session = getAdminSession();
+      if (!session) return;
+
+      const activeAvatarBtn = document.querySelector('.admin-avatar-btn.active');
+      const avatarUrl = activeAvatarBtn ? activeAvatarBtn.dataset.url : 'images/lena-officer-avatar.jpg';
+      const username = document.querySelector('#adminProfileDisplayInput').value.trim() || session.username;
+      const role = document.querySelector('#adminProfileRoleInput').value;
+      const discordUsername = document.querySelector('#adminProfileDiscordInput').value.trim().replace(/^@/, '');
+      const email = document.querySelector('#adminProfileEmailInput').value.trim();
+      const newPwd = document.querySelector('#adminProfileNewPwd').value;
+      const confirmPwd = document.querySelector('#adminProfileConfirmPwd').value;
+
+      if (newPwd && newPwd.length < 6) {
+        notify('Hata', 'Yeni şifre en az 6 karakter olmalıdır.');
+        return;
+      }
+      if (newPwd && newPwd !== confirmPwd) {
+        notify('Hata', 'Şifreler birbiriyle eşleşmiyor.');
+        return;
+      }
+
+      const saveBtn = document.querySelector('#adminProfileSaveBtn');
+      try {
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Kaydediliyor…';
+        await saveAdminProfileData(session.username, {
+          avatarUrl,
+          role,
+          discordUsername,
+          email,
+          newPassword: newPwd || undefined
+        });
+
+        notify('Profil Güncellendi', 'Yönetici profiliniz başarıyla kaydedildi.');
+        document.querySelector('#adminProfileDialog').close();
+        checkAuth();
+      } catch (err) {
+        notify('Hata', err.message);
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Değişiklikleri Kaydet';
+      }
+    });
 
     // Giriş & 2FA Formu
     let activeChallengeId = null;
@@ -928,7 +1133,7 @@
       togglePwdBtn.addEventListener('click', () => {
         const isPwd = passwordInput.type === 'password';
         passwordInput.type = isPwd ? 'text' : 'password';
-        togglePwdBtn.textContent = isPwd ? 'GIZLE' : 'GOSTER';
+        togglePwdBtn.textContent = isPwd ? 'GİZLE' : 'GÖSTER';
       });
     }
 
@@ -942,18 +1147,18 @@
         if (!code) return;
 
         submitBtn.disabled = true;
-        submitBtn.textContent = 'Dogrulaniyor…';
+        submitBtn.textContent = 'Doğrulanıyor…';
         try {
           await verifyAdmin2FA(activeChallengeId, code, discUser);
           clearInterval(countdownTimer);
-          notify('Giris Basarili', 'Monarch Store Yonetim Paneline hos geldiniz.');
+          notify('Giriş Başarılı', 'Monarch Store Yönetim Paneline hoş geldiniz.');
           checkAuth();
         } catch (err) {
-          notify('Hata', err.message || 'Gecersiz 2FA kodu.');
+          notify('Hata', err.message || 'Geçersiz 2FA kodu.');
           codeInput.focus();
         } finally {
           submitBtn.disabled = false;
-          submitBtn.textContent = 'Dogrula ve Giris Yap';
+          submitBtn.textContent = 'Doğrula ve Giriş Yap';
         }
         return;
       }
@@ -975,8 +1180,8 @@
           usernameInput.required = false;
           passwordInput.required = false;
           codeInput.required = true;
-          submitBtn.textContent = 'Dogrula ve Giris Yap';
-          notify('2FA Kodu Gonderildi', 'Discord #admin-2fa kanalina guvenlik kodunuz iletildi.');
+          submitBtn.textContent = 'Doğrula ve Giriş Yap';
+          notify('2FA Kodu Gönderildi', 'Discord #admin-2fa kanalına güvenlik kodunuz iletildi.');
           codeInput.focus();
 
           let remain = 300;
@@ -984,47 +1189,41 @@
           countdownTimer = setInterval(() => {
             const min = Math.floor(remain / 60);
             const sec = remain % 60;
-            if (cdEl) cdEl.textContent = `${min}:${sec < 10 ? '0' : ''}${sec}`;
-            if (remain <= 0) {
-              clearInterval(countdownTimer);
-              if (cdEl) cdEl.textContent = 'Sure Doldu';
-            }
+            if (cdEl) cdEl.textContent = `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
             remain--;
+            if (remain < 0) {
+              clearInterval(countdownTimer);
+              notify('Süre Doldu', '2FA kodunun geçerlilik süresi bitti. Lütfen tekrar deneyin.');
+              location.reload();
+            }
           }, 1000);
+        } else {
+          notify('Giriş Başarılı', 'Monarch Store Yönetim Paneline hoş geldiniz.');
+          checkAuth();
         }
       } catch (err) {
-        notify('Hata', err.message || 'Kullanici adi veya sifre hatali.');
+        notify('Giriş Başarısız', err.message);
       } finally {
         submitBtn.disabled = false;
+        if (!activeChallengeId) submitBtn.textContent = 'Giriş Yap (2FA ile)';
       }
     });
 
-    // Çıkış
     document.querySelector('#dashLogoutBtn').addEventListener('click', () => {
       clearAdminSession();
-      activeChallengeId = null;
-      clearInterval(countdownTimer);
-      standardWrap.style.display = 'grid';
-      twoFAWrap.style.display = 'none';
-      usernameInput.required = true;
-      passwordInput.required = true;
-      codeInput.required = false;
-      submitBtn.textContent = 'Giris Yap';
-      notify('Cikis Yapildi', 'Oturum sonlandirildi.');
-      checkAuth();
+      location.reload();
     });
 
-    // Siparişleri Yükleme & Tablo
+    // Sipariş Listesi & Tablo
     let allOrders = [];
     let currentFilter = 'all';
     let activeDetailOrder = null;
 
     async function loadOrders() {
-      const tbody = document.querySelector('#ordersTableBody');
       try {
-        const res = await fetchAdminOrders();
-        allOrders = res.orders || [];
-        renderMetrics();
+        const orders = await fetchAdminOrders();
+        allOrders = orders || [];
+        updateMetrics();
         renderTable();
       } catch (err) {
         notify('Hata', err.message);
@@ -1035,64 +1234,62 @@
       }
     }
 
-    function renderMetrics() {
-      const activeList = allOrders.filter(o => o.status !== 'cancelled');
-      document.querySelector('#statTotalOrders').textContent = activeList.length;
-      const validOrders = activeList.filter(o => o.status === 'validated' || o.status === 'closed');
-      const revenue = validOrders.reduce((sum, o) => sum + Number(o.total_price || o.total_tl || 0), 0);
-      document.querySelector('#statTotalRevenue').textContent = `${revenue} TL`;
-      document.querySelector('#statPendingOrders').textContent = activeList.filter(o => o.status === 'pending_validation' || o.status === 'processing').length;
-      document.querySelector('#statCompletedOrders').textContent = activeList.filter(o => o.status === 'closed').length;
+    function updateMetrics() {
+      document.querySelector('#statTotalOrders').textContent = allOrders.length;
+      
+      const totalRev = allOrders
+        .filter(o => o.status === 'validated' || o.status === 'completed')
+        .reduce((sum, o) => sum + Number(o.total_price || o.total_tl || 0), 0);
+      document.querySelector('#statTotalRevenue').textContent = `${totalRev.toLocaleString('tr-TR')} TL`;
+
+      const pending = allOrders.filter(o => o.status === 'pending_validation').length;
+      document.querySelector('#statPendingOrders').textContent = pending;
+
+      const completed = allOrders.filter(o => o.status === 'completed').length;
+      document.querySelector('#statCompletedOrders').textContent = completed;
     }
 
     function renderTable() {
-      const tbody = document.querySelector('#ordersTableBody');
-      const query = document.querySelector('#orderSearchInput').value.trim().toLowerCase();
-
-      let filtered = allOrders.filter(o => {
-        let matchFilter = true;
-        const isSupport = Array.isArray(o.items) && o.items[0]?.type === 'support';
-
-        if (currentFilter === 'all') matchFilter = (o.status !== 'cancelled');
-        else if (currentFilter === 'support') matchFilter = (o.status !== 'cancelled' && isSupport);
-        else if (currentFilter === 'pending_validation') matchFilter = (o.status === 'pending_validation' || o.status === 'processing');
-        else if (currentFilter === 'validated') matchFilter = (o.status === 'validated' || o.status === 'queued' || o.status === 'in_progress');
-        else if (currentFilter === 'completed') matchFilter = (o.status === 'closed');
-        else if (currentFilter === 'cancelled') matchFilter = (o.status === 'cancelled');
-
-        const matchSearch = !query || 
-          o.order_code?.toLowerCase().includes(query) || 
-          o.discord_username?.toLowerCase().includes(query) ||
-          (Array.isArray(o.items) && o.items.some(i => (i.title || i.name || i.subject || i.message || '').toLowerCase().includes(query)));
-        return matchFilter && matchSearch;
+      const search = document.querySelector('#orderSearchInput').value.trim().toLowerCase();
+      const filtered = allOrders.filter(o => {
+        const isSupport = Array.isArray(o.items) && (o.items[0]?.type === 'support' || o.items[0]?.sku === 'support_ticket');
+        if (currentFilter === 'support' && !isSupport) return false;
+        if (currentFilter !== 'all' && currentFilter !== 'support' && o.status !== currentFilter) return false;
+        if (!search) return true;
+        const codeMatch = (o.order_code || '').toLowerCase().includes(search);
+        const userMatch = (o.discord_username || '').toLowerCase().includes(search);
+        return codeMatch || userMatch;
       });
 
+      const tbody = document.querySelector('#ordersTableBody');
       if (!filtered.length) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 30px;">Kriterlere uygun talep bulunamadi.</td></tr>`;
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 30px;">Kayıt bulunamadı.</td></tr>';
         return;
       }
 
-      tbody.innerHTML = filtered.map(order => {
-        const isSupport = Array.isArray(order.items) && order.items[0]?.type === 'support';
-        const items = isSupport
-          ? `<span style="color: #38bdf8; font-weight: 700;">[DESTEK]</span> ${order.items[0].subject || order.items[0].title}`
-          : (Array.isArray(order.items) ? order.items.map(i => `${i.title || i.name || 'Urun'} (x${i.quantity || 1})`).join(', ') : '—');
+      tbody.innerHTML = filtered.map(o => {
+        const isSupport = Array.isArray(o.items) && (o.items[0]?.type === 'support' || o.items[0]?.sku === 'support_ticket');
+        const itemsSummary = isSupport 
+          ? `<span style="color: #38bdf8; font-weight: 700;">💬 Destek: ${o.items[0]?.subject || 'Genel'}</span>`
+          : (Array.isArray(o.items) ? o.items.map(i => `${i.title || i.name || 'Ürün'} (x${i.quantity || 1})`).join(', ') : 'Ürün bilgisi yok');
         
-        const dateStr = new Date(order.created_at).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' });
-        const badgeHTML = isSupport && (order.status === 'pending_validation' || order.status === 'validated')
-          ? `<span class="badge" style="background: rgba(56,189,248,0.15); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3);">Destek</span>`
-          : getStatusBadgeHTML(order.status);
+        const priceStr = isSupport ? '<span style="color: var(--text-muted);">Destek</span>' : `${o.total_price || o.total_tl || 0} TL`;
 
         return `
           <tr>
-            <td><strong class="order-code">${order.order_code}</strong></td>
-            <td><strong>@${order.discord_username || 'Bilinmiyor'}</strong></td>
-            <td style="max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${items}</td>
-            <td><b class="price-tag">${isSupport ? 'Ücretsiz' : `${order.total_price || order.total_tl || 0} TL`}</b></td>
-            <td>${badgeHTML}</td>
-            <td style="font-size: 11px; color: var(--text-muted);">${dateStr}</td>
+            <td class="order-code">${o.order_code}</td>
             <td>
-              <button type="button" class="btn-action" data-order-id="${order.id}">Detay</button>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-weight: 600;">@${o.discord_username || 'Müşteri'}</span>
+                ${isSupport ? '<span class="badge" style="background: rgba(56,189,248,0.15); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3); font-size: 9px; padding: 1px 6px;">DESTEK</span>' : ''}
+              </div>
+            </td>
+            <td style="max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${itemsSummary}</td>
+            <td class="price-tag">${priceStr}</td>
+            <td>${getStatusBadgeHTML(o.status)}</td>
+            <td style="color: var(--text-muted); font-size: 11.5px;">${new Date(o.created_at).toLocaleString('tr-TR')}</td>
+            <td>
+              <button type="button" class="btn-action" data-code="${o.order_code}">İncele</button>
             </td>
           </tr>
         `;
@@ -1100,8 +1297,8 @@
 
       tbody.querySelectorAll('.btn-action').forEach(btn => {
         btn.addEventListener('click', () => {
-          const id = btn.dataset.orderId;
-          const order = allOrders.find(o => o.id === id);
+          const code = btn.dataset.code;
+          const order = allOrders.find(o => o.order_code === code);
           if (order) openDetailModal(order);
         });
       });
@@ -1113,17 +1310,17 @@
       const dialog = document.querySelector('#adminOrderDetailDialog');
       const replySection = document.querySelector('#modalSupportReplySection');
       const normalInfoGrid = document.querySelector('#modalNormalInfoGrid');
+      const headerBadge = document.querySelector('#modalHeaderStatusBadge');
 
-      if (dialog) {
-        dialog.style.maxWidth = isSupport ? '1080px' : '560px';
-        dialog.style.width = '95vw';
+      if (headerBadge) {
+        headerBadge.innerHTML = getStatusBadgeHTML(order.status);
       }
 
       if (replySection) replySection.style.display = isSupport ? 'block' : 'none';
       if (normalInfoGrid) normalInfoGrid.style.display = isSupport ? 'none' : 'grid';
 
-      document.querySelector('#modalOrderCode').textContent = order.order_code;
-      document.querySelector('#modalOrderUser').textContent = `@${order.discord_username || 'Musteri'}`;
+      document.querySelector('#modalOrderCode').textContent = `#${order.order_code}`;
+      document.querySelector('#modalOrderUser').textContent = `@${order.discord_username || 'Müşteri'}`;
       document.querySelector('#modalOrderPrice').textContent = isSupport ? 'Destek Talebi' : `${order.total_price || order.total_tl || 0} TL`;
       document.querySelector('#modalOrderDate').textContent = new Date(order.created_at).toLocaleString('tr-TR');
 
@@ -1140,49 +1337,53 @@
             }];
 
         itemsContainer.innerHTML = `
-          <div style="display: grid; grid-template-columns: 260px 1fr; gap: 16px; align-items: start;">
+          <div style="display: grid; grid-template-columns: 280px 1fr; gap: 20px; align-items: start;">
             <!-- Sol Detaylar Kartı -->
-            <div style="background: #0a111b; border: 1px solid var(--border); border-radius: 6px; padding: 14px;">
-              <span style="font: 700 10.5px var(--font-mono); color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 4px;">Talep Detayları</span>
-              <div style="margin-bottom: 10px;">
-                <span style="font-size: 11px; color: var(--text-muted); display: block;">Müşteri:</span>
-                <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
-                  <img src="images/default-avatar.jpg" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border);" />
+            <div style="background: #0a111b; border: 1px solid var(--border); border-radius: 8px; padding: 18px;">
+              <span style="font: 700 11px var(--font-mono); color: #38bdf8; text-transform: uppercase; display: block; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 6px;">📋 Talep Parametreleri</span>
+              
+              <div style="margin-bottom: 14px;">
+                <span style="font-size: 11px; color: var(--text-muted); display: block;">Müşteri Profili:</span>
+                <div style="display: flex; align-items: center; gap: 10px; margin-top: 6px;">
+                  <img src="images/default-avatar.jpg" alt="Avatar" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #38bdf8;" />
                   <div>
-                    <strong style="color: var(--text); font-size: 12.5px; display: block;">${order.discord_username || 'Müşteri'}</strong>
-                    <small style="color: var(--text-muted); font-size: 10.5px;">@${order.discord_username || '-'}</small>
+                    <strong style="color: var(--text); font-size: 13.5px; display: block;">${order.discord_username || 'Müşteri'}</strong>
+                    <small style="color: #38bdf8; font-size: 11px;">@${order.discord_username || '-'}</small>
                   </div>
                 </div>
               </div>
-              <div style="margin-bottom: 10px;">
-                <span style="font-size: 11px; color: var(--text-muted); display: block;">Konu / Kategori:</span>
-                <strong style="color: #38bdf8; font-size: 12px;">${item.subject || item.title || 'Genel Destek'}</strong>
+
+              <div style="margin-bottom: 12px;">
+                <span style="font-size: 11px; color: var(--text-muted); display: block;">Kategori / Konu:</span>
+                <strong style="color: #38bdf8; font-size: 13px;">${item.subject || item.title || 'Genel Destek'}</strong>
               </div>
-              <div style="margin-bottom: 10px;">
-                <span style="font-size: 11px; color: var(--text-muted); display: block;">Durum:</span>
-                <span class="badge" style="background: rgba(56,189,248,0.15); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3); font-size: 10.5px; padding: 2px 8px;">${order.status}</span>
+
+              <div style="margin-bottom: 12px;">
+                <span style="font-size: 11px; color: var(--text-muted); display: block;">Talep Durumu:</span>
+                <div style="margin-top: 4px;">${getStatusBadgeHTML(order.status)}</div>
               </div>
+
               <div>
-                <span style="font-size: 11px; color: var(--text-muted); display: block;">Tarih:</span>
-                <span style="color: var(--text-muted); font-size: 11px;">${new Date(order.created_at).toLocaleString('tr-TR')}</span>
+                <span style="font-size: 11px; color: var(--text-muted); display: block;">Oluşturulma:</span>
+                <span style="color: var(--text); font-size: 11.5px; font-family: var(--font-mono);">${new Date(order.created_at).toLocaleString('tr-TR')}</span>
               </div>
             </div>
 
-            <!-- Sağ Mesajlaşma Akışı -->
-            <div style="display: flex; flex-direction: column; gap: 12px; max-height: 320px; overflow-y: auto; padding-right: 4px;">
+            <!-- Sağ Mesajlaşma Akışı (Ferah & Yüksek) -->
+            <div style="display: flex; flex-direction: column; gap: 14px; max-height: 420px; min-height: 240px; overflow-y: auto; padding-right: 6px;">
               ${messages.map(m => {
                 const isAdmin = m.sender === 'admin';
                 const timeStr = m.createdAt ? new Date(m.createdAt).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }) : '';
                 const avatar = isAdmin ? 'images/lena-officer-avatar.jpg' : 'images/default-avatar.jpg';
                 return `
-                  <div style="display: flex; gap: 10px; align-items: flex-start;">
-                    <img src="${avatar}" alt="${m.author}" style="width: 36px; height: 36px; border-radius: ${isAdmin ? '4px' : '50%'}; object-fit: cover; border: 1.5px solid ${isAdmin ? 'rgba(34,197,94,0.4)' : 'rgba(56,189,248,0.4)'}; flex-shrink: 0;" />
-                    <div style="flex: 1; background: ${isAdmin ? 'rgba(34,197,94,0.08)' : '#070d14'}; border: 1px solid ${isAdmin ? 'rgba(34,197,94,0.3)' : 'var(--border)'}; border-radius: 6px; padding: 10px 12px;">
-                      <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,0.04); padding-bottom: 3px;">
-                        <strong style="color: ${isAdmin ? '#22c55e' : '#38bdf8'};">${isAdmin ? '🛡️ ' + (m.author || 'Destek Ekibi') : '👤 ' + (m.author || 'Müşteri')}</strong>
-                        <span style="color: var(--text-muted); font-size: 10px;">${timeStr}</span>
+                  <div style="display: flex; gap: 12px; align-items: flex-start;">
+                    <img src="${avatar}" alt="${m.author}" style="width: 40px; height: 40px; border-radius: ${isAdmin ? '6px' : '50%'}; object-fit: cover; border: 2px solid ${isAdmin ? 'rgba(34,197,94,0.4)' : 'rgba(56,189,248,0.4)'}; flex-shrink: 0;" />
+                    <div style="flex: 1; background: ${isAdmin ? 'rgba(34,197,94,0.06)' : '#070d14'}; border: 1px solid ${isAdmin ? 'rgba(34,197,94,0.3)' : 'var(--border)'}; border-radius: 8px; padding: 12px 16px;">
+                      <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 6px; border-bottom: 1px solid rgba(255,255,255,0.04); padding-bottom: 4px;">
+                        <strong style="color: ${isAdmin ? '#22c55e' : '#38bdf8'}; font-size: 12.5px;">${isAdmin ? '🛡️ ' + (m.author || 'Destek Ekibi') : '👤 ' + (m.author || 'Müşteri')}</strong>
+                        <span style="color: var(--text-muted); font-size: 10.5px;">${timeStr}</span>
                       </div>
-                      <div style="color: var(--text); font-size: 13px; line-height: 1.5; white-space: pre-wrap;">${m.text}</div>
+                      <div style="color: var(--text); font-size: 13.5px; line-height: 1.55; white-space: pre-wrap;">${m.text}</div>
                     </div>
                   </div>
                 `;
@@ -1192,8 +1393,8 @@
         `;
       } else if (Array.isArray(order.items) && order.items.length) {
         itemsContainer.innerHTML = order.items.map(i => `
-          <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.04);">
-            <span>${i.title || i.name || 'Urun'} <small style="color: var(--text-muted);">(x${i.quantity || 1})</small></span>
+          <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04);">
+            <span>${i.title || i.name || 'Ürün'} <small style="color: var(--text-muted);">(x${i.quantity || 1})</small></span>
             <strong style="color: var(--primary); font-family: var(--font-mono);">${i.price_tl || i.unit_price || 0} TL</strong>
           </div>
         `).join('');
@@ -1204,7 +1405,18 @@
       document.querySelector('#adminOrderDetailDialog').showModal();
     }
 
-    // Yönetici Destek Yanıtı Gönderme
+    // Yönetici Hızlı Yanıt Preset Çipleri
+    document.querySelectorAll('.admin-quick-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const replyIn = document.querySelector('#modalAdminReplyText');
+        if (replyIn && chip.dataset.text) {
+          replyIn.value = chip.dataset.text;
+          replyIn.focus();
+        }
+      });
+    });
+
+    // Yönetici Destek Yanıtı Gönderme (Hatasız ve Senkronize)
     const sendReplyBtn = document.querySelector('#modalAdminSendReplyBtn');
     if (sendReplyBtn) {
       sendReplyBtn.addEventListener('click', async () => {
@@ -1221,66 +1433,39 @@
           sendReplyBtn.textContent = 'Yanıt İletiliyor…';
 
           const session = getAdminSession();
-          const author = session?.username ? `Monarch Admin (${session.username})` : 'Monarch Destek Ekibi';
-          
-          const items = Array.isArray(activeDetailOrder.items) ? [...activeDetailOrder.items] : [{}];
-          items[0].messages = Array.isArray(items[0].messages) ? [...items[0].messages] : [];
+          const profile = getAdminProfileData(session?.username);
+          const author = profile?.username ? `Monarch Admin (${profile.username})` : (session?.username ? `Monarch Admin (${session.username})` : 'Monarch Destek Ekibi');
 
-          if (items[0].messages.length === 0 && (items[0].message || items[0].description)) {
-            items[0].messages.push({
-              sender: 'user',
-              author: activeDetailOrder.discord_username ? `@${activeDetailOrder.discord_username}` : 'Müşteri',
-              text: items[0].message || items[0].description,
-              createdAt: activeDetailOrder.created_at || new Date().toISOString()
-            });
-          }
-
-          items[0].messages.push({
-            sender: 'admin',
-            author,
-            text,
-            createdAt: new Date().toISOString()
-          });
-
-          // Supabase'de güncelle (RPC & Direct Fallback)
-          let updated = null;
-          try {
-            const { data: rpcRes, error: rpcErr } = await supabaseClient.rpc('monarch_append_ticket_message', {
-              p_order_code: activeDetailOrder.order_code,
-              p_sender: 'admin',
-              p_author: author,
-              p_text: text
-            });
-            if (!rpcErr && rpcRes?.success && rpcRes?.order) {
-              updated = rpcRes.order;
-            }
-          } catch (rpcErr) {
-            console.warn('Admin RPC append fallback:', rpcErr);
-          }
-
-          if (!updated) {
-            const { data: directUpd, error } = await supabaseClient.from('order_requests')
-              .update({ items, status: 'validated' })
-              .eq('id', activeDetailOrder.id)
-              .select('*')
-              .single();
-            if (error) throw error;
-            updated = directUpd;
-          }
-
+          const updated = await appendAdminTicketReply(activeDetailOrder.order_code, text, author);
           activeDetailOrder = updated;
           if (textIn) textIn.value = '';
           openDetailModal(updated);
           loadOrders();
-          notify('Yanıt İletildi', 'Mesajınız destek geçmişine ve kullanıcıya iletildi.');
+          notify('Yanıt İletildi', 'Mesajınız destek geçmişine ve Discord ticket kanalına iletildi.');
         } catch (err) {
           notify('Hata', err.message);
         } finally {
           sendReplyBtn.disabled = false;
-          sendReplyBtn.textContent = 'Yanıtı Gönder (Site & Discord)';
+          sendReplyBtn.textContent = '🚀 Yanıtı Gönder (Site & Discord)';
         }
       });
     }
+
+    // Talebi Çözüldü Olarak Kapatma
+    document.querySelector('#modalAdminCloseTicketBtn')?.addEventListener('click', async () => {
+      if (!activeDetailOrder) return;
+      if (!confirm('Bu destek talebini çözüldü olarak kapatmak istediğinize emin misiniz?')) return;
+
+      try {
+        await updateOrderStatusRPC(activeDetailOrder.order_code, 'completed', 'Yönetici Tarafından Çözüldü Olarak Kapatıldı');
+        activeDetailOrder.status = 'completed';
+        openDetailModal(activeDetailOrder);
+        loadOrders();
+        notify('Talep Kapatıldı', 'Destek talebi başarıyla tamamlandı ve kapatıldı.');
+      } catch (err) {
+        notify('Hata', err.message);
+      }
+    });
 
     // Arama & Filtreler
     document.querySelector('#orderSearchInput').addEventListener('input', () => renderTable());
@@ -1295,21 +1480,34 @@
 
     document.querySelector('#refreshBtn').addEventListener('click', () => {
       loadOrders();
-      notify('Yenilendi', 'Siparis listesi guncellendi.');
+      notify('Yenilendi', 'Sipariş ve destek listesi güncellendi.');
     });
 
     document.querySelector('#exportBtn').addEventListener('click', () => {
-      if (!allOrders.length) return notify('Uyari', 'Indirilecek siparis yok.');
+      if (!allOrders.length) return notify('Uyarı', 'İndirilecek sipariş yok.');
       exportOrdersToCSV(allOrders);
-      notify('Indirildi', 'Siparisler CSV olarak indirildi.');
+      notify('İndirildi', 'Siparişler CSV olarak indirildi.');
     });
 
-    // Modal Butonları
+    document.querySelector('#deleteAllBtn').addEventListener('click', async () => {
+      if (!allOrders.length) return notify('Bilgi', 'Silinecek sipariş bulunmuyor.');
+      if (!confirm(`DİKKAT: Aktif ${allOrders.length} adet siparişi silmek/iptal etmek istediğinize emin misiniz?`)) return;
+
+      try {
+        const res = await cancelAllActiveOrders(allOrders);
+        notify('Başarılı', `${res.count} sipariş iptal edildi / silindi.`);
+        loadOrders();
+      } catch (err) {
+        notify('Hata', err.message);
+      }
+    });
+
+    // Detay Modal Aksiyon Butonları
     document.querySelector('#modalActionDone').addEventListener('click', async () => {
       if (!activeDetailOrder) return;
       try {
-        await updateOrderStatusRPC(activeDetailOrder.order_code, 'closed', 'Founder Web Paneli');
-        notify('Tamamlandi', `${activeDetailOrder.order_code} siparisi tamamlandi.`);
+        await updateOrderStatusRPC(activeDetailOrder.order_code, 'completed', 'Admin Panel Manuel Onay');
+        notify('Başarılı', `${activeDetailOrder.order_code} tamamlandı olarak işaretlendi.`);
         document.querySelector('#adminOrderDetailDialog').close();
         loadOrders();
       } catch (err) {
@@ -1319,9 +1517,10 @@
 
     document.querySelector('#modalActionCancel').addEventListener('click', async () => {
       if (!activeDetailOrder) return;
+      if (!confirm(`${activeDetailOrder.order_code} kodlu kaydı iptal etmek istiyor musunuz?`)) return;
       try {
-        await updateOrderStatusRPC(activeDetailOrder.order_code, 'cancelled', 'Founder Web Paneli');
-        notify('Iptal Edildi', `${activeDetailOrder.order_code} siparisi iptal edildi.`);
+        await updateOrderStatusRPC(activeDetailOrder.order_code, 'cancelled', 'Admin Panel Manuel İptal');
+        notify('İptal Edildi', `${activeDetailOrder.order_code} iptal edildi.`);
         document.querySelector('#adminOrderDetailDialog').close();
         loadOrders();
       } catch (err) {
@@ -1329,13 +1528,12 @@
       }
     });
 
-    document.querySelector('#modalActionDelete')?.addEventListener('click', async () => {
+    document.querySelector('#modalActionDelete').addEventListener('click', async () => {
       if (!activeDetailOrder) return;
-      const code = activeDetailOrder.order_code;
-      if (!confirm(`'${code}' kodlu siparisi silmek istediginize emin misiniz?`)) return;
+      if (!confirm(`DİKKAT: ${activeDetailOrder.order_code} kalıcı olarak silinecektir. Emin misiniz?`)) return;
       try {
-        await cancelSingleOrder(code);
-        notify('Silindi', `${code} siparisi silindi.`);
+        await cancelSingleOrder(activeDetailOrder.order_code);
+        notify('Silindi', `${activeDetailOrder.order_code} kaydı temizlendi.`);
         document.querySelector('#adminOrderDetailDialog').close();
         loadOrders();
       } catch (err) {
@@ -1343,41 +1541,16 @@
       }
     });
 
-    document.querySelector('#deleteAllBtn')?.addEventListener('click', async () => {
-      const activeList = allOrders.filter(o => o.status !== 'cancelled');
-      if (!activeList.length) return notify('Bilgi', 'Silinecek siparis bulunmuyor.');
-      if (!confirm(`DIKKAT: Listedeki ${activeList.length} adet siparisin TUMU silinecek! Onayliyor musunuz?`)) return;
-      
-      const btn = document.querySelector('#deleteAllBtn');
-      if (btn) { btn.disabled = true; btn.textContent = 'Siliniyor…'; }
-      notify('Siliniyor', 'Tum siparisler temizleniyor…');
-
-      try {
-        const res = await cancelAllActiveOrders(activeList);
-        notify('Temizlendi', `${res.count} adet siparis basariyla silindi.`);
-        await loadOrders();
-      } catch (err) {
-        notify('Hata', err.message);
-        await loadOrders();
-      } finally {
-        if (btn) { btn.disabled = false; btn.textContent = 'Tumunu Sil'; }
-      }
-    });
-
-    document.querySelector('#modalActionCopy')?.addEventListener('click', async () => {
+    document.querySelector('#modalActionCopy').addEventListener('click', () => {
       if (!activeDetailOrder) return;
       const order = activeDetailOrder;
       const items = Array.isArray(order.items) 
-        ? order.items.map(i => `* ${i.title || i.name} (x${i.quantity || 1})`).join('\n')
+        ? order.items.map(i => `* ${i.title || i.name || i.subject || 'Kalem'} (x${i.quantity || 1})`).join('\n')
         : '-';
-      const text = `MONARCH STORE SIPARIS BILDIRIMI\n\nMusteri: @${order.discord_username || 'Musteri'}\nSiparis Kodu: ${order.order_code}\nToplam Tutar: ${order.total_price} TL\n\nSiparis Kalemleri:\n${items}\n\nTarih: ${new Date(order.created_at).toLocaleString('tr-TR')}\n\nYonetim Paneli: http://astralissaga.xyz/admin.html`;
+      const text = `MONARCH STORE BİLDİRİMİ\n\nMüşteri: @${order.discord_username || 'Müşteri'}\nKod: ${order.order_code}\nTutar: ${order.total_price || order.total_tl || 0} TL\nDurum: ${order.status}\n\nKalemler:\n${items}\n\nTarih: ${new Date(order.created_at).toLocaleString('tr-TR')}`;
       
-      try {
-        await navigator.clipboard.writeText(text);
-        notify('Kopyalandi', 'Siparis metni panoya kopyalandi.');
-      } catch {
-        notify('Kopyalandi', `${order.order_code} detaylari hazirlandi.`);
-      }
+      navigator.clipboard.writeText(text);
+      notify('Kopyalandı', 'Sipariş/Talep özeti panoya kopyalandı.');
     });
 
     // Başlangıç Kontrolü

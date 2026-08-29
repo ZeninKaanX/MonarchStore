@@ -456,6 +456,12 @@ export function bindLocalAccountUI({
       emailVerifyBtn.style.display = isVerified ? "none" : "inline-block";
     }
 
+    const customAvatarIn = document.querySelector("#profileCustomAvatarUrl");
+    if (customAvatarIn) {
+      const isPreset = DEFAULT_AVATARS.some(a => a.url === currentAvatar);
+      customAvatarIn.value = isPreset ? '' : currentAvatar;
+    }
+
     document.querySelectorAll(".avatar-select-btn").forEach(btn => {
       btn.classList.toggle("active", btn.dataset.url === currentAvatar);
     });
@@ -503,6 +509,42 @@ export function bindLocalAccountUI({
     });
   }
 
+  // Profil Alt Sekme Gezinme Fonksiyonu
+  const switchProfileSubTab = (tabName) => {
+    const secOverview = document.querySelector("#profileTabSectionOverview");
+    const secAvatar = document.querySelector("#profileTabSectionAvatar");
+    const secSecurity = document.querySelector("#profileTabSectionSecurity");
+
+    const btnOverview = document.querySelector("#profileNavOverview");
+    const btnAvatar = document.querySelector("#profileNavAvatar");
+    const btnSecurity = document.querySelector("#profileNavSecurity");
+
+    if (secOverview) secOverview.style.display = tabName === 'overview' ? 'block' : 'none';
+    if (secAvatar) secAvatar.style.display = tabName === 'avatar' ? 'block' : 'none';
+    if (secSecurity) secSecurity.style.display = tabName === 'security' ? 'block' : 'none';
+
+    [btnOverview, btnAvatar, btnSecurity].forEach(btn => {
+      if (!btn) return;
+      btn.style.background = 'transparent';
+      btn.style.borderColor = 'transparent';
+      btn.style.color = 'var(--text-muted)';
+      btn.style.fontWeight = '600';
+    });
+
+    const activeBtn = tabName === 'overview' ? btnOverview : (tabName === 'avatar' ? btnAvatar : btnSecurity);
+    if (activeBtn) {
+      activeBtn.style.background = 'rgba(56,189,248,0.12)';
+      activeBtn.style.borderColor = 'rgba(56,189,248,0.3)';
+      activeBtn.style.color = '#38bdf8';
+      activeBtn.style.fontWeight = '700';
+    }
+  };
+
+  document.querySelector("#profileNavOverview")?.addEventListener("click", () => switchProfileSubTab('overview'));
+  document.querySelector("#profileNavAvatar")?.addEventListener("click", () => switchProfileSubTab('avatar'));
+  document.querySelector("#profileNavSecurity")?.addEventListener("click", () => switchProfileSubTab('security'));
+  document.querySelector("#profileQuickEditBtn")?.addEventListener("click", () => switchProfileSubTab('avatar'));
+
   // Profil Avatar Seçimi
   document.querySelectorAll(".avatar-select-btn").forEach(btn => {
     btn.addEventListener("click", async () => {
@@ -515,6 +557,10 @@ export function bindLocalAccountUI({
         btn.classList.add("active");
         const avatarImg = document.querySelector("#accountHeroAvatarImg");
         if (avatarImg) avatarImg.src = avatarUrl;
+        const bannerImg = document.querySelector("#profileBannerAvatar");
+        if (bannerImg) bannerImg.src = avatarUrl;
+        const sidebarImg = document.querySelector("#profileSidebarAvatar");
+        if (sidebarImg) sidebarImg.src = avatarUrl;
         notify("Avatar Güncellendi", `${btn.dataset.name} profil resminiz olarak ayarlandı.`);
       } catch (err) {
         notify("Hata", err.message);
@@ -522,40 +568,92 @@ export function bindLocalAccountUI({
     });
   });
 
-  // Profil Kaydetme
-  const profileSaveBtn = document.querySelector("#profileSaveBtn");
-  if (profileSaveBtn) {
-    profileSaveBtn.addEventListener("click", async () => {
+  // Profil Görünüm / Avatar Kaydetme
+  const profileSaveAvatarBtn = document.querySelector("#profileSaveAvatarBtn");
+  if (profileSaveAvatarBtn) {
+    profileSaveAvatarBtn.addEventListener("click", async () => {
       const session = getLocalSession(storage);
       if (!session) return;
+      const customAvatarIn = document.querySelector("#profileCustomAvatarUrl");
       const discIn = document.querySelector("#profileDiscordInput");
+
+      let avatarUrl = customAvatarIn?.value?.trim();
+      if (!avatarUrl) {
+        const activeBtn = document.querySelector(".avatar-select-btn.active");
+        if (activeBtn) avatarUrl = activeBtn.dataset.url;
+      }
+
+      try {
+        profileSaveAvatarBtn.disabled = true;
+        profileSaveAvatarBtn.textContent = "Kaydediliyor…";
+        await updateLocalAccountProfile(storage, session.username, {
+          avatarUrl: avatarUrl || undefined,
+          discordUsername: discIn ? discIn.value.trim() : undefined
+        });
+        populateProfilePanel(getLocalSession(storage));
+        updateHeader();
+        notify("Görünüm Kaydedildi", "Profil avatarınız ve Discord bilgileriniz güncellendi.");
+        switchProfileSubTab('overview');
+      } catch (err) {
+        notify("Hata", err.message);
+      } finally {
+        profileSaveAvatarBtn.disabled = false;
+        profileSaveAvatarBtn.textContent = "Görünüm Ayarlarını Kaydet";
+      }
+    });
+  }
+
+  // Profil Güvenlik / Şifre Kaydetme
+  const profileSaveSecurityBtn = document.querySelector("#profileSaveSecurityBtn");
+  if (profileSaveSecurityBtn) {
+    profileSaveSecurityBtn.addEventListener("click", async () => {
+      const session = getLocalSession(storage);
+      if (!session) return;
       const emailIn = document.querySelector("#profileEmailInput");
       const curPwdIn = document.querySelector("#profileCurrentPwdInput");
       const newPwdIn = document.querySelector("#profileNewPwdInput");
+      const newPwdConfirmIn = document.querySelector("#profileNewPwdConfirmInput");
+
+      if (newPwdIn?.value && newPwdIn.value.length < 6) {
+        notify("Hata", "Yeni şifre en az 6 karakter olmalıdır.");
+        return;
+      }
+      if (newPwdIn?.value && newPwdConfirmIn?.value && newPwdIn.value !== newPwdConfirmIn.value) {
+        notify("Hata", "Yeni şifreler birbiriyle eşleşmiyor.");
+        return;
+      }
 
       try {
-        profileSaveBtn.disabled = true;
-        profileSaveBtn.textContent = "Kaydediliyor…";
+        profileSaveSecurityBtn.disabled = true;
+        profileSaveSecurityBtn.textContent = "Kaydediliyor…";
         await updateLocalAccountProfile(storage, session.username, {
-          discordUsername: discIn ? discIn.value.trim() : undefined,
           email: emailIn ? emailIn.value.trim() : undefined,
           currentPassword: curPwdIn ? curPwdIn.value : undefined,
           newPassword: newPwdIn && newPwdIn.value ? newPwdIn.value : undefined
         });
-
         if (curPwdIn) curPwdIn.value = "";
         if (newPwdIn) newPwdIn.value = "";
+        if (newPwdConfirmIn) newPwdConfirmIn.value = "";
         populateProfilePanel(getLocalSession(storage));
         updateHeader();
-        notify("Profil Güncellendi", "Profil bilgileriniz ve ayarlarınız başarıyla kaydedildi.");
+        notify("Güvenlik Güncellendi", "E-posta ve şifre ayarlarınız başarıyla kaydedildi.");
+        switchProfileSubTab('overview');
       } catch (err) {
-        notify("Profil Güncellenemedi", err.message);
+        notify("Hata", err.message);
       } finally {
-        profileSaveBtn.disabled = false;
-        profileSaveBtn.textContent = "Değişiklikleri Kaydet";
+        profileSaveSecurityBtn.disabled = false;
+        profileSaveSecurityBtn.textContent = "Güvenlik & Şifre Değişikliğini Kaydet";
       }
     });
   }
+
+  // Profil Çıkış Yap Butonu
+  document.querySelector("#profileLogoutBtn")?.addEventListener("click", () => {
+    storage.removeItem("monarch_session_v1");
+    dialog.close();
+    updateHeader();
+    notify("Çıkış Yapıldı", "Hesabınızdan güvenle çıkış yaptınız.");
+  });
 
   // Profil E-Posta Kod Gönder
   const profileSendCodeBtn = document.querySelector("#profileSendEmailCodeBtn");

@@ -122,11 +122,125 @@ export async function updateOrderStatus (orderCode, newStatus, notes = null) {
   return data
 }
 
-export const updateOrderStatusRPC = updateOrderStatus
+export async function appendAdminTicketReply (orderCode, messageText, authorName = 'Monarch Destek Ekibi') {
+  const supabase = getSupabase()
+  const cleanCode = (orderCode || '').trim().toUpperCase()
+
+  // 1. Try RPC monarch_append_ticket_message
+  try {
+    const { data: rpcRes, error: rpcErr } = await supabase.rpc('monarch_append_ticket_message', {
+      p_order_code: cleanCode,
+      p_sender: 'admin',
+      p_author: authorName,
+      p_text: messageText.trim()
+    })
+    if (!rpcErr && rpcRes && rpcRes.success && rpcRes.order) {
+      return rpcRes.order
+    }
+  } catch (err) {
+    console.warn('RPC append message error:', err)
+  }
+
+  // 2. Direct query fallback
+  const { data: ticket, error: fetchErr } = await supabase.from('order_requests')
+    .select('*')
+    .eq('order_code', cleanCode)
+    .single()
+
+  if (fetchErr || !ticket) {
+    throw new Error('Talep veritabanında bulunamadı.')
+  }
+
+  const items = Array.isArray(ticket.items) ? [...ticket.items] : [{}]
+  items[0].messages = Array.isArray(items[0].messages) ? [...items[0].messages] : []
+
+  if (items[0].messages.length === 0 && (items[0].message || items[0].description)) {
+    items[0].messages.push({
+      sender: 'user',
+      author: ticket.discord_username ? `@${ticket.discord_username}` : 'Müşteri',
+      text: items[0].message || items[0].description,
+      createdAt: ticket.created_at || new Date().toISOString()
+    })
+  }
+
+  const newMsg = {
+    sender: 'admin',
+    author: authorName,
+    text: messageText.trim(),
+    createdAt: new Date().toISOString()
+  }
+  items[0].messages.push(newMsg)
+
+  // Cache in local thread
+  const cacheKey = `monarch_ticket_thread_${cleanCode}`
+  const cachedMessages = JSON.parse(localStorage.getItem(cacheKey) || '[]')
+  cachedMessages.push(newMsg)
+  localStorage.setItem(cacheKey, JSON.stringify(cachedMessages))
+
+  const { data: updated, error: updateErr } = await supabase.from('order_requests')
+    .update({ items, status: 'validated' })
+    .eq('id', ticket.id)
+    .select('*')
+    .single()
+
+  if (updateErr) {
+    return { ...ticket, items }
+  }
+
+  return updated
+}
+
+export function getAdminProfileData (username) {
+  const accountsRaw = localStorage.getItem('monarch_accounts_v1') || '[]'
+  const accounts = JSON.parse(accountsRaw)
+  const norm = (username || '').trim().toLowerCase()
+  const found = accounts.find(a => (a.username || '').toLowerCase() === norm)
+  return found || {
+    username: username || 'Admin',
+    avatarUrl: localStorage.getItem('monarch_admin_avatar') || 'images/lena-officer-avatar.jpg',
+    discordUsername: localStorage.getItem('monarch_admin_discord_user') || 'yetkili',
+    email: localStorage.getItem('monarch_admin_email') || 'admin@monarchstore.com',
+    role: 'Sistem Yöneticisi / Founder'
+  }
+}
+
+export async function saveAdminProfileData (username, updates) {
+  const accountsRaw = localStorage.getItem('monarch_accounts_v1') || '[]'
+  const accounts = JSON.parse(accountsRaw)
+  const norm = (username || '').trim().toLowerCase()
+  let found = accounts.find(a => (a.username || '').toLowerCase() === norm)
+
+  if (!found) {
+    found = {
+      username: username || 'Admin',
+      normalized: norm,
+      isAdmin: true,
+      createdAt: new Date().toISOString()
+    }
+    accounts.push(found)
+  }
+
+  if (updates.avatarUrl) found.avatarUrl = updates.avatarUrl
+  if (updates.discordUsername !== undefined) found.discordUsername = updates.discordUsername
+  if (updates.email !== undefined) found.email = updates.email
+  if (updates.role !== undefined) found.role = updates.role
+  if (updates.newPassword) {
+    found.passwordHash = await sha256(updates.newPassword)
+  }
+
+  localStorage.setItem('monarch_accounts_v1', JSON.stringify(accounts))
+  if (updates.avatarUrl) localStorage.setItem('monarch_admin_avatar', updates.avatarUrl)
+  if (updates.discordUsername) localStorage.setItem('monarch_admin_discord_user', updates.discordUsername)
+  if (updates.email) localStorage.setItem('monarch_admin_email', updates.email)
+
+  return found
+}
 
 export async function cancelSingleOrder (orderCode) {
   return updateOrderStatus(orderCode, 'cancelled', 'Founder Silme')
 }
+
+export const updateOrderStatusRPC = updateOrderStatus
 
 export async function cancelAllActiveOrders (orders) {
   const session = getAdminSession()

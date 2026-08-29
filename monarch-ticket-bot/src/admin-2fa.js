@@ -21,6 +21,18 @@ function findRoleByName (guild, name) {
   return guild.roles.cache.find((role) => role.name.toLowerCase().trim() === normalized && role.id !== guild.id) || null
 }
 
+function findMemberByUsername (guild, rawName) {
+  if (!rawName) return null
+  const cleaned = rawName.replace(/^@/, '').toLowerCase().trim()
+  if (!cleaned) return null
+  return guild.members.cache.find(m => 
+    m.user.username.toLowerCase() === cleaned || 
+    m.user.tag.toLowerCase() === cleaned ||
+    m.displayName.toLowerCase() === cleaned ||
+    m.id === cleaned
+  ) || null
+}
+
 async function resolve2FAChannel (guild) {
   const settings = get2FASettings(guild.id)
   if (settings?.channelId) {
@@ -112,20 +124,37 @@ function create2FASync ({ supabaseUrl, serviceRoleKey, logger = console }) {
       for (const req of pendingRequests) {
         try {
           const expireUnix = Math.floor(new Date(req.expires_at).getTime() / 1000)
+          
+          // Discord Üyesini bul ve etiketle
+          let member = findMemberByUsername(guild, req.discord_username)
+          if (!member && req.discord_username) {
+            const cleanName = req.discord_username.replace(/^@/, '').trim()
+            const searched = await guild.members.search({ query: cleanName, limit: 1 }).catch(() => null)
+            if (searched && searched.size > 0) {
+              member = searched.first()
+            }
+          }
+
+          const targetMention = member ? `<@${member.id}>` : (req.discord_username ? `**@${req.discord_username.replace(/^@/, '')}**` : 'Yetkili')
+
           const embed = new EmbedBuilder()
             .setColor(0x3e83b8)
             .setTitle('🔐 Monarch Store — Admin Giriş Doğrulama Kodu')
             .setDescription('Web yönetim paneline giriş talebinde bulunuldu. Girişi onaylamak için aşağıdaki 6 haneli 2FA kodunu tarayıcıya girin.')
             .addFields(
               { name: '🔑 Güvenlik Kodu', value: `\`\`\`${req.code}\`\`\``, inline: false },
-              { name: '👤 Kullanıcı', value: `\`${req.admin_username}\``, inline: true },
+              { name: '👤 Admin Hesabı', value: `\`${req.admin_username}\``, inline: true },
+              { name: '💬 Talep Eden Yetkili', value: member ? `${member} (\`${member.user.tag}\`)` : `**@${req.discord_username || 'admin'}**`, inline: true },
               { name: '⏱️ Kalan Süre', value: `<t:${expireUnix}:R>`, inline: true },
-              { name: '🛡️ Güvenlik Kapsamı', value: 'Bu kod yalnızca **Founder** ve **Destek** rolleri tarafından görüntülenebilir.', inline: false }
+              { name: '🛡️ Güvenlik Kapsamı', value: 'Bu bildirim ve kod yalnızca **Founder** ve **Destek** rolleri tarafından görüntülenebilir.', inline: false }
             )
             .setFooter({ text: 'Monarch Store Güvenlik Sistemi' })
             .setTimestamp()
 
-          await channel.send({ embeds: [embed] })
+          await channel.send({
+            content: `🔔 **Yetkili Giriş Bildirimi:** ${targetMention}, web paneli giriş kodunuz oluşturuldu:`,
+            embeds: [embed]
+          })
 
           // Bildirildi olarak işaretle
           await supabase
@@ -133,7 +162,7 @@ function create2FASync ({ supabaseUrl, serviceRoleKey, logger = console }) {
             .update({ discord_notified: true })
             .eq('id', req.id)
 
-          logger.log(`[2FA] Doğrulama kodu #${channel.name} kanalına gönderildi (${req.admin_username})`)
+          logger.log(`[2FA] Doğrulama kodu ve etiket #${channel.name} kanalına gönderildi (${req.admin_username} -> ${req.discord_username || 'yetkili'})`)
         } catch (itemErr) {
           logger.error('[2FA] Mesaj gönderilemedi:', itemErr.message)
         }

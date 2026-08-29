@@ -53,13 +53,14 @@ export function clearAdminSession () {
   sessionStorage.removeItem(EXPIRES_STORAGE_KEY)
 }
 
-export async function requestAdmin2FA (username, password) {
+export async function requestAdmin2FA (username, password, discordUsername = null) {
   const supabase = getSupabase()
   const passwordHash = await sha256(password)
   const { data, error } = await supabase.rpc('monarch_admin_request_2fa', {
     p_username: username,
     p_password_hash: passwordHash,
-    p_ip_info: navigator.userAgent.substring(0, 100)
+    p_ip_info: navigator.userAgent.substring(0, 100),
+    p_discord_username: discordUsername ? discordUsername.trim() : null
   })
 
   if (error) throw new Error(error.message || '2FA talebi oluşturulamadı.')
@@ -67,11 +68,12 @@ export async function requestAdmin2FA (username, password) {
   return data
 }
 
-export async function verifyAdmin2FA (challengeId, code) {
+export async function verifyAdmin2FA (challengeId, code, discordUsername = null) {
   const supabase = getSupabase()
   const { data, error } = await supabase.rpc('monarch_admin_verify_2fa', {
     p_challenge_id: challengeId,
-    p_code: code.trim()
+    p_code: code.trim(),
+    p_discord_username: discordUsername ? discordUsername.trim() : null
   })
 
   if (error) throw new Error(error.message || 'Doğrulama başarısız.')

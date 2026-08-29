@@ -5,7 +5,7 @@
 create table if not exists public.monarch_admin_accounts (
   id uuid primary key default gen_random_uuid(),
   username text not null unique check (length(username) >= 3),
-  password_hash text not null, -- SHA-256 veya bcrypt hash
+  password_hash text not null, -- SHA-256 hash
   role text not null default 'admin' check (role in ('admin', 'founder', 'support')),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
@@ -15,6 +15,7 @@ create table if not exists public.monarch_admin_accounts (
 create table if not exists public.monarch_admin_2fa (
   id uuid primary key default gen_random_uuid(),
   admin_username text not null,
+  discord_username text, -- Giriş yapan yetkilinin Discord kullanıcı adı
   code text not null, -- 6 haneli güvenlik kodu
   expires_at timestamptz not null default (now() + interval '5 minutes'),
   consumed boolean not null default false,
@@ -24,6 +25,9 @@ create table if not exists public.monarch_admin_2fa (
   ip_info text,
   created_at timestamptz not null default now()
 );
+
+-- Mevcut tablo varsa kolon ekleme
+alter table public.monarch_admin_2fa add column if not exists discord_username text;
 
 create index if not exists monarch_admin_2fa_lookup_idx
   on public.monarch_admin_2fa (admin_username, consumed, expires_at);
@@ -51,7 +55,8 @@ grant select, insert, update, delete on table public.monarch_admin_2fa to servic
 create or replace function public.monarch_admin_request_2fa(
   p_username text,
   p_password_hash text,
-  p_ip_info text default null
+  p_ip_info text default null,
+  p_discord_username text default null
 )
 returns jsonb
 language plpgsql
@@ -77,8 +82,8 @@ begin
   v_code := lpad(floor(random() * 900000 + 100000)::text, 6, '0');
 
   -- 2FA kaydını oluştur (5 dakika geçerli)
-  insert into public.monarch_admin_2fa (admin_username, code, expires_at, ip_info)
-  values (v_admin.username, v_code, now() + interval '5 minutes', p_ip_info)
+  insert into public.monarch_admin_2fa (admin_username, discord_username, code, expires_at, ip_info)
+  values (v_admin.username, nullif(trim(p_discord_username), ''), v_code, now() + interval '5 minutes', p_ip_info)
   returning id into v_challenge_id;
 
   return jsonb_build_object(
@@ -92,7 +97,8 @@ $function$;
 -- 5. 2FA Kodunu Doğrulama Fonksiyonu (RPC)
 create or replace function public.monarch_admin_verify_2fa(
   p_challenge_id uuid,
-  p_code text
+  p_code text,
+  p_discord_username text default null
 )
 returns jsonb
 language plpgsql
@@ -102,6 +108,7 @@ as $function$
 declare
   v_2fa public.monarch_admin_2fa;
   v_session_token text;
+  v_discord_user text;
 begin
   select * into v_2fa
   from public.monarch_admin_2fa
@@ -116,9 +123,11 @@ begin
 
   -- Oturum tokenı üret (12 saat geçerli - 64 karakter)
   v_session_token := replace(gen_random_uuid()::text, '-', '') || replace(gen_random_uuid()::text, '-', '');
+  v_discord_user := coalesce(nullif(trim(p_discord_username), ''), v_2fa.discord_username, 'admin');
 
   update public.monarch_admin_2fa
   set consumed = true,
+      discord_username = v_discord_user,
       session_token = v_session_token,
       session_expires_at = now() + interval '12 hours'
   where id = p_challenge_id;
@@ -127,6 +136,7 @@ begin
     'success', true,
     'session_token', v_session_token,
     'username', v_2fa.admin_username,
+    'discord_username', v_discord_user,
     'expires_at', (now() + interval '12 hours')
   );
 end;
@@ -193,9 +203,10 @@ set search_path = public, pg_temp
 as $function$
 declare
   v_admin_username text;
+  v_discord_username text;
   v_updated public.order_requests;
 begin
-  select admin_username into v_admin_username
+  select admin_username, discord_username into v_admin_username, v_discord_username
   from public.monarch_admin_2fa
   where session_token = p_session_token
     and session_expires_at > now();
@@ -206,7 +217,7 @@ begin
 
   update public.order_requests
   set status = p_new_status,
-      handled_by = coalesce(p_notes, v_admin_username),
+      handled_by = coalesce(p_notes, v_discord_username, v_admin_username),
       closed_at = (case when p_new_status in ('closed', 'cancelled') then now() else closed_at end)
   where order_code = upper(trim(p_order_code))
   returning * into v_updated;
@@ -223,7 +234,7 @@ end;
 $function$;
 
 -- RPC İzinleri
-grant execute on function public.monarch_admin_request_2fa(text, text, text) to anon, authenticated, service_role;
-grant execute on function public.monarch_admin_verify_2fa(uuid, text) to anon, authenticated, service_role;
+grant execute on function public.monarch_admin_request_2fa(text, text, text, text) to anon, authenticated, service_role;
+grant execute on function public.monarch_admin_verify_2fa(uuid, text, text) to anon, authenticated, service_role;
 grant execute on function public.monarch_admin_get_orders(text) to anon, authenticated, service_role;
 grant execute on function public.monarch_admin_update_order_status(text, text, text, text) to anon, authenticated, service_role;

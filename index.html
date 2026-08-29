@@ -685,6 +685,7 @@
           <div id="accountStandardFields" style="display: grid; gap: 13px;">
             <label>Kullanıcı adı<input id="accountUsername" name="username" autocomplete="username" minlength="3" maxlength="24" required /></label>
             <label>Şifre<input id="accountPassword" name="password" type="password" autocomplete="current-password" minlength="6" required /></label>
+            <label id="accountDiscordLabel">Discord Kullanıcı Adınız<input id="accountDiscordUsername" name="discordUsername" autocomplete="off" placeholder="Örn: eververity" /></label>
             <label id="accountConfirmLabel" style="display: none;">Şifre tekrar<input id="accountPasswordConfirm" name="passwordConfirm" type="password" autocomplete="new-password" minlength="6" disabled /></label>
           </div>
 
@@ -692,9 +693,13 @@
           <div id="account2FAFields" style="display: none; gap: 12px;">
             <div class="account-2fa-box">
               <b>🔐 2FA Güvenlik Doğrulaması</b>
-              Kod Discord sunucusundaki <strong>#admin-2fa</strong> kanalına iletildi. Yalnızca <strong>Founder</strong> ve <strong>Destek</strong> rollerine görünür.
+              Kod Discord sunucusundaki <strong>#admin-2fa</strong> kanalına iletildi ve adınız etiketlendi.
               <div>Kalan Süre: <span class="countdown-pill" id="account2FACountdown">05:00</span></div>
             </div>
+            <label>
+              Discord Kullanıcı Adınız
+              <input id="account2FADiscordUser" name="account2FADiscordUser" type="text" placeholder="Örn: eververity" autocomplete="off" style="width: 100%; min-height: 42px; padding: 0 12px; border: 1px solid #cbd4de; border-radius: 4px; color: var(--ink); background: #ffffff;" />
+            </label>
             <label>
               6 Haneli Güvenlik Kodu
               <input id="account2FACodeInput" name="account2FACode" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="Örn: 849216" autocomplete="one-time-code" style="letter-spacing: .25em; font-family: 'Space Mono', monospace; font-size: 18px; font-weight: 700; text-align: center; width: 100%; min-height: 46px; border: 2px solid #7c3aed; border-radius: 4px; color: var(--ink); background: #ffffff;" />
@@ -776,9 +781,9 @@
 
     <script type="module" src="./theme-toggle.js"></script>
     <script type="module">
-      import { bindLocalAccountUI } from './account-local.js?v=20260829_2fa_v4';
+      import { bindLocalAccountUI } from './account-local.js?v=20260829_discord_tag_v1';
       import { bindOrderUI, bindCommunityStats } from './store-orders.js';
-      import { initAdminDashboardUI } from './admin-panel.js?v=20260829_2fa_v4';
+      import { initAdminDashboardUI } from './admin-panel.js?v=20260829_discord_tag_v1';
 
       const cartCount = document.querySelector('#cartCount');
       const toast = document.querySelector('#toast');

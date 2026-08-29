@@ -177,13 +177,22 @@ function buildPrivateTicketOverwrites (guildId, memberId, staffRoleId) {
   ]
 }
 
+function isSupportRequest (order) {
+  const item = Array.isArray(order.items) ? order.items[0] : null
+  return item?.type === 'support' || item?.sku === 'support_ticket' || order.order_code?.startsWith('DST')
+}
+
 async function ensureOrderTicket (guild, member, order, resources) {
   let channel = findCachedOrderTicket(guild, order)
   if (!channel && order.ticket_channel_id) channel = await guild.channels.fetch(order.ticket_channel_id).catch(() => null)
 
+  const isSupport = isSupportRequest(order)
+  const item = Array.isArray(order.items) ? order.items[0] : {}
+  const prefix = isSupport ? 'destek' : 'siparis'
+
   if (!channel) {
     channel = await guild.channels.create({
-      name: `siparis-${order.order_code.toLowerCase()}-${sanitizeChannelName(member.user.username)}`,
+      name: `${prefix}-${order.order_code.toLowerCase()}-${sanitizeChannelName(member.user.username)}`,
       type: ChannelType.GuildText,
       parent: resources.category.id,
       topic: orderTopic({ ...order, discord_user_id: member.id }),
@@ -194,18 +203,31 @@ async function ensureOrderTicket (guild, member, order, resources) {
   const recentMessages = await channel.messages.fetch({ limit: 20 }).catch(() => null)
   const alreadyIntroduced = recentMessages?.some((message) => message.embeds.some((embed) => embed.footer?.text === orderMarker(order)))
   if (!alreadyIntroduced) {
-    const embed = new EmbedBuilder()
-      .setColor(0x3e83b8)
-      .setTitle(`Monarch sipariş talebi · ${order.order_code}`)
-      .setDescription('Bu alan yalnızca sen ve Monarch ekibi tarafından görülebilir. Ödeme bilgisi istemeyiz; yetkili uygun olduğunda burada yazacaktır.')
-      .addFields(
-        { name: 'Ürünler', value: formatOrderItems(order.items) },
-        { name: 'Talep toplamı', value: `${order.total_tl} TL`, inline: true },
-        { name: 'Durum', value: 'Üyelik doğrulandı', inline: true }
-      )
-      .setFooter({ text: orderMarker(order) })
-      .setTimestamp()
-    await channel.send({ content: `${member}`, embeds: [embed] })
+    const embed = isSupport
+      ? new EmbedBuilder()
+          .setColor(0x38bdf8)
+          .setTitle(`Monarch Destek Talebi · ${order.order_code}`)
+          .setDescription('Web sitemiz üzerinden açtığınız destek talebi alındı. Yetkili ekibimiz en kısa sürede burada yanıt verecektir.')
+          .addFields(
+            { name: 'Konu', value: item.subject || item.title || 'Genel Destek' },
+            { name: 'Açıklama / Mesaj', value: item.message || item.description || '-' },
+            { name: 'Durum', value: 'Destek Açık', inline: true }
+          )
+          .setFooter({ text: orderMarker(order) })
+          .setTimestamp()
+      : new EmbedBuilder()
+          .setColor(0x3e83b8)
+          .setTitle(`Monarch sipariş talebi · ${order.order_code}`)
+          .setDescription('Bu alan yalnızca sen ve Monarch ekibi tarafından görülebilir. Ödeme bilgisi istemeyiz; yetkili uygun olduğunda burada yazacaktır.')
+          .addFields(
+            { name: 'Ürünler', value: formatOrderItems(order.items) },
+            { name: 'Talep toplamı', value: `${order.total_tl} TL`, inline: true },
+            { name: 'Durum', value: 'Üyelik doğrulandı', inline: true }
+          )
+          .setFooter({ text: orderMarker(order) })
+          .setTimestamp()
+
+    await channel.send({ content: `${member} ${resources.staffRole ? `${resources.staffRole}` : ''}`, embeds: [embed] })
   }
   return channel
 }
@@ -219,6 +241,25 @@ async function findPurchaseMessage (purchaseChannel, order) {
 }
 
 function buildPurchaseEmbed (member, order, ticket) {
+  const isSupport = isSupportRequest(order)
+  const item = Array.isArray(order.items) ? order.items[0] : {}
+
+  if (isSupport) {
+    return new EmbedBuilder()
+      .setColor(0x38bdf8)
+      .setTitle(`Yeni Destek Talebi · ${order.order_code}`)
+      .setDescription('Web sitesi üzerinden yeni bir destek talebi gönderildi.')
+      .addFields(
+        { name: 'Discord Üyesi', value: `${member.user.tag} (${member.id})` },
+        { name: 'Konu', value: item.subject || item.title || 'Genel Destek' },
+        { name: 'Mesaj', value: item.message || item.description || '-' },
+        { name: 'Özel Destek Kanalı', value: `${ticket}`, inline: true },
+        { name: 'Durum', value: 'Destek Açık', inline: true }
+      )
+      .setFooter({ text: orderMarker(order) })
+      .setTimestamp()
+  }
+
   return new EmbedBuilder()
     .setColor(0x46a66a)
     .setTitle(`Doğrulanmış sipariş · ${order.order_code}`)

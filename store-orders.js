@@ -237,5 +237,98 @@ export function bindOrderUI ({ cartButton, cartCount, dialog, closeButton, form,
   update()
 }
 
+export function bindSupportUI ({ button, dialog, closeButton, form, discordInput, subjectInput, messageInput, submitButton, notify }) {
+  if (!button || !dialog || !form) return
+
+  button.addEventListener('click', () => {
+    try {
+      const sessRaw = localStorage.getItem('monarch_session_v1')
+      if (sessRaw) {
+        const sess = JSON.parse(sessRaw)
+        if (sess?.discordUsername && discordInput && !discordInput.value) {
+          discordInput.value = sess.discordUsername
+        }
+      }
+    } catch {}
+    dialog.showModal()
+  })
+
+  closeButton?.addEventListener('click', () => dialog.close())
+  dialog.addEventListener('click', (event) => {
+    if (event.target === dialog) dialog.close()
+  })
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault()
+    const discordUsername = normalizeDiscordUsername(discordInput.value)
+    if (!isDiscordUsername(discordUsername)) {
+      notify('Discord Kullanıcı Adı Gerekli', 'Sunucudaki kullanıcı adınızı @ olmadan doğru yazın.')
+      discordInput.focus()
+      return
+    }
+
+    const subject = subjectInput?.value?.trim() || 'Genel Destek'
+    const message = messageInput?.value?.trim()
+    if (!message || message.length < 5) {
+      notify('Mesaj Gerekli', 'Lütfen sorununuzu veya talebinizi en az 5 karakterle açıklayın.')
+      messageInput?.focus()
+      return
+    }
+
+    // 5 Dakika Cooldown
+    const lastSupportTime = Number(localStorage.getItem('monarch_last_support_time') || 0)
+    const cooldownMs = 5 * 60 * 1000
+    const elapsed = Date.now() - lastSupportTime
+    if (elapsed < cooldownMs) {
+      const remainSec = Math.ceil((cooldownMs - elapsed) / 1000)
+      const min = Math.floor(remainSec / 60)
+      const sec = remainSec % 60
+      notify('Bekleme Süresi (5 Dk)', `Yeni bir destek talebi açmak için lütfen ${min} dk ${sec} sn bekleyin.`)
+      return
+    }
+
+    submitButton.disabled = true
+    submitButton.textContent = 'Destek talebi açılıyor…'
+
+    try {
+      const supabase = getSupabase()
+      const user = await ensureVisitor(true)
+
+      const items = [{
+        type: 'support',
+        sku: 'support_ticket',
+        title: `Destek: ${subject}`,
+        subject,
+        message,
+        unit_price: 1,
+        price_tl: 1
+      }]
+
+      const { data, error } = await supabase.from('order_requests').insert({
+        visitor_id: user.id,
+        discord_username: discordUsername,
+        items,
+        total_tl: 1,
+        status: 'pending_validation'
+      }).select('order_code').single()
+
+      if (error) {
+        throw new Error('Destek talebi iletilemedi. Lütfen birkaç dakika sonra tekrar deneyin.')
+      }
+
+      localStorage.setItem('monarch_last_support_time', Date.now().toString())
+      dialog.close()
+      form.reset()
+      notify('Destek Talebi Oluşturuldu', `Talep kodunuz: ${data.order_code}. Discord sunucumuzda adınıza özel destek kanalı açılıyor.`)
+    } catch (err) {
+      notify('İşlem Başarısız', err?.message || 'Beklenmeyen bir sorun oluştu.')
+    } finally {
+      submitButton.textContent = 'Destek Talebini Gönder'
+      submitButton.disabled = false
+    }
+  })
+}
+
 window.bindOrderUI = bindOrderUI
+window.bindSupportUI = bindSupportUI
 window.bindCommunityStats = bindCommunityStats

@@ -700,6 +700,25 @@
         .admin-toolbar { flex-direction: column; align-items: stretch; }
         .admin-search-input { width: 100%; }
       }
+      .support-button {
+        background: rgba(56, 189, 248, 0.1);
+        border: 1px solid rgba(56, 189, 248, 0.35);
+        color: #38bdf8;
+        font: 700 11px/1 'Space Mono', monospace;
+        letter-spacing: .08em;
+        padding: 9px 13px;
+        border-radius: 4px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: background 0.2s, border-color 0.2s, color 0.2s;
+      }
+      .support-button:hover {
+        background: rgba(56, 189, 248, 0.2);
+        border-color: #38bdf8;
+        color: #ffffff;
+      }
     </style>
   </head>
   <body>
@@ -718,6 +737,7 @@
           <a href="#iletisim">İletişim</a>
         </div>
         <div class="nav-actions">
+          <button class="support-button" id="supportButton" type="button" title="Destek Talebi Aç"><span class="tactical-dot"></span>DESTEK</button>
           <button class="account-button" id="accountButton" type="button">Giriş Yap / Kaydol</button>
           <button class="theme-toggle" id="themeToggle" type="button" aria-label="Açık tema seçili. Koyu temaya geç" aria-pressed="false">
             <svg class="theme-toggle-icon theme-toggle-sun" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="3"></circle><path d="M8 1.25v1.5M8 13.25v1.5M1.25 8h1.5M13.25 8h1.5M3.23 3.23l1.06 1.06M11.71 11.71l1.06 1.06M12.77 3.23l-1.06 1.06M4.29 11.71l-1.06 1.06"></path></svg>
@@ -965,6 +985,59 @@
       </div>
     </dialog>
 
+    <!-- Canlı Destek Talebi Penceresi / Modal -->
+    <dialog class="account-dialog" id="supportDialog" aria-labelledby="supportTitle">
+      <button class="dialog-close" id="supportClose" type="button" aria-label="Pencereyi kapat">×</button>
+
+      <div class="account-hero-banner">
+        <div class="account-hero-left">
+          <span class="account-hero-badge">MONARCH STORE // DESTEK MERKEZİ</span>
+          <img src="images/logo-light.webp" alt="Monarch Store" class="account-coldwar-logo" width="145" height="34" />
+          <div class="account-coldwar-status">
+            <span class="tactical-dot"></span>
+            <span id="supportDescription">Talebiniz Discord ve yönetici paneline anında iletilir.</span>
+          </div>
+          <h2 id="supportTitle" style="display: none;">Destek Talebi</h2>
+        </div>
+        <div class="account-hero-mascot" title="Monarch Destek Birimi">
+          <img src="images/lena-officer-avatar.jpg" alt="Monarch Anime Komutanı" width="70" height="70" />
+        </div>
+      </div>
+
+      <div class="account-panel">
+        <div class="order-notice" role="alert" style="margin-bottom: 14px;">
+          <span class="notice-icon">(!)</span>
+          <div>
+            <strong>Destek Talebi Bilgilendirmesi:</strong>
+            <p>Talep gönderdiğinizde Discord sunucumuzda adınıza özel destek ticketı açılır ve ekibimiz bilgilendirilir.</p>
+          </div>
+        </div>
+
+        <form class="account-form" id="supportForm" style="display: grid; gap: 12px;">
+          <label>
+            Discord Kullanıcı Adınız
+            <input id="supportDiscordUsername" name="discordUsername" autocomplete="off" placeholder="ornek.kullanici" required />
+          </label>
+          <label>
+            Destek Konusu
+            <select id="supportSubject" name="subject" style="width: 100%; min-height: 42px; padding: 0 10px; border: 1px solid var(--border); border-radius: 4px; background: #070d14; color: var(--text); font-family: var(--font-body); font-size: 13px;">
+              <option value="Genel Destek & Soru">Genel Destek & Soru</option>
+              <option value="Satın Alım & Teslimat">Satın Alım & Teslimat</option>
+              <option value="Hata / Teknik Destek">Hata / Teknik Destek</option>
+              <option value="Öneri & İş Birliği">Öneri & İş Birliği</option>
+              <option value="Diğer">Diğer</option>
+            </select>
+          </label>
+          <label>
+            Mesajınız / Açıklamanız
+            <textarea id="supportMessage" name="message" rows="4" placeholder="Sorununuzu veya talebinizi detaylı olarak açıklayın..." minlength="5" required style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; background: #070d14; color: var(--text); font-family: var(--font-body); font-size: 13px; resize: vertical;"></textarea>
+          </label>
+          <button class="account-submit" id="supportSubmit" type="submit">Destek Talebini Gönder</button>
+        </form>
+        <p class="account-note">Monarch Store Güvenli Destek Hattı © 2026</p>
+      </div>
+    </dialog>
+
     <!-- Standart Kullanıcı & Entegre Admin/2FA Hesap Penceresi -->
     <dialog class="account-dialog" id="accountDialog" aria-labelledby="accountTitle">
       <button class="dialog-close" id="accountClose" type="button" aria-label="Pencereyi kapat">×</button>
@@ -1036,8 +1109,8 @@
 
     <script type="module" src="./theme-toggle.js?v=20260829_v4"></script>
     <script type="module">
-      import { bindLocalAccountUI } from './account-local.js?v=20260829_auth_v6';
-      import { bindOrderUI, bindCommunityStats } from './store-orders.js?v=20260829_auth_v6';
+      import { bindLocalAccountUI } from './account-local.js?v=20260829_auth_v7';
+      import { bindOrderUI, bindSupportUI, bindCommunityStats } from './store-orders.js?v=20260829_auth_v7';
 
       const cartCount = document.querySelector('#cartCount');
       const toast = document.querySelector('#toast');
@@ -1049,6 +1122,18 @@
       
       bindOrderUI({ cartButton: document.querySelector('#cartButton'), cartCount, dialog: document.querySelector('#orderDialog'), closeButton: document.querySelector('#orderClose'), form: document.querySelector('#orderForm'), discordInput: document.querySelector('#orderDiscordUsername'), summary: document.querySelector('#orderSummary'), submitButton: document.querySelector('#orderSubmit'), notify });
       bindCommunityStats({ countElement: document.querySelector('#discordActiveCount'), statusElement: document.querySelector('#discordActiveStatus') });
+
+      bindSupportUI({
+        button: document.querySelector('#supportButton'),
+        dialog: document.querySelector('#supportDialog'),
+        closeButton: document.querySelector('#supportClose'),
+        form: document.querySelector('#supportForm'),
+        discordInput: document.querySelector('#supportDiscordUsername'),
+        subjectInput: document.querySelector('#supportSubject'),
+        messageInput: document.querySelector('#supportMessage'),
+        submitButton: document.querySelector('#supportSubmit'),
+        notify
+      });
 
       bindLocalAccountUI({ 
         button: document.querySelector('#accountButton'), 

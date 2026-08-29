@@ -783,6 +783,7 @@
             <input type="text" id="orderSearchInput" class="search-input" placeholder="Siparis kodu veya Discord ara...">
             <div class="filter-tabs">
               <button type="button" class="filter-tab active" data-filter="all">Tumu</button>
+              <button type="button" class="filter-tab" data-filter="support">Destek</button>
               <button type="button" class="filter-tab" data-filter="pending_validation">Bekleyen</button>
               <button type="button" class="filter-tab" data-filter="validated">Onayli</button>
               <button type="button" class="filter-tab" data-filter="completed">Tamamlanan</button>
@@ -1043,7 +1044,10 @@
 
       let filtered = allOrders.filter(o => {
         let matchFilter = true;
+        const isSupport = Array.isArray(o.items) && o.items[0]?.type === 'support';
+
         if (currentFilter === 'all') matchFilter = (o.status !== 'cancelled');
+        else if (currentFilter === 'support') matchFilter = (o.status !== 'cancelled' && isSupport);
         else if (currentFilter === 'pending_validation') matchFilter = (o.status === 'pending_validation' || o.status === 'processing');
         else if (currentFilter === 'validated') matchFilter = (o.status === 'validated' || o.status === 'queued' || o.status === 'in_progress');
         else if (currentFilter === 'completed') matchFilter = (o.status === 'closed');
@@ -1052,28 +1056,32 @@
         const matchSearch = !query || 
           o.order_code?.toLowerCase().includes(query) || 
           o.discord_username?.toLowerCase().includes(query) ||
-          (Array.isArray(o.items) && o.items.some(i => (i.title || i.name || '').toLowerCase().includes(query)));
+          (Array.isArray(o.items) && o.items.some(i => (i.title || i.name || i.subject || i.message || '').toLowerCase().includes(query)));
         return matchFilter && matchSearch;
       });
 
       if (!filtered.length) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 30px;">Kriterlere uygun siparis bulunamadi.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 30px;">Kriterlere uygun talep bulunamadi.</td></tr>`;
         return;
       }
 
       tbody.innerHTML = filtered.map(order => {
-        const items = Array.isArray(order.items) 
-          ? order.items.map(i => `${i.title || i.name || 'Urun'} (x${i.quantity || 1})`).join(', ') 
-          : '—';
+        const isSupport = Array.isArray(order.items) && order.items[0]?.type === 'support';
+        const items = isSupport
+          ? `<span style="color: #38bdf8; font-weight: 700;">[DESTEK]</span> ${order.items[0].subject || order.items[0].title}`
+          : (Array.isArray(order.items) ? order.items.map(i => `${i.title || i.name || 'Urun'} (x${i.quantity || 1})`).join(', ') : '—');
+        
         const dateStr = new Date(order.created_at).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' });
-        const badgeHTML = getStatusBadgeHTML(order.status);
+        const badgeHTML = isSupport && (order.status === 'pending_validation' || order.status === 'validated')
+          ? `<span class="badge" style="background: rgba(56,189,248,0.15); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3);">Destek</span>`
+          : getStatusBadgeHTML(order.status);
 
         return `
           <tr>
             <td><strong class="order-code">${order.order_code}</strong></td>
             <td><strong>@${order.discord_username || 'Bilinmiyor'}</strong></td>
             <td style="max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${items}</td>
-            <td><b class="price-tag">${order.total_price || order.total_tl || 0} TL</b></td>
+            <td><b class="price-tag">${isSupport ? 'Ücretsiz' : `${order.total_price || order.total_tl || 0} TL`}</b></td>
             <td>${badgeHTML}</td>
             <td style="font-size: 11px; color: var(--text-muted);">${dateStr}</td>
             <td>
@@ -1094,13 +1102,23 @@
 
     function openDetailModal(order) {
       activeDetailOrder = order;
+      const isSupport = Array.isArray(order.items) && order.items[0]?.type === 'support';
+
       document.querySelector('#modalOrderCode').textContent = order.order_code;
       document.querySelector('#modalOrderUser').textContent = `@${order.discord_username || 'Musteri'}`;
-      document.querySelector('#modalOrderPrice').textContent = `${order.total_price || order.total_tl || 0} TL`;
+      document.querySelector('#modalOrderPrice').textContent = isSupport ? 'Destek Talebi' : `${order.total_price || order.total_tl || 0} TL`;
       document.querySelector('#modalOrderDate').textContent = new Date(order.created_at).toLocaleString('tr-TR');
 
       const itemsContainer = document.querySelector('#modalOrderItemsList');
-      if (Array.isArray(order.items) && order.items.length) {
+      if (isSupport) {
+        const item = order.items[0] || {};
+        itemsContainer.innerHTML = `
+          <div style="padding: 4px 0;">
+            <div style="color: #38bdf8; font-weight: 700; margin-bottom: 6px;">Konu: ${item.subject || item.title || 'Genel Destek'}</div>
+            <div style="background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 4px; padding: 10px; color: var(--text); white-space: pre-wrap; font-family: var(--font-body); font-size: 12px; line-height: 1.5;">${item.message || item.description || '-'}</div>
+          </div>
+        `;
+      } else if (Array.isArray(order.items) && order.items.length) {
         itemsContainer.innerHTML = order.items.map(i => `
           <div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.04);">
             <span>${i.title || i.name || 'Urun'} <small style="color: var(--text-muted);">(x${i.quantity || 1})</small></span>
@@ -1108,7 +1126,7 @@
           </div>
         `).join('');
       } else {
-        itemsContainer.innerHTML = '<span style="color: var(--text-muted);">Urun bilgisi yok.</span>';
+        itemsContainer.innerHTML = '<span style="color: var(--text-muted);">Bilgi yok.</span>';
       }
 
       document.querySelector('#adminOrderDetailDialog').showModal();

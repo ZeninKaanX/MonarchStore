@@ -824,7 +824,7 @@
       <button type="button" onclick="document.querySelector('#adminOrderDetailDialog').close()" style="background: transparent; border: 0; color: var(--text-muted); font-size: 22px; cursor: pointer;">×</button>
     </div>
 
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; font-size: 12.5px;">
+    <div id="modalNormalInfoGrid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; font-size: 12.5px;">
       <div><span style="color: var(--text-muted); display: block;">Musteri:</span><strong id="modalOrderUser">—</strong></div>
       <div><span style="color: var(--text-muted); display: block;">Toplam Tutar:</span><strong id="modalOrderPrice" class="price-tag">—</strong></div>
       <div style="grid-column: span 2;"><span style="color: var(--text-muted); display: block;">Tarih:</span><strong id="modalOrderDate">—</strong></div>
@@ -1109,9 +1109,18 @@
 
     function openDetailModal(order) {
       activeDetailOrder = order;
-      const isSupport = Array.isArray(order.items) && order.items[0]?.type === 'support';
+      const isSupport = Array.isArray(order.items) && (order.items[0]?.type === 'support' || order.items[0]?.sku === 'support_ticket');
+      const dialog = document.querySelector('#adminOrderDetailDialog');
       const replySection = document.querySelector('#modalSupportReplySection');
+      const normalInfoGrid = document.querySelector('#modalNormalInfoGrid');
+
+      if (dialog) {
+        dialog.style.maxWidth = isSupport ? '1080px' : '560px';
+        dialog.style.width = '95vw';
+      }
+
       if (replySection) replySection.style.display = isSupport ? 'block' : 'none';
+      if (normalInfoGrid) normalInfoGrid.style.display = isSupport ? 'none' : 'grid';
 
       document.querySelector('#modalOrderCode').textContent = order.order_code;
       document.querySelector('#modalOrderUser').textContent = `@${order.discord_username || 'Musteri'}`;
@@ -1131,19 +1140,50 @@
             }];
 
         itemsContainer.innerHTML = `
-          <div style="padding: 2px 0;">
-            <div style="color: #38bdf8; font-weight: 700; font-size: 13px; margin-bottom: 8px;">Konu: ${item.subject || item.title || 'Genel Destek'}</div>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div style="display: grid; grid-template-columns: 260px 1fr; gap: 16px; align-items: start;">
+            <!-- Sol Detaylar Kartı -->
+            <div style="background: #0a111b; border: 1px solid var(--border); border-radius: 6px; padding: 14px;">
+              <span style="font: 700 10.5px var(--font-mono); color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 4px;">Talep Detayları</span>
+              <div style="margin-bottom: 10px;">
+                <span style="font-size: 11px; color: var(--text-muted); display: block;">Müşteri:</span>
+                <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
+                  <img src="images/default-avatar.jpg" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border);" />
+                  <div>
+                    <strong style="color: var(--text); font-size: 12.5px; display: block;">${order.discord_username || 'Müşteri'}</strong>
+                    <small style="color: var(--text-muted); font-size: 10.5px;">@${order.discord_username || '-'}</small>
+                  </div>
+                </div>
+              </div>
+              <div style="margin-bottom: 10px;">
+                <span style="font-size: 11px; color: var(--text-muted); display: block;">Konu / Kategori:</span>
+                <strong style="color: #38bdf8; font-size: 12px;">${item.subject || item.title || 'Genel Destek'}</strong>
+              </div>
+              <div style="margin-bottom: 10px;">
+                <span style="font-size: 11px; color: var(--text-muted); display: block;">Durum:</span>
+                <span class="badge" style="background: rgba(56,189,248,0.15); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3); font-size: 10.5px; padding: 2px 8px;">${order.status}</span>
+              </div>
+              <div>
+                <span style="font-size: 11px; color: var(--text-muted); display: block;">Tarih:</span>
+                <span style="color: var(--text-muted); font-size: 11px;">${new Date(order.created_at).toLocaleString('tr-TR')}</span>
+              </div>
+            </div>
+
+            <!-- Sağ Mesajlaşma Akışı -->
+            <div style="display: flex; flex-direction: column; gap: 12px; max-height: 320px; overflow-y: auto; padding-right: 4px;">
               ${messages.map(m => {
                 const isAdmin = m.sender === 'admin';
                 const timeStr = m.createdAt ? new Date(m.createdAt).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }) : '';
+                const avatar = isAdmin ? 'images/lena-officer-avatar.jpg' : 'images/default-avatar.jpg';
                 return `
-                  <div style="background: ${isAdmin ? 'rgba(34,197,94,0.1)' : 'rgba(56,189,248,0.1)'}; border: 1px solid ${isAdmin ? 'rgba(34,197,94,0.3)' : 'rgba(56,189,248,0.3)'}; border-radius: 4px; padding: 8px 10px;">
-                    <div style="display: flex; justify-content: space-between; font-size: 10.5px; margin-bottom: 3px;">
-                      <strong style="color: ${isAdmin ? '#22c55e' : '#38bdf8'};">${isAdmin ? '🛡️ ' + (m.author || 'Destek Ekibi') : '👤 ' + (m.author || 'Müşteri')}</strong>
-                      <span style="color: var(--text-muted);">${timeStr}</span>
+                  <div style="display: flex; gap: 10px; align-items: flex-start;">
+                    <img src="${avatar}" alt="${m.author}" style="width: 36px; height: 36px; border-radius: ${isAdmin ? '4px' : '50%'}; object-fit: cover; border: 1.5px solid ${isAdmin ? 'rgba(34,197,94,0.4)' : 'rgba(56,189,248,0.4)'}; flex-shrink: 0;" />
+                    <div style="flex: 1; background: ${isAdmin ? 'rgba(34,197,94,0.08)' : '#070d14'}; border: 1px solid ${isAdmin ? 'rgba(34,197,94,0.3)' : 'var(--border)'}; border-radius: 6px; padding: 10px 12px;">
+                      <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,0.04); padding-bottom: 3px;">
+                        <strong style="color: ${isAdmin ? '#22c55e' : '#38bdf8'};">${isAdmin ? '🛡️ ' + (m.author || 'Destek Ekibi') : '👤 ' + (m.author || 'Müşteri')}</strong>
+                        <span style="color: var(--text-muted); font-size: 10px;">${timeStr}</span>
+                      </div>
+                      <div style="color: var(--text); font-size: 13px; line-height: 1.5; white-space: pre-wrap;">${m.text}</div>
                     </div>
-                    <div style="color: var(--text); font-size: 12px; line-height: 1.4; white-space: pre-wrap;">${m.text}</div>
                   </div>
                 `;
               }).join('')}
@@ -1152,7 +1192,7 @@
         `;
       } else if (Array.isArray(order.items) && order.items.length) {
         itemsContainer.innerHTML = order.items.map(i => `
-          <div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.04);">
+          <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.04);">
             <span>${i.title || i.name || 'Urun'} <small style="color: var(--text-muted);">(x${i.quantity || 1})</small></span>
             <strong style="color: var(--primary); font-family: var(--font-mono);">${i.price_tl || i.unit_price || 0} TL</strong>
           </div>

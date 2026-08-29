@@ -986,49 +986,135 @@
     </dialog>
 
     <!-- Canlı Destek Talebi & İki Yönlü Mesajlaşma Penceresi / Modal -->
-    <dialog class="account-dialog" id="supportDialog" aria-labelledby="supportTitle" style="max-width: 580px;">
+    <dialog class="account-dialog portal-dialog-wide" id="supportDialog" aria-labelledby="supportTitle" style="max-width: 1100px; width: 95vw;">
       <button class="dialog-close" id="supportClose" type="button" aria-label="Pencereyi kapat">×</button>
 
-      <div class="account-hero-banner">
-        <div class="account-hero-left">
-          <span class="account-hero-badge">MONARCH STORE // CANLI DESTEK</span>
-          <img src="images/logo-light.webp" alt="Monarch Store" class="account-coldwar-logo" width="145" height="34" />
-          <div class="account-coldwar-status">
-            <span class="tactical-dot"></span>
-            <span id="supportDescription">Talepleriniz Discord ve yönetici paneline anında iletilir.</span>
-          </div>
-          <h2 id="supportTitle" style="display: none;">Destek Portalı</h2>
+      <!-- Üst Breadcrumb & Başlık Çubuğu -->
+      <div style="background: #0b1522; padding: 14px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 11.5px; color: var(--text-muted);">
+          <span>🏠 Anasayfa</span>
+          <span>/</span>
+          <span style="color: #38bdf8;">Destek</span>
+          <span>/</span>
+          <span id="supportBreadcrumbSub" style="color: var(--text);">Taleplerim</span>
         </div>
-        <div class="account-hero-mascot" title="Monarch Destek Birimi">
-          <img src="images/lena-officer-avatar.jpg" alt="Monarch Anime Komutanı" width="70" height="70" />
+        <div style="display: flex; gap: 8px;">
+          <button type="button" class="account-modal-tab active" id="supportTabMyTickets" style="padding: 6px 14px; font-size: 11px;">💬 TALEPLERİM</button>
+          <button type="button" class="account-modal-tab" id="supportTabNew" style="padding: 6px 14px; font-size: 11px;">+ YENİ TALEP AÇ</button>
         </div>
       </div>
 
-      <div class="account-panel">
-        <!-- Destek Sekmeleri -->
-        <div class="account-modal-tabs" style="margin-bottom: 14px;">
-          <button type="button" class="account-modal-tab active" id="supportTabNew">+ YENİ TALEP AÇ</button>
-          <button type="button" class="account-modal-tab" id="supportTabMyTickets">💬 TALEPLERİM</button>
+      <div class="account-panel" style="padding: 20px; background: #070d14;">
+        <!-- 1. Taleplerim Tablosu Görünümü (Görsel 2 Formatı) -->
+        <div id="supportViewList">
+          <div id="supportTicketsList" style="min-height: 250px;">
+            <div style="text-align: center; color: var(--text-muted); padding: 40px;">Talepleriniz yükleniyor…</div>
+          </div>
         </div>
 
-        <!-- 1. Yeni Destek Talebi Görünümü -->
-        <div id="supportViewNew">
-          <div class="order-notice" role="alert" style="margin-bottom: 14px;">
+        <!-- 2. İki Yönlü Mesajlaşma & Sohbet Görünümü (Görsel 3 Formatı - 2 Sütunlu) -->
+        <div id="supportViewChat" style="display: none;">
+          <!-- Başlık ve Geri Çubuğu -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid var(--border);">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <button type="button" id="supportChatBackBtn" style="background: rgba(56,189,248,0.12); border: 1px solid rgba(56,189,248,0.3); color: #38bdf8; font: 700 11px var(--font-mono); padding: 6px 14px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                ← Geri
+              </button>
+              <h3 id="supportChatTitle" style="font-size: 17px; font-weight: 700; color: var(--text); margin: 0;">Talep Detayı</h3>
+            </div>
+            <span id="supportChatStatus" class="badge" style="background: rgba(56,189,248,0.15); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3); padding: 4px 12px;">Aktif</span>
+          </div>
+
+          <!-- 2 Sütunlu Geniş Izgara Düzeni -->
+          <div style="display: grid; grid-template-columns: 280px 1fr; gap: 20px; align-items: start;">
+            <!-- Sol Sütun: Detaylar Kartı -->
+            <div style="background: #0a111b; border: 1px solid var(--border); border-radius: 8px; padding: 18px;">
+              <span style="color: var(--text-muted); font: 700 11px var(--font-mono); text-transform: uppercase; display: block; margin-bottom: 14px; border-bottom: 1px solid var(--border); padding-bottom: 6px;">Detaylar</span>
+              
+              <!-- Açan Kullanıcı -->
+              <div style="margin-bottom: 14px;">
+                <span style="font-size: 11px; color: var(--text-muted); display: block; margin-bottom: 4px;">Açan:</span>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <img id="supportDetailUserAvatar" src="images/default-avatar.jpg" alt="Avatar" style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border);" />
+                  <div>
+                    <strong id="supportDetailUsername" style="color: var(--text); font-size: 13px; display: block;">—</strong>
+                    <small id="supportDetailDiscord" style="color: var(--text-muted); font-size: 11px;">@—</small>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Kategori -->
+              <div style="margin-bottom: 12px;">
+                <span style="font-size: 11px; color: var(--text-muted); display: block;">Kategori:</span>
+                <strong id="supportDetailCategory" style="color: var(--text); font-size: 12.5px;">Genel Destek</strong>
+              </div>
+
+              <!-- Durum -->
+              <div style="margin-bottom: 12px;">
+                <span style="font-size: 11px; color: var(--text-muted); display: block; margin-bottom: 3px;">Durum:</span>
+                <div id="supportDetailStatusBadge"><span class="badge">Açık</span></div>
+              </div>
+
+              <!-- Talep Kodu & Tarihler -->
+              <div style="margin-bottom: 12px;">
+                <span style="font-size: 11px; color: var(--text-muted); display: block;">Talep Kodu:</span>
+                <strong id="supportDetailCode" style="font-family: var(--font-mono); color: #38bdf8; font-size: 12.5px;">#—</strong>
+              </div>
+              <div style="margin-bottom: 12px;">
+                <span style="font-size: 11px; color: var(--text-muted); display: block;">Son Güncelleme:</span>
+                <span id="supportDetailUpdated" style="color: var(--text); font-size: 12px;">—</span>
+              </div>
+              <div>
+                <span style="font-size: 11px; color: var(--text-muted); display: block;">Oluşturulma:</span>
+                <span id="supportDetailDate" style="color: var(--text-muted); font-size: 11.5px;">—</span>
+              </div>
+            </div>
+
+            <!-- Sağ Sütun: Mesajlaşma ve Geniş Yanıt Kutusu -->
+            <div>
+              <!-- Mesaj Geçmişi Akışı -->
+              <div id="supportChatMessages" style="background: #0a111b; border: 1px solid var(--border); border-radius: 8px; padding: 18px; min-height: 240px; max-height: 380px; overflow-y: auto; margin-bottom: 16px;">
+                <!-- Dinamik mesaj kutuları -->
+              </div>
+
+              <!-- Geniş Yanıt Kutusu (LeaderOS Tarzı) -->
+              <div style="background: #0a111b; border: 1px solid var(--border); border-radius: 8px; padding: 14px;">
+                <div style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 8px;">Hızlı bir yanıt yazabilirsiniz:</div>
+                
+                <!-- Format Araç Çubuğu Dekoru -->
+                <div style="display: flex; gap: 8px; padding: 6px 10px; background: #070d14; border: 1px solid var(--border); border-radius: 4px 4px 0 0; font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">
+                  <span>Paragraf</span> | <b>B</b> | <i>I</i> | <s>S</s> | <u>U</u> | <span>🔗</span> | <span>☰</span>
+                </div>
+
+                <form id="supportChatReplyForm" style="display: grid; gap: 10px;">
+                  <textarea id="supportChatReplyInput" rows="4" placeholder="Kullanıcıya veya ekibe iletmek istediğiniz yanıtınızı detaylı olarak buraya yazın..." required style="width: 100%; min-height: 110px; padding: 12px; border: 1px solid var(--border); border-top: 0; border-radius: 0 0 4px 4px; background: #070d14; color: var(--text); font-family: var(--font-body); font-size: 13.5px; line-height: 1.6; resize: vertical;"></textarea>
+                  <div style="display: flex; justify-content: flex-end;">
+                    <button type="submit" id="supportChatReplySubmit" style="background: #16a34a; border: 0; color: #ffffff; font: 700 12px var(--font-mono); padding: 10px 24px; border-radius: 4px; cursor: pointer; transition: background .16s;">Gönder</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Yeni Destek Talebi Açma Formu -->
+        <div id="supportViewNew" style="display: none;">
+          <div class="order-notice" role="alert" style="margin-bottom: 16px;">
             <span class="notice-icon">(!)</span>
             <div>
               <strong>Canlı Destek Bildirimi:</strong>
-              <p>Talep gönderdiğinizde Discord sunucumuzda adınıza özel ticket açılır ve yetkililerimiz anında yanıtlayabilir.</p>
+              <p>Destek talebi açtığınızda ekibimiz Discord ve web paneli üzerinden anında bilgilendirilir ve mesajınızı yanıtlar.</p>
             </div>
           </div>
 
-          <form class="account-form" id="supportForm" style="display: grid; gap: 12px;">
+          <form class="account-form" id="supportForm" style="display: grid; gap: 14px; max-width: 680px; margin: 0 auto;">
             <label>
               Discord Kullanıcı Adınız
               <input id="supportDiscordUsername" name="discordUsername" autocomplete="off" placeholder="ornek.kullanici" required />
             </label>
             <label>
               Destek Konusu
-              <select id="supportSubject" name="subject" style="width: 100%; min-height: 42px; padding: 0 10px; border: 1px solid var(--border); border-radius: 4px; background: #070d14; color: var(--text); font-family: var(--font-body); font-size: 13px;">
+              <select id="supportSubject" name="subject" style="width: 100%; min-height: 42px; padding: 0 12px; border: 1px solid var(--border); border-radius: 4px; background: #070d14; color: var(--text); font-family: var(--font-body); font-size: 13px;">
                 <option value="Genel Destek & Soru">Genel Destek & Soru</option>
                 <option value="Satın Alım & Teslimat">Satın Alım & Teslimat</option>
                 <option value="Hata / Teknik Destek">Hata / Teknik Destek</option>
@@ -1038,79 +1124,43 @@
             </label>
             <label>
               Mesajınız / Açıklamanız
-              <textarea id="supportMessage" name="message" rows="4" placeholder="Sorununuzu veya talebinizi detaylı olarak açıklayın..." minlength="5" required style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; background: #070d14; color: var(--text); font-family: var(--font-body); font-size: 13px; resize: vertical;"></textarea>
+              <textarea id="supportMessage" name="message" rows="5" placeholder="Sorununuzu veya talebinizi detaylı olarak açıklayın..." minlength="5" required style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 4px; background: #070d14; color: var(--text); font-family: var(--font-body); font-size: 13px; resize: vertical;"></textarea>
             </label>
-            <button class="account-submit" id="supportSubmit" type="submit">Destek Talebini Gönder</button>
+            <button class="account-submit" id="supportSubmit" type="submit" style="min-height: 44px;">Destek Talebini Gönder</button>
           </form>
         </div>
 
-        <!-- 2. Taleplerim Listesi Görünümü -->
-        <div id="supportViewList" style="display: none;">
-          <div id="supportTicketsList" style="max-height: 320px; overflow-y: auto; padding-right: 4px;">
-            <div style="text-align: center; color: var(--text-muted); padding: 25px;">Talepleriniz yükleniyor…</div>
-          </div>
-        </div>
-
-        <!-- 3. İki Yönlü Mesajlaşma / Canlı Sohbet Görünümü -->
-        <div id="supportViewChat" style="display: none;">
-          <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; margin-bottom: 12px; border-bottom: 1px solid var(--border);">
-            <button type="button" id="supportChatBackBtn" style="background: transparent; border: 0; color: #38bdf8; font-family: var(--font-mono); font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 4px;">
-              ← Taleplerime Dön
-            </button>
-            <div style="text-align: right;">
-              <strong id="supportChatTitle" style="font-size: 13px; color: var(--text); display: block;">—</strong>
-              <small id="supportChatStatus" style="color: var(--text-muted); font-size: 11px;">Aktif Talep</small>
-            </div>
-          </div>
-
-          <!-- Mesaj Geçmişi Akışı -->
-          <div id="supportChatMessages" style="background: #070d14; border: 1px solid var(--border); border-radius: 6px; padding: 14px; min-height: 220px; max-height: 280px; overflow-y: auto; margin-bottom: 12px; display: flex; flex-direction: column;">
-            <!-- Dinamik mesaj balonları -->
-          </div>
-
-          <!-- Kullanıcı Yanıt Formu -->
-          <form id="supportChatReplyForm" style="display: grid; gap: 8px;">
-            <textarea id="supportChatReplyInput" rows="2" placeholder="Yöneticilere yanıtınızı yazın..." required style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; background: #070d14; color: var(--text); font-family: var(--font-body); font-size: 12.5px; resize: vertical;"></textarea>
-            <button type="submit" id="supportChatReplySubmit" class="account-submit" style="min-height: 38px; font-size: 12px;">Yanıt Gönder</button>
-          </form>
-        </div>
-
-        <p class="account-note">Monarch Store Güvenli Destek Hattı © 2026</p>
+        <p class="account-note" style="margin-top: 20px;">Monarch Store Güvenli Destek Hattı © 2026</p>
       </div>
     </dialog>
 
-    <!-- Standart Kullanıcı & Entegre Admin/2FA & Profil Özelleştirme Penceresi -->
-    <dialog class="account-dialog" id="accountDialog" aria-labelledby="accountTitle">
+    <!-- Standart Kullanıcı & Entegre Admin/2FA & Profil Özelleştirme Penceresi (Görsel 1 Formatı) -->
+    <dialog class="account-dialog portal-dialog-wide" id="accountDialog" aria-labelledby="accountTitle" style="max-width: 980px; width: 95vw;">
       <button class="dialog-close" id="accountClose" type="button" aria-label="Pencereyi kapat">×</button>
 
-      <div class="account-hero-banner">
-        <div class="account-hero-left">
-          <span class="account-hero-badge">MONARCH STORE // HESAP</span>
-          <img src="images/logo-light.webp" alt="Monarch Store" class="account-coldwar-logo" width="145" height="34" />
-          <div class="account-coldwar-status">
-            <span class="tactical-dot"></span>
-            <span id="accountDescription">Kullanıcı adı ve şifrenizle giriş yapın.</span>
-          </div>
-          <h2 id="accountTitle" style="display: none;">Hesap Girişi</h2>
+      <!-- Üst Breadcrumb Çubuğu -->
+      <div style="background: #0b1522; padding: 14px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 11.5px; color: var(--text-muted);">
+          <span>🏠 Anasayfa</span>
+          <span>/</span>
+          <span style="color: #38bdf8;">Profil</span>
         </div>
-        <div class="account-hero-mascot" title="Monarch Karakteri">
-          <img id="accountHeroAvatarImg" src="images/lena-officer-avatar.jpg" alt="Monarch Profil Avatarı" width="70" height="70" style="border-radius: 4px; object-fit: cover;" />
-        </div>
+        <img id="accountHeroAvatarImg" src="images/default-avatar.jpg" alt="Avatar" width="34" height="34" style="border-radius: 50%; object-fit: cover; border: 1px solid var(--border);" />
       </div>
 
-      <div class="account-panel">
-        <!-- Giriş / Kayıt / Şifremi Unuttum Sekmeleri -->
-        <div class="account-modal-tabs" id="accountModalTabs">
+      <div class="account-panel" style="padding: 20px; background: #070d14;">
+        <!-- Giriş / Kayıt / Şifremi Unuttum Sekmeleri (Oturum Yokken) -->
+        <div class="account-modal-tabs" id="accountModalTabs" style="max-width: 440px; margin: 0 auto 16px;">
           <button type="button" class="account-modal-tab active" id="accountTabLogin">GİRİŞ YAP</button>
           <button type="button" class="account-modal-tab" id="accountTabRegister">KAYDOL</button>
           <button type="button" class="account-modal-tab" id="accountTabForgot">ŞİFREMİ UNUTTUM</button>
         </div>
 
         <!-- Admin İçin Panel Açma Butonu -->
-        <button class="account-admin-open-btn" id="accountOpenAdminBtn" type="button" style="display: none;">YÖNETİM PANELİNİ AÇ</button>
+        <button class="account-admin-open-btn" id="accountOpenAdminBtn" type="button" style="display: none; max-width: 440px; margin: 0 auto 14px;">YÖNETİM PANELİNİ AÇ</button>
 
         <!-- 1. Giriş & Kayıt & Şifremi Unuttum Formu (Oturum Yokken) -->
-        <form class="account-form" id="accountForm">
+        <form class="account-form" id="accountForm" style="max-width: 440px; margin: 0 auto;">
           <!-- Standart Giriş/Kayıt Alanları -->
           <div id="accountStandardFields" style="display: grid; gap: 12px;">
             <label>Kullanıcı Adı<input id="accountUsername" name="username" autocomplete="username" minlength="3" maxlength="24" placeholder="Kullanıcı adınız..." required /></label>
@@ -1165,79 +1215,149 @@
           <button class="account-submit" id="accountSubmit" type="submit">Giriş Yap</button>
         </form>
 
-        <!-- 2. Giriş Yapılmış Profil & Özelleştirme Paneli -->
+        <!-- 2. Giriş Yapılmış Profil & Dashboard Paneli (Görsel 1 Formatı - 2 Sütunlu) -->
         <div id="accountProfilePanel" style="display: none;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border);">
+          <div style="display: grid; grid-template-columns: 240px 1fr; gap: 20px; align-items: start;">
+            
+            <!-- Sol Profil Menü Kartı -->
+            <div style="background: #0a111b; border: 1px solid var(--border); border-radius: 8px; padding: 20px; text-align: center;">
+              <div style="position: relative; width: 84px; height: 84px; margin: 0 auto 12px;">
+                <img id="profileSidebarAvatar" src="images/default-avatar.jpg" alt="Avatar" style="width: 84px; height: 84px; border-radius: 50%; object-fit: cover; border: 3px solid #38bdf8; box-shadow: 0 0 20px rgba(56,189,248,0.3);" />
+              </div>
+              <strong id="profileSidebarUsername" style="font-family: var(--font-mono); font-size: 16px; color: var(--text); display: block; margin-bottom: 4px;">—</strong>
+              <span id="profileSidebarRole" class="badge" style="background: rgba(56,189,248,0.15); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3); font-size: 10px; padding: 2px 10px; border-radius: 12px;">Müşteri</span>
+
+              <div style="text-align: left; margin-top: 20px; border-top: 1px solid var(--border); padding-top: 14px;">
+                <span style="font: 700 10px var(--font-mono); color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 8px;">Hesabım</span>
+                <div style="display: grid; gap: 4px; font-size: 12.5px;">
+                  <a href="javascript:void(0)" style="color: #38bdf8; font-weight: 700; text-decoration: none; padding: 6px 8px; border-radius: 4px; background: rgba(56,189,248,0.1); display: block;">👤 Profil</a>
+                  <a href="javascript:void(0)" id="profileOpenSupportBtn" style="color: var(--text-muted); text-decoration: none; padding: 6px 8px; border-radius: 4px; display: block;">💬 Destek Talepleri</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sağ Ana Profil İçerik Alanı -->
             <div>
-              <span style="font-size: 11px; color: var(--text-muted); display: block;">Aktif Kullanıcı</span>
-              <strong id="profileUsernameDisplay" style="font-family: var(--font-mono); font-size: 15px; color: var(--primary);">—</strong>
-            </div>
-            <button type="button" id="profileOpenSupportBtn" class="support-button" style="font-size: 11px; padding: 6px 12px;">
-              💬 Destek Taleplerim
-            </button>
-          </div>
-
-          <!-- Avatar Seçici -->
-          <div style="margin-bottom: 14px;">
-            <span style="font: 700 11px var(--font-mono); color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 6px;">Profil Avatarı Seçin:</span>
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
-              <button type="button" class="avatar-select-btn" data-url="images/lena-officer-avatar.jpg" data-name="Lena Komutanı" style="background: #070d14; border: 2px solid var(--border); border-radius: 6px; padding: 6px; cursor: pointer; text-align: center;">
-                <img src="images/lena-officer-avatar.jpg" alt="Lena" width="48" height="48" style="border-radius: 4px; display: block; margin: 0 auto 4px; object-fit: cover;" />
-                <span style="font-size: 10px; color: var(--text); display: block;">Lena Komutanı</span>
-              </button>
-              <button type="button" class="avatar-select-btn" data-url="images/mascot.webp" data-name="Monarch Maskot" style="background: #070d14; border: 2px solid var(--border); border-radius: 6px; padding: 6px; cursor: pointer; text-align: center;">
-                <img src="images/mascot.webp" alt="Maskot" width="48" height="48" style="border-radius: 4px; display: block; margin: 0 auto 4px; object-fit: cover;" />
-                <span style="font-size: 10px; color: var(--text); display: block;">Monarch Maskot</span>
-              </button>
-              <button type="button" class="avatar-select-btn" data-url="images/hero-whitehair.webp" data-name="Saha Operatörü" style="background: #070d14; border: 2px solid var(--border); border-radius: 6px; padding: 6px; cursor: pointer; text-align: center;">
-                <img src="images/hero-whitehair.webp" alt="Saha Operatörü" width="48" height="48" style="border-radius: 4px; display: block; margin: 0 auto 4px; object-fit: cover;" />
-                <span style="font-size: 10px; color: var(--text); display: block;">Saha Operatörü</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- Discord Kullanıcı Adı & E-Posta -->
-          <div style="display: grid; gap: 10px; margin-bottom: 14px;">
-            <label>
-              Discord Kullanıcı Adınız
-              <input id="profileDiscordInput" type="text" placeholder="Örn: eververity" />
-            </label>
-            <label>
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                <span>E-Posta Adresiniz</span>
-                <span id="profileEmailBadge" class="badge" style="font-size: 9.5px; padding: 1px 6px;">Doğrulanmamış</span>
+              <!-- Üst Profil Banner Kartı -->
+              <div style="background: #0a111b; border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <div style="display: flex; align-items: center; gap: 14px;">
+                  <img id="profileBannerAvatar" src="images/default-avatar.jpg" alt="Avatar" style="width: 48px; height: 48px; border-radius: 6px; object-fit: cover; border: 1px solid var(--border);" />
+                  <div>
+                    <strong id="profileBannerUsername" style="font-size: 16px; color: var(--text); display: block;">—</strong>
+                    <small id="profileBannerEmail" style="color: var(--text-muted); font-size: 12px;">—</small>
+                  </div>
+                </div>
+                <button type="button" id="profileToggleEditBtn" style="background: #0284c7; border: 0; color: #fff; font: 700 11.5px var(--font-mono); padding: 8px 18px; border-radius: 4px; cursor: pointer;">Profili Düzenle</button>
               </div>
-              <div style="display: flex; gap: 8px;">
-                <input id="profileEmailInput" type="email" placeholder="ornek@domain.com" style="flex: 1;" />
-                <button type="button" id="profileSendEmailCodeBtn" style="background: rgba(56,189,248,0.15); border: 1px solid #38bdf8; color: #38bdf8; font: 700 10.5px var(--font-mono); padding: 0 10px; border-radius: 4px; cursor: pointer; white-space: nowrap;">Doğrula</button>
-              </div>
-            </label>
 
-            <!-- E-Posta Doğrulama Kodu Alanı -->
-            <div id="profileEmailCodePrompt" style="display: none; background: rgba(56,189,248,0.06); border: 1px dashed rgba(56,189,248,0.3); border-radius: 4px; padding: 10px; margin-top: 4px;">
-              <div style="font-size: 11px; margin-bottom: 6px; color: #38bdf8;">E-posta adresinize 6 haneli güvenlik kodu iletildi:</div>
-              <div style="display: flex; gap: 8px;">
-                <input id="profileEmailOtpInput" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="123456" style="width: 110px; text-align: center; font-family: var(--font-mono); font-weight: 700; letter-spacing: .2em;" />
-                <button type="button" id="profileVerifyEmailCodeBtn" style="background: #22c55e; border: 0; color: #ffffff; font: 700 11px var(--font-mono); padding: 0 12px; border-radius: 4px; cursor: pointer;">Onayla</button>
+              <!-- 2x2 Bilgi Kartları Izgarası (Görsel 1 Formatı) -->
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+                <!-- Kart 1: E-Posta -->
+                <div style="background: #0a111b; border: 1px solid var(--border); border-radius: 8px; padding: 14px; display: flex; align-items: center; gap: 12px;">
+                  <div style="width: 38px; height: 38px; border-radius: 6px; background: rgba(56,189,248,0.15); display: grid; place-items: center; font-size: 18px;">✉️</div>
+                  <div>
+                    <span style="font: 700 10px var(--font-mono); color: var(--text-muted); text-transform: uppercase; display: block;">E-Posta</span>
+                    <strong id="profileGridEmail" style="color: var(--text); font-size: 12.5px;">—</strong>
+                  </div>
+                </div>
+
+                <!-- Kart 2: Discord -->
+                <div style="background: #0a111b; border: 1px solid var(--border); border-radius: 8px; padding: 14px; display: flex; align-items: center; gap: 12px;">
+                  <div style="width: 38px; height: 38px; border-radius: 6px; background: rgba(99,102,241,0.15); display: grid; place-items: center; font-size: 18px;">🎮</div>
+                  <div>
+                    <span style="font: 700 10px var(--font-mono); color: var(--text-muted); text-transform: uppercase; display: block;">Discord</span>
+                    <strong id="profileGridDiscord" style="color: var(--text); font-size: 12.5px;">—</strong>
+                  </div>
+                </div>
+
+                <!-- Kart 3: Kayıt Tarihi -->
+                <div style="background: #0a111b; border: 1px solid var(--border); border-radius: 8px; padding: 14px; display: flex; align-items: center; gap: 12px;">
+                  <div style="width: 38px; height: 38px; border-radius: 6px; background: rgba(56,189,248,0.15); display: grid; place-items: center; font-size: 18px;">📅</div>
+                  <div>
+                    <span style="font: 700 10px var(--font-mono); color: var(--text-muted); text-transform: uppercase; display: block;">Kayıt Tarihi</span>
+                    <strong id="profileGridRegDate" style="color: var(--text); font-size: 12.5px;">—</strong>
+                  </div>
+                </div>
+
+                <!-- Kart 4: Güvenlik / 2FA -->
+                <div style="background: #0a111b; border: 1px solid var(--border); border-radius: 8px; padding: 14px; display: flex; align-items: center; gap: 12px;">
+                  <div style="width: 38px; height: 38px; border-radius: 6px; background: rgba(34,197,94,0.15); display: grid; place-items: center; font-size: 18px;">🛡️</div>
+                  <div>
+                    <span style="font: 700 10px var(--font-mono); color: var(--text-muted); text-transform: uppercase; display: block;">Güvenlik / 2FA</span>
+                    <strong id="profileGrid2FA" style="color: #22c55e; font-size: 12.5px;">Aktif</strong>
+                  </div>
+                </div>
               </div>
-              <div style="font-size: 10px; color: var(--text-muted); margin-top: 4px;">Kalan Süre: <span id="profileEmailCountdown" class="countdown-pill">05:00</span></div>
+
+              <!-- Profil Düzenleme & Avatar Seçimi & Şifre Değiştirme Alanı -->
+              <div id="profileEditSection" style="background: #0a111b; border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+                <span style="font: 700 11px var(--font-mono); color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 10px;">Avatar & Profil Özelleştirme:</span>
+                
+                <!-- Avatar Seçici -->
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px;">
+                  <button type="button" class="avatar-select-btn" data-url="images/default-avatar.jpg" data-name="Anime Karakteri" style="background: #070d14; border: 2px solid var(--border); border-radius: 6px; padding: 6px; cursor: pointer; text-align: center;">
+                    <img src="images/default-avatar.jpg" alt="Anime" width="44" height="44" style="border-radius: 50%; display: block; margin: 0 auto 4px; object-fit: cover;" />
+                    <span style="font-size: 9.5px; color: var(--text); display: block;">L / Anime</span>
+                  </button>
+                  <button type="button" class="avatar-select-btn" data-url="images/lena-officer-avatar.jpg" data-name="Lena Komutanı" style="background: #070d14; border: 2px solid var(--border); border-radius: 6px; padding: 6px; cursor: pointer; text-align: center;">
+                    <img src="images/lena-officer-avatar.jpg" alt="Lena" width="44" height="44" style="border-radius: 4px; display: block; margin: 0 auto 4px; object-fit: cover;" />
+                    <span style="font-size: 9.5px; color: var(--text); display: block;">Lena</span>
+                  </button>
+                  <button type="button" class="avatar-select-btn" data-url="images/mascot.webp" data-name="Monarch Maskot" style="background: #070d14; border: 2px solid var(--border); border-radius: 6px; padding: 6px; cursor: pointer; text-align: center;">
+                    <img src="images/mascot.webp" alt="Maskot" width="44" height="44" style="border-radius: 4px; display: block; margin: 0 auto 4px; object-fit: cover;" />
+                    <span style="font-size: 9.5px; color: var(--text); display: block;">Maskot</span>
+                  </button>
+                  <button type="button" class="avatar-select-btn" data-url="images/hero-whitehair.webp" data-name="Saha Operatörü" style="background: #070d14; border: 2px solid var(--border); border-radius: 6px; padding: 6px; cursor: pointer; text-align: center;">
+                    <img src="images/hero-whitehair.webp" alt="Saha Operatörü" width="44" height="44" style="border-radius: 4px; display: block; margin: 0 auto 4px; object-fit: cover;" />
+                    <span style="font-size: 9.5px; color: var(--text); display: block;">Operatör</span>
+                  </button>
+                </div>
+
+                <!-- Discord & E-Posta Formu -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                  <label style="font: 700 11px var(--font-mono); color: var(--text-muted);">
+                    Discord Kullanıcı Adı
+                    <input id="profileDiscordInput" type="text" placeholder="Örn: eververity" style="margin-top: 4px;" />
+                  </label>
+                  <label style="font: 700 11px var(--font-mono); color: var(--text-muted);">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                      <span>E-Posta</span>
+                      <span id="profileEmailBadge" class="badge" style="font-size: 9.5px; padding: 1px 6px;">Doğrulanmamış</span>
+                    </div>
+                    <div style="display: flex; gap: 6px; margin-top: 4px;">
+                      <input id="profileEmailInput" type="email" placeholder="ornek@domain.com" style="flex: 1;" />
+                      <button type="button" id="profileSendEmailCodeBtn" style="background: rgba(56,189,248,0.15); border: 1px solid #38bdf8; color: #38bdf8; font: 700 10.5px var(--font-mono); padding: 0 10px; border-radius: 4px; cursor: pointer; white-space: nowrap;">Doğrula</button>
+                    </div>
+                  </label>
+                </div>
+
+                <!-- E-Posta Doğrulama Kodu Alanı -->
+                <div id="profileEmailCodePrompt" style="display: none; background: rgba(56,189,248,0.06); border: 1px dashed rgba(56,189,248,0.3); border-radius: 4px; padding: 10px; margin-bottom: 12px;">
+                  <div style="font-size: 11px; margin-bottom: 6px; color: #38bdf8;">E-posta adresinize 6 haneli güvenlik kodu iletildi:</div>
+                  <div style="display: flex; gap: 8px;">
+                    <input id="profileEmailOtpInput" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="123456" style="width: 110px; text-align: center; font-family: var(--font-mono); font-weight: 700; letter-spacing: .2em;" />
+                    <button type="button" id="profileVerifyEmailCodeBtn" style="background: #22c55e; border: 0; color: #ffffff; font: 700 11px var(--font-mono); padding: 0 12px; border-radius: 4px; cursor: pointer;">Onayla</button>
+                  </div>
+                  <div style="font-size: 10px; color: var(--text-muted); margin-top: 4px;">Kalan Süre: <span id="profileEmailCountdown" class="countdown-pill">05:00</span></div>
+                </div>
+
+                <!-- Şifre Değiştirme -->
+                <div style="background: #070d14; border: 1px solid var(--border); border-radius: 4px; padding: 10px; margin-bottom: 12px;">
+                  <span style="font: 700 10.5px var(--font-mono); color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 6px;">Şifre Değiştir (İsteğe Bağlı):</span>
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <input id="profileCurrentPwdInput" type="password" placeholder="Mevcut şifreniz..." style="min-height: 38px; font-size: 12px;" />
+                    <input id="profileNewPwdInput" type="password" minlength="6" placeholder="Yeni şifreniz (en az 6 karakter)..." style="min-height: 38px; font-size: 12px;" />
+                  </div>
+                </div>
+
+                <button type="button" id="profileSaveBtn" class="account-submit" style="margin-bottom: 4px;">Değişiklikleri Kaydet</button>
+              </div>
             </div>
           </div>
-
-          <!-- Şifre Değiştirme -->
-          <div style="background: #070d14; border: 1px solid var(--border); border-radius: 4px; padding: 10px; margin-bottom: 14px;">
-            <span style="font: 700 11px var(--font-mono); color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 6px;">Şifre Değiştir (İsteğe Bağlı):</span>
-            <div style="display: grid; gap: 8px;">
-              <input id="profileCurrentPwdInput" type="password" placeholder="Mevcut şifreniz..." style="min-height: 38px; font-size: 12px;" />
-              <input id="profileNewPwdInput" type="password" minlength="6" placeholder="Yeni şifreniz (en az 6 karakter)..." style="min-height: 38px; font-size: 12px;" />
-            </div>
-          </div>
-
-          <button type="button" id="profileSaveBtn" class="account-submit" style="margin-bottom: 8px;">Değişiklikleri Kaydet</button>
         </div>
 
-        <button class="account-logout" id="accountLogout" type="button" style="display: none;">Çıkış Yap</button>
-        <p class="account-note">Monarch Store Güvenli Giriş Sistemi © 2026</p>
+        <button class="account-logout" id="accountLogout" type="button" style="display: none; max-width: 200px; margin: 16px auto 0;">Çıkış Yap</button>
+        <p class="account-note" style="margin-top: 14px;">Monarch Store Güvenli Giriş Sistemi © 2026</p>
       </div>
     </dialog>
 

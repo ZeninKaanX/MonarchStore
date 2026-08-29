@@ -4,7 +4,10 @@ const STORAGE_KEY = "monarch_accounts_v1";
 const SESSION_KEY = "monarch_session_v1";
 const OTP_STORAGE_KEY = "monarch_email_otp_v1";
 
+export const DEFAULT_AVATAR_URL = 'images/default-avatar.jpg';
+
 export const DEFAULT_AVATARS = [
+  { id: 'default', name: 'L / Anime Profil', url: 'images/default-avatar.jpg' },
   { id: 'lena', name: 'Lena Komutanı', url: 'images/lena-officer-avatar.jpg' },
   { id: 'mascot', name: 'Monarch Maskot', url: 'images/mascot.webp' },
   { id: 'hero', name: 'Saha Operatörü', url: 'images/hero-whitehair.webp' }
@@ -351,8 +354,8 @@ export function bindLocalAccountUI({
         avatarImg.src = acc?.avatarUrl || session.avatarUrl;
       }
 
-      title.textContent = session.isAdmin ? `Yönetici: ${session.username}` : `Hesabım: ${session.username}`;
-      description.textContent = session.isAdmin 
+      if (title) title.textContent = session.isAdmin ? `Yönetici: ${session.username}` : `Hesabım: ${session.username}`;
+      if (description) description.textContent = session.isAdmin 
         ? "Monarch Store yönetim oturumunuz aktif." 
         : "Profilinizi özelleştirebilir, şifrenizi değiştirebilir veya destek taleplerinizi görebilirsiniz.";
       return;
@@ -372,8 +375,8 @@ export function bindLocalAccountUI({
       if (standardFields) standardFields.style.display = "none";
       if (twoFAFields) twoFAFields.style.display = "none";
       if (forgotFields) forgotFields.style.display = "grid";
-      title.textContent = "Şifremi Unuttum";
-      description.textContent = "Kayıtlı e-posta adresinizi yazarak 6 haneli sıfırlama kodu alın.";
+      if (title) title.textContent = "Şifremi Unuttum";
+      if (description) description.textContent = "Kayıtlı e-posta adresinizi yazarak 6 haneli sıfırlama kodu alın.";
       submitButton.textContent = "Şifreyi Sıfırla";
       return;
     }
@@ -383,8 +386,8 @@ export function bindLocalAccountUI({
     if (forgotFields) forgotFields.style.display = "none";
 
     const isRegister = mode === "register";
-    title.textContent = isRegister ? "Yeni Hesap Oluştur" : "Hesabına Giriş Yap";
-    description.textContent = isRegister 
+    if (title) title.textContent = isRegister ? "Yeni Hesap Oluştur" : "Hesabına Giriş Yap";
+    if (description) description.textContent = isRegister 
       ? "Sipariş ve talepleriniz için hesabınızı oluşturun." 
       : "Kullanıcı adı ve şifrenizle giriş yapın.";
 
@@ -400,6 +403,40 @@ export function bindLocalAccountUI({
 
   const populateProfilePanel = (session) => {
     const acc = getAccountByUsername(storage, session.username) || {};
+    const currentAvatar = acc.avatarUrl || session.avatarUrl || DEFAULT_AVATARS[0].url;
+    const isVerified = Boolean(acc.emailVerified || session.emailVerified);
+    const regDate = acc.createdAt ? new Date(acc.createdAt).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric' }) : '29 Ağu 2026';
+    const roleName = session.isAdmin ? 'Yönetici' : 'Müşteri';
+
+    // Sidebar & Banner Elements
+    const sidebarAvatar = document.querySelector("#profileSidebarAvatar");
+    const bannerAvatar = document.querySelector("#profileBannerAvatar");
+    const sidebarUsername = document.querySelector("#profileSidebarUsername");
+    const bannerUsername = document.querySelector("#profileBannerUsername");
+    const sidebarRole = document.querySelector("#profileSidebarRole");
+    const bannerEmail = document.querySelector("#profileBannerEmail");
+    const heroAvatar = document.querySelector("#accountHeroAvatarImg");
+
+    if (sidebarAvatar) sidebarAvatar.src = currentAvatar;
+    if (bannerAvatar) bannerAvatar.src = currentAvatar;
+    if (heroAvatar) heroAvatar.src = currentAvatar;
+    if (sidebarUsername) sidebarUsername.textContent = session.username;
+    if (bannerUsername) bannerUsername.textContent = session.username;
+    if (sidebarRole) sidebarRole.textContent = roleName;
+    if (bannerEmail) bannerEmail.textContent = acc.email || session.email || 'E-posta tanımlanmamış';
+
+    // Grid Info Cards
+    const gridEmail = document.querySelector("#profileGridEmail");
+    const gridDiscord = document.querySelector("#profileGridDiscord");
+    const gridRegDate = document.querySelector("#profileGridRegDate");
+    const grid2FA = document.querySelector("#profileGrid2FA");
+
+    if (gridEmail) gridEmail.textContent = acc.email || session.email || 'Tanımlanmamış';
+    if (gridDiscord) gridDiscord.textContent = acc.discordUsername || session.discordUsername ? `@${acc.discordUsername || session.discordUsername}` : 'Belirtilmedi';
+    if (gridRegDate) gridRegDate.textContent = regDate;
+    if (grid2FA) grid2FA.textContent = session.isAdmin ? '2FA Aktif (Discord)' : (isVerified ? 'Aktif (E-Posta OTP)' : 'Doğrulama Bekliyor');
+
+    // Form inputs
     const discIn = document.querySelector("#profileDiscordInput");
     const emailIn = document.querySelector("#profileEmailInput");
     const emailBadge = document.querySelector("#profileEmailBadge");
@@ -410,7 +447,6 @@ export function bindLocalAccountUI({
     if (discIn) discIn.value = acc.discordUsername || session.discordUsername || '';
     if (emailIn) emailIn.value = acc.email || session.email || '';
 
-    const isVerified = Boolean(acc.emailVerified || session.emailVerified);
     if (emailBadge) {
       emailBadge.textContent = isVerified ? "✓ Doğrulandı" : "Doğrulanmamış";
       emailBadge.style.color = isVerified ? "#22c55e" : "#f59e0b";
@@ -420,7 +456,6 @@ export function bindLocalAccountUI({
       emailVerifyBtn.style.display = isVerified ? "none" : "inline-block";
     }
 
-    const currentAvatar = acc.avatarUrl || session.avatarUrl || DEFAULT_AVATARS[0].url;
     document.querySelectorAll(".avatar-select-btn").forEach(btn => {
       btn.classList.toggle("active", btn.dataset.url === currentAvatar);
     });
@@ -429,8 +464,8 @@ export function bindLocalAccountUI({
   const show2FAView = (challengeId, passedDiscordUser = "") => {
     is2FAActive = true;
     activeChallengeId = challengeId;
-    title.textContent = "2FA Güvenlik Doğrulaması";
-    description.textContent = "Admin yetkisi algılandı. Discord #admin-2fa kanalına gelen 6 haneli kodu girin.";
+    if (title) title.textContent = "2FA Güvenlik Doğrulaması";
+    if (description) description.textContent = "Admin yetkisi algılandı. Discord #admin-2fa kanalına gelen 6 haneli kodu girin.";
 
     const modalTabs = document.querySelector("#accountModalTabs");
     if (modalTabs) modalTabs.style.display = "none";

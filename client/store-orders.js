@@ -337,57 +337,114 @@ export function bindSupportUI ({ button, dialog, closeButton, form, discordInput
     }
   }
 
+  const formatRelativeTime = (isoString) => {
+    if (!isoString) return 'Az önce'
+    const diff = Date.now() - new Date(isoString).getTime()
+    const mins = Math.floor(diff / 60000)
+    if (mins < 1) return 'Az önce'
+    if (mins < 60) return `${mins} dakika önce`
+    const hours = Math.floor(mins / 60)
+    if (hours < 24) return `${hours} saat önce`
+    const days = Math.floor(hours / 24)
+    return `${days} gün önce`
+  }
+
   const loadAndRenderUserTickets = async () => {
     if (!ticketsListEl) return
-    ticketsListEl.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 25px;">Talepleriniz yükleniyor…</div>'
+    ticketsListEl.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 40px;">Talepleriniz yükleniyor…</div>'
 
     const tickets = await fetchUserSupportTickets()
     if (!tickets || tickets.length === 0) {
       ticketsListEl.innerHTML = `
-        <div style="text-align: center; padding: 30px 15px; color: var(--text-muted);">
-          <p style="margin-bottom: 12px;">Henüz açılmış bir destek talebiniz bulunmuyor.</p>
-          <button type="button" class="btn-support" id="supportEmptyNewBtn" style="margin: 0 auto;">Yeni Destek Talebi Aç</button>
+        <div style="text-align: center; padding: 50px 20px; background: rgba(7, 13, 20, 0.6); border: 1px solid var(--border); border-radius: 8px;">
+          <div style="font-size: 32px; margin-bottom: 12px; color: var(--text-muted);">📋</div>
+          <p style="margin-bottom: 16px; color: var(--text-muted); font-size: 14px;">Henüz açılmış bir destek talebiniz bulunmuyor.</p>
+          <button type="button" class="account-submit" id="supportEmptyNewBtn" style="display: inline-block; width: auto; padding: 0 24px;">Yeni Destek Talebi Aç</button>
         </div>
       `
       document.querySelector('#supportEmptyNewBtn')?.addEventListener('click', () => showTab('new'))
       return
     }
 
-    ticketsListEl.innerHTML = tickets.map((t) => {
-      const item = Array.isArray(t.items) ? t.items[0] : {}
-      const subject = item.subject || item.title || 'Genel Destek'
-      const cleanCode = (t.order_code || '').trim().toUpperCase()
-      const cachedMsgs = JSON.parse(localStorage.getItem(`monarch_ticket_thread_${cleanCode}`) || '[]')
-      const msgCount = (Array.isArray(item.messages) ? item.messages.length : 1) + cachedMsgs.length
-      const hasAdminReply = Array.isArray(item.messages) && item.messages.some(m => m.sender === 'admin')
-      const dateStr = new Date(t.created_at).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })
+    const sessRaw = localStorage.getItem('monarch_session_v1')
+    const localSess = sessRaw ? JSON.parse(sessRaw) : null
+    const userAvatar = localSess?.avatarUrl || 'images/default-avatar.jpg'
+    const userName = localSess?.username || 'Kullanıcı'
 
-      let statusBadge = `<span class="badge" style="background: rgba(56,189,248,0.15); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3);">Açık</span>`
-      if (hasAdminReply) {
-        statusBadge = `<span class="badge" style="background: rgba(34,197,94,0.15); color: #22c55e; border: 1px solid rgba(34,197,94,0.3);">Admin Yanıtladı</span>`
-      }
-      if (t.status === 'closed' || t.status === 'cancelled') {
-        statusBadge = `<span class="badge" style="background: rgba(148,163,184,0.15); color: #94a3b8; border: 1px solid rgba(148,163,184,0.3);">Kapalı</span>`
-      }
+    ticketsListEl.innerHTML = `
+      <div style="overflow-x: auto; background: #070d14; border: 1px solid var(--border); border-radius: 8px;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px;">
+          <thead>
+            <tr style="border-bottom: 1px solid var(--border); background: rgba(255, 255, 255, 0.02); color: var(--text-muted); font-family: var(--font-mono); font-size: 11px; text-transform: uppercase;">
+              <th style="padding: 14px 16px;">Başlık / ID</th>
+              <th style="padding: 14px 16px;">Kullanıcı</th>
+              <th style="padding: 14px 16px;">Kategori</th>
+              <th style="padding: 14px 16px;">Durum</th>
+              <th style="padding: 14px 16px;">Tarih</th>
+              <th style="padding: 14px 16px; text-align: right;">İşlem</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${tickets.map((t) => {
+              const item = Array.isArray(t.items) ? t.items[0] : {}
+              const subject = item.subject || item.title || 'Genel Destek'
+              const cleanCode = (t.order_code || '').trim().toUpperCase()
+              const cachedMsgs = JSON.parse(localStorage.getItem(`monarch_ticket_thread_${cleanCode}`) || '[]')
+              const remoteMsgs = Array.isArray(item.messages) ? item.messages : []
+              const allMsgs = [...remoteMsgs, ...cachedMsgs]
+              
+              const lastMsg = allMsgs[allMsgs.length - 1]
+              const hasAdminReply = allMsgs.some(m => m.sender === 'admin')
+              const isUserLast = lastMsg && lastMsg.sender === 'user' && allMsgs.length > 1
+              const dateStr = new Date(t.created_at).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+              const relTime = formatRelativeTime(t.created_at)
 
-      return `
-        <div class="support-ticket-card" data-code="${t.order_code}" style="background: #070d14; border: 1px solid var(--border); border-radius: 4px; padding: 12px 14px; margin-bottom: 10px; cursor: pointer; transition: border-color 0.2s, background 0.2s;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-            <strong style="font-family: var(--font-mono); color: #38bdf8; font-size: 13px;">${t.order_code}</strong>
-            ${statusBadge}
-          </div>
-          <div style="font-weight: 700; color: var(--text); font-size: 13px; margin-bottom: 4px;">${subject}</div>
-          <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted);">
-            <span>${dateStr}</span>
-            <span>💬 ${msgCount} Mesaj</span>
-          </div>
-        </div>
-      `
-    }).join('')
+              let statusBadge = `<span class="badge" style="background: rgba(56,189,248,0.15); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3); padding: 3px 10px; border-radius: 4px; font-weight: 700; font-size: 11px;">Açık</span>`
+              if (hasAdminReply && !isUserLast) {
+                statusBadge = `<span class="badge" style="background: rgba(34,197,94,0.15); color: #22c55e; border: 1px solid rgba(34,197,94,0.3); padding: 3px 10px; border-radius: 4px; font-weight: 700; font-size: 11px;">Yanıtlandı</span>`
+              } else if (isUserLast) {
+                statusBadge = `<span class="badge" style="background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); padding: 3px 10px; border-radius: 4px; font-weight: 700; font-size: 11px;">Kullanıcı Yanıtı</span>`
+              }
+              if (t.status === 'closed' || t.status === 'cancelled') {
+                statusBadge = `<span class="badge" style="background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); padding: 3px 10px; border-radius: 4px; font-weight: 700; font-size: 11px;">Kapalı</span>`
+              }
 
-    ticketsListEl.querySelectorAll('.support-ticket-card').forEach((card) => {
-      card.addEventListener('click', () => {
-        const code = card.dataset.code
+              return `
+                <tr class="support-ticket-row" data-code="${t.order_code}" style="border-bottom: 1px solid rgba(255,255,255,0.04); cursor: pointer; transition: background .15s;">
+                  <td style="padding: 14px 16px;">
+                    <div style="font-weight: 700; color: var(--text); font-size: 13.5px; margin-bottom: 2px;">${subject}</div>
+                    <div style="font-family: var(--font-mono); color: #38bdf8; font-size: 11.5px;">#${t.order_code}</div>
+                  </td>
+                  <td style="padding: 14px 16px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <img src="${userAvatar}" alt="${userName}" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border);" />
+                      <div>
+                        <div style="font-weight: 600; color: var(--text); font-size: 12.5px;">${userName}</div>
+                        <div style="color: var(--text-muted); font-size: 11px;">@${t.discord_username || userName}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td style="padding: 14px 16px; color: var(--text-muted); font-size: 12.5px;">${item.subject || 'Genel Destek'}</td>
+                  <td style="padding: 14px 16px;">${statusBadge}</td>
+                  <td style="padding: 14px 16px;">
+                    <div style="color: var(--text); font-size: 12px;">${dateStr}</div>
+                    <div style="color: var(--text-muted); font-size: 10.5px;">${relTime}</div>
+                  </td>
+                  <td style="padding: 14px 16px; text-align: right;">
+                    <button type="button" class="btn-support-view" data-code="${t.order_code}" style="background: rgba(56,189,248,0.1); border: 1px solid rgba(56,189,248,0.3); color: #38bdf8; padding: 6px 14px; border-radius: 4px; font: 700 11.5px var(--font-mono); cursor: pointer;">Görüntüle</button>
+                  </td>
+                </tr>
+              `
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+    `
+
+    ticketsListEl.querySelectorAll('.support-ticket-row, .btn-support-view').forEach((el) => {
+      el.addEventListener('click', (ev) => {
+        ev.stopPropagation()
+        const code = el.dataset.code
         const ticket = tickets.find(t => t.order_code === code)
         if (ticket) openChatView(ticket)
       })
@@ -398,9 +455,37 @@ export function bindSupportUI ({ button, dialog, closeButton, form, discordInput
     activeChatTicket = ticket
     const item = Array.isArray(ticket.items) ? ticket.items[0] : {}
     const subject = item.subject || item.title || 'Genel Destek'
+    const sessRaw = localStorage.getItem('monarch_session_v1')
+    const localSess = sessRaw ? JSON.parse(sessRaw) : null
+    const userAvatar = localSess?.avatarUrl || 'images/default-avatar.jpg'
+    const userName = localSess?.username || 'Kullanıcı'
 
-    if (chatTitleEl) chatTitleEl.textContent = `${ticket.order_code} · ${subject}`
-    if (chatStatusEl) chatStatusEl.textContent = ticket.status === 'closed' ? 'Talebiniz Çözüldü/Kapandı' : 'Aktif Destek Talebi'
+    if (chatTitleEl) chatTitleEl.textContent = subject
+    if (chatStatusEl) chatStatusEl.textContent = ticket.status === 'closed' ? 'Kapalı Talep' : 'Aktif Talep'
+
+    // Left column details card elements
+    const dAvatar = document.querySelector('#supportDetailUserAvatar')
+    const dUsername = document.querySelector('#supportDetailUsername')
+    const dDiscord = document.querySelector('#supportDetailDiscord')
+    const dCategory = document.querySelector('#supportDetailCategory')
+    const dStatusBadge = document.querySelector('#supportDetailStatusBadge')
+    const dCode = document.querySelector('#supportDetailCode')
+    const dDate = document.querySelector('#supportDetailDate')
+    const dUpdated = document.querySelector('#supportDetailUpdated')
+
+    if (dAvatar) dAvatar.src = userAvatar
+    if (dUsername) dUsername.textContent = userName
+    if (dDiscord) dDiscord.textContent = ticket.discord_username ? `@${ticket.discord_username}` : `@${userName}`
+    if (dCategory) dCategory.textContent = item.subject || 'Genel Destek'
+    if (dCode) dCode.textContent = `#${ticket.order_code}`
+    if (dDate) dDate.textContent = new Date(ticket.created_at).toLocaleString('tr-TR')
+    if (dUpdated) dUpdated.textContent = formatRelativeTime(ticket.created_at)
+
+    if (dStatusBadge) {
+      dStatusBadge.innerHTML = ticket.status === 'closed'
+        ? '<span class="badge" style="background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); padding: 2px 8px; border-radius: 4px; font-weight: 700; font-size: 10.5px;">Kapalı</span>'
+        : '<span class="badge" style="background: rgba(56,189,248,0.15); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3); padding: 2px 8px; border-radius: 4px; font-weight: 700; font-size: 10.5px;">Açık</span>'
+    }
 
     renderChatMessages(ticket)
     showTab('chat')
@@ -412,6 +497,11 @@ export function bindSupportUI ({ button, dialog, closeButton, form, discordInput
     const item = Array.isArray(ticket.items) ? ticket.items[0] : {}
     const remoteMsgs = Array.isArray(item.messages) ? item.messages : []
     const cachedMsgs = JSON.parse(localStorage.getItem(`monarch_ticket_thread_${cleanCode}`) || '[]')
+
+    const sessRaw = localStorage.getItem('monarch_session_v1')
+    const localSess = sessRaw ? JSON.parse(sessRaw) : null
+    const userAvatar = localSess?.avatarUrl || 'images/default-avatar.jpg'
+    const adminAvatar = 'images/lena-officer-avatar.jpg'
 
     const allMsgsMap = new Map()
     if (item.message || item.description) {
@@ -429,29 +519,24 @@ export function bindSupportUI ({ button, dialog, closeButton, form, discordInput
 
     chatMessagesEl.innerHTML = messages.map((m) => {
       const isAdmin = m.sender === 'admin'
-      const timeStr = m.createdAt ? new Date(m.createdAt).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }) : ''
-      const author = m.author || (isAdmin ? 'Monarch Destek Ekibi' : 'Siz')
-
-      if (isAdmin) {
-        return `
-          <div style="display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 12px;">
-            <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 3px; font-size: 11px;">
-              <span class="badge" style="background: rgba(34,197,94,0.2); color: #22c55e; border: 1px solid rgba(34,197,94,0.4); padding: 1px 6px; font-size: 9.5px;">MONARCH DESTEK</span>
-              <strong style="color: #22c55e;">${author}</strong>
-              <span style="color: var(--text-muted); font-size: 10px;">${timeStr}</span>
-            </div>
-            <div style="background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.25); border-radius: 6px; padding: 10px 14px; max-width: 85%; color: var(--text); font-size: 13px; line-height: 1.5; white-space: pre-wrap;">${m.text}</div>
-          </div>
-        `
-      }
+      const timeStr = formatRelativeTime(m.createdAt)
+      const fullDateStr = m.createdAt ? new Date(m.createdAt).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }) : ''
+      const author = m.author || (isAdmin ? 'Monarch Destek Ekibi' : (localSess?.username || 'Siz'))
+      const avatar = isAdmin ? adminAvatar : userAvatar
 
       return `
-        <div style="display: flex; flex-direction: column; align-items: flex-end; margin-bottom: 12px;">
-          <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 3px; font-size: 11px;">
-            <span style="color: var(--text-muted); font-size: 10px;">${timeStr}</span>
-            <strong style="color: #38bdf8;">${author}</strong>
+        <div style="display: flex; gap: 14px; margin-bottom: 20px; align-items: flex-start;">
+          <img src="${avatar}" alt="${author}" style="width: 44px; height: 44px; border-radius: ${isAdmin ? '6px' : '50%'}; object-fit: cover; border: 2px solid ${isAdmin ? 'rgba(34,197,94,0.4)' : 'rgba(56,189,248,0.4)'}; flex-shrink: 0;" />
+          <div style="flex: 1; background: ${isAdmin ? 'rgba(34,197,94,0.06)' : '#070d14'}; border: 1px solid ${isAdmin ? 'rgba(34,197,94,0.25)' : 'var(--border)'}; border-radius: 8px; padding: 14px 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.04); padding-bottom: 6px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <strong style="color: ${isAdmin ? '#22c55e' : '#38bdf8'}; font-size: 13.5px;">${author}</strong>
+                ${isAdmin ? '<span class="badge" style="background: rgba(34,197,94,0.15); color: #22c55e; border: 1px solid rgba(34,197,94,0.3); font-size: 9.5px; padding: 1px 6px;">YÖNETİCİ</span>' : ''}
+              </div>
+              <span style="color: var(--text-muted); font-size: 11px;">${timeStr} (${fullDateStr})</span>
+            </div>
+            <div style="color: var(--text); font-size: 13.5px; line-height: 1.6; white-space: pre-wrap;">${m.text}</div>
           </div>
-          <div style="background: rgba(56,189,248,0.12); border: 1px solid rgba(56,189,248,0.35); border-radius: 6px; padding: 10px 14px; max-width: 85%; color: var(--text); font-size: 13px; line-height: 1.5; white-space: pre-wrap;">${m.text}</div>
         </div>
       `
     }).join('')

@@ -1,201 +1,142 @@
+/**
+ * Monarch Store - Admin Paneli 2FA Doğrulama & Bildirim Modülü
+ * Supabase'deki `monarch_admin_2fa` tablosunu dinler ve yeni giriş taleplerinde
+ * Discord sunucusundaki gizli `#admin-2fa` kanalına güvenlik kodunu iletir.
+ */
+
 const { EmbedBuilder, ChannelType, PermissionFlagsBits } = require('discord.js')
 const { createClient } = require('@supabase/supabase-js')
-const { loadStore, saveStore, logTo } = require('./util')
+const { loadStore, saveStore } = require('./util')
 
-const TWO_FACTOR_POLL_INTERVAL_MS = 2500
+const POLL_INTERVAL = 3000
 
 function get2FASettings (guildId) {
   const store = loadStore()
-  return store.admin2FASettings?.[guildId] || null
+  store.admin2FASettings = store.admin2FASettings || {}
+  return store.admin2FASettings[guildId] || null
 }
 
-function save2FASettings (guildId, settings) {
+function save2FASettings (guildId, channelId) {
   const store = loadStore()
   store.admin2FASettings = store.admin2FASettings || {}
-  store.admin2FASettings[guildId] = settings
+  store.admin2FASettings[guildId] = { channelId }
   saveStore(store)
 }
 
-function findRoleByName (guild, name) {
-  const normalized = name.toLowerCase().trim()
-  return guild.roles.cache.find((role) => role.name.toLowerCase().trim() === normalized && role.id !== guild.id) || null
-}
-
-function findMemberByUsername (guild, rawName) {
-  if (!rawName) return null
-  const cleaned = rawName.replace(/^@/, '').toLowerCase().trim()
-  if (!cleaned) return null
-  return guild.members.cache.find(m => 
-    m.user.username.toLowerCase() === cleaned || 
-    m.user.tag.toLowerCase() === cleaned ||
-    m.displayName.toLowerCase() === cleaned ||
-    m.id === cleaned
-  ) || null
-}
-
-async function resolve2FAChannel (guild) {
+async function ensure2FAChannel (guild) {
   const settings = get2FASettings(guild.id)
-  if (settings?.channelId) {
-    const customChannel = await guild.channels.fetch(settings.channelId).catch(() => null)
-    if (customChannel?.isTextBased()) return customChannel
+  let channel = settings?.channelId ? guild.channels.cache.get(settings.channelId) : null
+
+  if (!channel) {
+    channel = guild.channels.cache.find(c => c.name === 'admin-2fa' && c.type === ChannelType.GuildText)
   }
 
-  // Otomatik #admin-2fa veya #yetkili-2fa kanalını ara
-  let channel = guild.channels.cache.find((c) => c.isTextBased() && (c.name === 'admin-2fa' || c.name === 'yetkili-2fa'))
-  if (channel) return channel
-
-  // Roller: Founder ve Destek
-  const founderRole = findRoleByName(guild, 'Founder') || findRoleByName(guild, 'Kurucu')
-  const destekRole = findRoleByName(guild, 'Destek') || findRoleByName(guild, 'Yetkili')
-
-  const permissionOverwrites = [
-    { id: guild.id, deny: [PermissionFlagsBits.ViewChannel] }
-  ]
-
-  if (founderRole) {
-    permissionOverwrites.push({
-      id: founderRole.id,
-      allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.ReadMessageHistory, PermissionFlagsBits.SendMessages]
+  if (!channel) {
+    // Sadece Yöneticilere açık özel kanal oluştur
+    channel = await guild.channels.create({
+      name: 'admin-2fa',
+      type: ChannelType.GuildText,
+      topic: 'Monarch Store Admin Paneli 2FA Güvenlik Kodları',
+      permissionOverwrites: [
+        {
+          id: guild.roles.everyone.id,
+          deny: [PermissionFlagsBits.ViewChannel]
+        },
+        {
+          id: guild.members.me.id,
+          allow: [
+            PermissionFlagsBits.ViewChannel,
+            PermissionFlagsBits.SendMessages,
+            PermissionFlagsBits.EmbedLinks,
+            PermissionFlagsBits.ReadMessageHistory
+          ]
+        }
+      ]
+    }).catch(err => {
+      console.error('[2FA KANAL HATA]', err.message)
+      return null
     })
   }
 
-  if (destekRole) {
-    permissionOverwrites.push({
-      id: destekRole.id,
-      allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.ReadMessageHistory, PermissionFlagsBits.SendMessages]
-    })
+  if (channel) {
+    save2FASettings(guild.id, channel.id)
   }
-
-  const botMember = guild.members.me || await guild.members.fetchMe().catch(() => null)
-  if (botMember) {
-    permissionOverwrites.push({
-      id: botMember.id,
-      allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.EmbedLinks, PermissionFlagsBits.ReadMessageHistory]
-    })
-  }
-
-  // Yeni güvenli kanal oluştur
-  channel = await guild.channels.create({
-    name: 'admin-2fa',
-    type: ChannelType.GuildText,
-    topic: 'Monarch Store web paneli 2FA yetkili giriş kodları kanalı. Yalnızca Founder ve Destek rollerine açıktır.',
-    permissionOverwrites
-  }).catch((err) => {
-    console.error('[2FA] Güvenli #admin-2fa kanalı oluşturulamadı:', err.message)
-    return null
-  })
-
   return channel
 }
 
-function create2FASync ({ supabaseUrl, serviceRoleKey, logger = console }) {
-  if (!supabaseUrl || !serviceRoleKey) return { start: () => {}, tick: () => {} }
-  const supabase = createClient(supabaseUrl, serviceRoleKey, {
-    auth: { persistSession: false, autoRefreshToken: false }
-  })
+function create2FASync (supabaseUrl, serviceRoleKey) {
+  if (!supabaseUrl || !serviceRoleKey) return null
+  const supabase = createClient(supabaseUrl, serviceRoleKey)
+  let timer = null
+  let running = false
 
-  let isPolling = false
+  async function checkPendingChallenges (client, guildId) {
+    if (running) return
+    running = true
 
-  async function pollPending2FA (client, guildId) {
-    if (isPolling) return
-    isPolling = true
     try {
       const guild = client.guilds.cache.get(guildId)
       if (!guild) return
 
-      // Bildirimi gitmemiş, süresi geçmemiş ve kullanılmamış 2FA kodlarını çek
-      const { data: pendingRequests, error } = await supabase
+      const { data: challenges, error } = await supabase
         .from('monarch_admin_2fa')
         .select('*')
         .eq('discord_notified', false)
         .eq('consumed', false)
         .gt('expires_at', new Date().toISOString())
         .order('created_at', { ascending: true })
-        .limit(5)
 
-      if (error || !pendingRequests?.length) return
+      if (error || !challenges || !challenges.length) return
 
-      const channel = await resolve2FAChannel(guild)
-      if (!channel) {
-        logger.error('[2FA] Bildirim gönderilecek 2FA kanalı bulunamadı.')
-        return
-      }
+      const channel = await ensure2FAChannel(guild)
+      if (!channel) return
 
-      for (const req of pendingRequests) {
-        try {
-          const expireUnix = Math.floor(new Date(req.expires_at).getTime() / 1000)
-          
-          // Discord Üyesini bul ve etiketle
-          let member = findMemberByUsername(guild, req.discord_username)
-          if (!member && req.discord_username) {
-            const cleanName = req.discord_username.replace(/^@/, '').trim()
-            const searched = await guild.members.search({ query: cleanName, limit: 1 }).catch(() => null)
-            if (searched && searched.size > 0) {
-              member = searched.first()
-            }
-          }
+      for (const req of challenges) {
+        const expiresDate = new Date(req.expires_at)
+        const expUnix = Math.floor(expiresDate.getTime() / 1000)
 
-          const targetMention = member ? `<@${member.id}>` : (req.discord_username ? `**@${req.discord_username.replace(/^@/, '')}**` : 'Yetkili')
+        const embed = new EmbedBuilder()
+          .setColor('#6366f1')
+          .setTitle('🛡️ Admin Paneli 2FA Güvenlik Giriş Kodu')
+          .setDescription(`Yönetim paneline (**admin.html**) bir giriş talebi yapıldı.\n\n### 🔑 Güvenlik Kodu: \`${req.code}\`\n\nBu kod **5 dakika** boyunca geçerlidir. Süre sonu: <t:${expUnix}:R>`)
+          .addFields(
+            { name: '👤 Yönetici Hesabı', value: `\`${req.admin_username}\``, inline: true },
+            { name: '💬 Talep Eden Discord', value: req.discord_username ? `@${req.discord_username}` : 'Belirtilmedi', inline: true },
+            { name: '🌐 Cihaz / IP', value: `\`${(req.ip_info || 'Bilinmiyor').substring(0, 40)}\``, inline: false }
+          )
+          .setFooter({ text: 'Monarch Store · Güvenlik Doğrulama Sistemi' })
+          .setTimestamp()
 
-          const embed = new EmbedBuilder()
-            .setColor(0x3e83b8)
-            .setTitle('🔐 Monarch Store — Admin Giriş Doğrulama Kodu')
-            .setDescription('Web yönetim paneline giriş talebinde bulunuldu. Girişi onaylamak için aşağıdaki 6 haneli 2FA kodunu tarayıcıya girin.')
-            .addFields(
-              { name: '🔑 Güvenlik Kodu', value: `\`\`\`${req.code}\`\`\``, inline: false },
-              { name: '👤 Admin Hesabı', value: `\`${req.admin_username}\``, inline: true },
-              { name: '💬 Talep Eden Yetkili', value: member ? `${member} (\`${member.user.tag}\`)` : `**@${req.discord_username || 'admin'}**`, inline: true },
-              { name: '⏱️ Kalan Süre', value: `<t:${expireUnix}:R>`, inline: true },
-              { name: '🛡️ Güvenlik Kapsamı', value: 'Bu bildirim ve kod yalnızca **Founder** ve **Destek** rolleri tarafından görüntülenebilir.', inline: false }
-            )
-            .setFooter({ text: 'Monarch Store Güvenlik Sistemi' })
-            .setTimestamp()
+        await channel.send({ embeds: [embed] })
 
-          await channel.send({
-            content: `🔔 **Yetkili Giriş Bildirimi:** ${targetMention}, web paneli giriş kodunuz oluşturuldu:`,
-            embeds: [embed]
-          })
-
-          // Bildirildi olarak işaretle
-          await supabase
-            .from('monarch_admin_2fa')
-            .update({ discord_notified: true })
-            .eq('id', req.id)
-
-          logger.log(`[2FA] Doğrulama kodu ve etiket #${channel.name} kanalına gönderildi (${req.admin_username} -> ${req.discord_username || 'yetkili'})`)
-        } catch (itemErr) {
-          logger.error('[2FA] Mesaj gönderilemedi:', itemErr.message)
-        }
+        // Bildirildi olarak işaretle
+        await supabase
+          .from('monarch_admin_2fa')
+          .update({ discord_notified: true })
+          .eq('id', req.id)
       }
     } catch (err) {
-      // sessizce geç
+      console.error('[2FA SENKRONİZASYON HATA]', err.message)
     } finally {
-      isPolling = false
+      running = false
     }
   }
 
-  function start (client, guildId) {
-    const timer = setInterval(() => pollPending2FA(client, guildId), TWO_FACTOR_POLL_INTERVAL_MS)
-    return () => clearInterval(timer)
+  return {
+    start (client, guildId) {
+      if (timer) clearInterval(timer)
+      checkPendingChallenges(client, guildId)
+      timer = setInterval(() => checkPendingChallenges(client, guildId), POLL_INTERVAL)
+      console.log('[2FA] Admin 2FA güvenlik senkronizasyonu başlatıldı.')
+    },
+    stop () {
+      if (timer) clearInterval(timer)
+      timer = null
+    }
   }
-
-  return { start, pollPending2FA }
-}
-
-async function set2FAChannel (interaction) {
-  const channel = interaction.options.getChannel('kanal')
-  if (!channel?.isTextBased()) throw new Error('2FA bildirimleri için geçerli bir metin kanalı seçmelisin.')
-  save2FASettings(interaction.guild.id, { channelId: channel.id })
-  return interaction.reply({
-    content: `✅ Admin 2FA güvenlik kodları artık ${channel} kanalına gönderilecek.`,
-    ephemeral: true
-  })
 }
 
 module.exports = {
   create2FASync,
-  set2FAChannel,
-  get2FASettings,
-  save2FASettings,
-  resolve2FAChannel
+  ensure2FAChannel
 }

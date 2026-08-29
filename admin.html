@@ -1049,10 +1049,10 @@
     </div>
     <div style="display: flex; gap: 10px;">
       <button type="button" id="modalActionDone" style="flex: 1; padding: 10px; background: #16a34a; border: 0; color: #fff; font: 700 12px var(--font-mono); border-radius: 6px; cursor: pointer;">Tamamla (Kapat)</button>
-      <button type="button" id="modalActionCancel" style="flex: 1; padding: 10px; background: #e11d48; border: 0; color: #fff; font: 700 12px var(--font-mono); border-radius: 6px; cursor: pointer;">İptal Et</button>
+      <button type="button" id="modalActionCancel" style="flex: 1; padding: 10px; background: #e11d48; border: 0; color: #fff; font: 700 12px var(--font-mono); border-radius: 6px; cursor: pointer;">Iptal Et</button>
     </div>
     <div style="margin-top: 10px;">
-      <button type="button" id="modalActionWhatsApp" style="width: 100%; padding: 10px; background: #15803d; border: 0; color: #fff; font: 700 12px var(--font-mono); border-radius: 6px; cursor: pointer;">WhatsApp Bildirimi Gönder</button>
+      <button type="button" id="modalActionCopy" style="width: 100%; padding: 10px; background: #3b82f6; border: 0; color: #fff; font: 700 12px var(--font-mono); border-radius: 6px; cursor: pointer;">Siparis Detaylarini Kopyala</button>
     </div>
   </dialog>
 
@@ -1159,7 +1159,7 @@
           codeInput.focus();
         } finally {
           submitBtn.disabled = false;
-          submitBtn.textContent = 'Doğrula ve Giriş Yap 🔓';
+          submitBtn.textContent = 'Dogrula ve Giris Yap';
         }
         return;
       }
@@ -1181,8 +1181,8 @@
           usernameInput.required = false;
           passwordInput.required = false;
           codeInput.required = true;
-          submitBtn.textContent = 'Doğrula ve Giriş Yap 🔓';
-          notify('2FA Kodu Gönderildi', 'Discord #admin-2fa kanalına güvenlik kodunuz iletildi.');
+          submitBtn.textContent = 'Dogrula ve Giris Yap';
+          notify('2FA Kodu Gonderildi', 'Discord #admin-2fa kanalina guvenlik kodunuz iletildi.');
           codeInput.focus();
 
           // Geri sayım
@@ -1435,17 +1435,20 @@
       }
     });
 
-    document.querySelector('#modalActionWhatsApp')?.addEventListener('click', () => {
+    document.querySelector('#modalActionCopy')?.addEventListener('click', async () => {
       if (!activeDetailOrder) return;
       const order = activeDetailOrder;
       const items = Array.isArray(order.items) 
-        ? order.items.map(i => `• ${i.title || i.name} (x${i.quantity || 1})`).join('\n')
-        : '—';
-      const text = `*Monarch Store Sipariş Bildirimi*\nMerhaba,\n\nAlıcısı *@${order.discord_username || 'Müşteri'}* olan ve Monarch Store üzerinden sipariş edilen talebiniz işleme alınmıştır. 📦\n\n*Sipariş Kodu:* ${order.order_code}\n*Toplam Tutar:* ${order.total_price} TL\n*Sipariş Kalemleri:*\n${items}\n\n*Tarih:* ${new Date(order.created_at).toLocaleString('tr-TR')}\n\nSiparişinizin durumunu ve yönetim detaylarını aşağıdaki panelden takip edebilirsiniz:\nhttp://astralissaga.xyz/admin.html`;
+        ? order.items.map(i => `* ${i.title || i.name} (x${i.quantity || 1})`).join('\n')
+        : '-';
+      const text = `MONARCH STORE SIPARIS BILDIRIMI\n\nMusteri: @${order.discord_username || 'Musteri'}\nSiparis Kodu: ${order.order_code}\nToplam Tutar: ${order.total_price} TL\n\nSiparis Kalemleri:\n${items}\n\nTarih: ${new Date(order.created_at).toLocaleString('tr-TR')}\n\nYonetim Paneli: http://astralissaga.xyz/admin.html`;
       
-      const adminNumbers = ['905488282882', '905517474118', '905065056589'];
-      const targetPhone = adminNumbers[0];
-      window.open(`https://api.whatsapp.com/send?phone=${targetPhone}&text=${encodeURIComponent(text)}`, '_blank');
+      try {
+        await navigator.clipboard.writeText(text);
+        notify('Kopyalandi', 'Siparis metni panoya kopyalandi.');
+      } catch {
+        notify('Kopyalandi', `${order.order_code} detaylari hazirlandi.`);
+      }
     });
 
     // Başlangıç Kontrolü

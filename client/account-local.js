@@ -163,11 +163,18 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
     if (twoFAFields) twoFAFields.style.display = "none";
     if (openAdminBtn) openAdminBtn.style.display = (session?.isAdmin ? "block" : "none");
 
-    if (usernameInput) usernameInput.disabled = false;
-    if (passwordInput) passwordInput.disabled = false;
+    if (usernameInput) {
+      usernameInput.disabled = false;
+      usernameInput.readOnly = false;
+    }
+    if (passwordInput) {
+      passwordInput.disabled = false;
+      passwordInput.readOnly = false;
+    }
     if (codeIn) {
-      codeIn.disabled = true;
-      codeIn.required = false;
+      codeIn.disabled = false;
+      codeIn.readOnly = false;
+      codeIn.value = "";
     }
 
     if (signedIn) {
@@ -212,15 +219,16 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
     if (standardFields) standardFields.style.display = "none";
     if (twoFAFields) twoFAFields.style.display = "grid";
 
-    if (usernameInput) usernameInput.disabled = true;
-    if (passwordInput) passwordInput.disabled = true;
-
     const codeIn = document.querySelector("#account2FACodeInput");
     if (codeIn) {
       codeIn.disabled = false;
+      codeIn.readOnly = false;
       codeIn.required = true;
       codeIn.value = "";
-      setTimeout(() => codeIn.focus(), 30);
+      setTimeout(() => {
+        codeIn.focus();
+        codeIn.select();
+      }, 50);
     }
 
     submitButton.textContent = "Doğrula ve Giriş Yap";
@@ -276,7 +284,11 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
         if (onOpenAdminDashboard) onOpenAdminDashboard();
       } catch (error) {
         notify("Doğrulama Başarısız", error?.message || "Geçersiz veya süresi dolmuş kod.");
-        if (codeIn) codeIn.focus();
+        if (codeIn) {
+          codeIn.disabled = false;
+          codeIn.readOnly = false;
+          codeIn.focus();
+        }
       } finally {
         submitButton.disabled = false;
         submitButton.textContent = "Doğrula ve Giriş Yap";

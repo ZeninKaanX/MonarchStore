@@ -697,7 +697,7 @@
             </div>
             <label>
               6 Haneli Güvenlik Kodu
-              <input id="account2FACodeInput" name="account2FACode" inputmode="numeric" maxlength="6" placeholder="Örn: 849216" disabled style="letter-spacing: .2em; font-family: 'Space Mono', monospace; font-size: 16px; text-align: center;" />
+              <input id="account2FACodeInput" name="account2FACode" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="Örn: 849216" autocomplete="one-time-code" style="letter-spacing: .25em; font-family: 'Space Mono', monospace; font-size: 18px; font-weight: 700; text-align: center; width: 100%; min-height: 46px; border: 2px solid #7c3aed; border-radius: 4px; color: var(--ink); background: #ffffff;" />
             </label>
           </div>
 
@@ -776,9 +776,9 @@
 
     <script type="module" src="./theme-toggle.js"></script>
     <script type="module">
-      import { bindLocalAccountUI } from './account-local.js?v=20260827b';
+      import { bindLocalAccountUI } from './account-local.js?v=20260829_2fa_v4';
       import { bindOrderUI, bindCommunityStats } from './store-orders.js';
-      import { initAdminDashboardUI } from './admin-panel.js';
+      import { initAdminDashboardUI } from './admin-panel.js?v=20260829_2fa_v4';
 
       const cartCount = document.querySelector('#cartCount');
       const toast = document.querySelector('#toast');

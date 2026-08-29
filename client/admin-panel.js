@@ -544,7 +544,7 @@ export function initAdminDashboardUI ({ notify }) {
       if (Array.isArray(order.items) && order.items.length) {
         modalItemsList.innerHTML = order.items.map(it => `
           <div class="adm-modal-item-row">
-            <span class="adm-modal-item-name">📦 ${escapeHtml(it.sku || 'Ürün')}</span>
+            <span class="adm-modal-item-name">${escapeHtml(it.sku || 'Ürün')}</span>
             <span class="adm-modal-item-qty">${it.quantity} Adet</span>
             <b class="adm-modal-item-price">${(it.unit_price || 0) * (it.quantity || 1)} TL</b>
           </div>

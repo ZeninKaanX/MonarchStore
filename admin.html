@@ -711,7 +711,7 @@
             Şifre
             <div class="pwd-wrap">
               <input type="password" id="loginPassword" class="form-input" required autocomplete="current-password">
-              <button type="button" id="loginTogglePwd" class="pwd-toggle" title="Şifreyi Göster">👁️</button>
+              <button type="button" id="loginTogglePwd" class="pwd-toggle" title="Şifreyi Göster">GÖSTER</button>
             </div>
           </label>
           <label class="form-label">
@@ -723,7 +723,7 @@
         <!-- 2FA Alanları -->
         <div id="login2FAWrap" style="display: none; gap: 14px;">
           <div class="login-2fa-box">
-            <strong>🔐 2FA Doğrulaması Gönderildi</strong>
+            <strong>2FA Doğrulaması Gönderildi</strong>
             <p>Discord sunucusundaki <b>#admin-2fa</b> kanalına güvenlik kodu iletildi ve adınız etiketlendi.</p>
             <div>Kalan Süre: <span id="loginCountdown" class="countdown-badge">05:00</span></div>
           </div>
@@ -733,7 +733,7 @@
           </label>
         </div>
 
-        <button type="submit" id="loginSubmitBtn" class="btn-login-submit">Giriş Yap ➔</button>
+        <button type="submit" id="loginSubmitBtn" class="btn-login-submit">Giriş Yap</button>
       </form>
     </div>
   </div>
@@ -759,7 +759,7 @@
         </div>
         <div class="profile-meta">
           <strong id="dashAdminUser">admin</strong>
-          <span class="role-pill">FOUNDER 👑</span>
+          <span class="role-pill">FOUNDER</span>
           <span class="discord-tag" id="dashDiscordTag">@yetkili</span>
         </div>
       </div>
@@ -787,12 +787,12 @@
       <!-- Sidebar Bottom -->
       <div class="sidebar-footer">
         <div class="live-clock-badge">
-          <span>🕒 İstanbul</span>
+          <span>İstanbul</span>
           <span id="dashClock">12:00:00</span>
         </div>
         <div class="db-status-badge">Supabase DB Aktif</div>
-        <a href="index.html" class="btn-return-store">🌐 Mağazaya Dön</a>
-        <button type="button" class="btn-logout" id="dashLogoutBtn">🚪 Güvenli Çıkış</button>
+        <a href="index.html" class="btn-return-store">Mağazaya Dön</a>
+        <button type="button" class="btn-logout" id="dashLogoutBtn">Güvenli Çıkış</button>
       </div>
     </aside>
 
@@ -810,10 +810,10 @@
         <div class="topbar-right">
           <select class="select-styled" id="adminStatusFilterSelect">
             <option value="all">Filtre: Tüm Durumlar</option>
-            <option value="pending">⏳ Bekleyenler</option>
-            <option value="active">⚡ Aktif / Sırada / Ticket Açık</option>
-            <option value="closed">✅ Tamamlanan / Kapalı</option>
-            <option value="cancelled">❌ İptal Edilenler</option>
+            <option value="pending">Bekleyenler</option>
+            <option value="active">Aktif / Sırada / Ticket Açık</option>
+            <option value="closed">Tamamlanan / Kapalı</option>
+            <option value="cancelled">İptal Edilenler</option>
           </select>
 
           <select class="select-styled" id="adminSortSelect">
@@ -892,7 +892,7 @@
               </h3>
               <div class="cat-progress-item">
                 <div class="cat-progress-meta">
-                  <span>🤖 Minecraft Botları</span>
+                  <span>Minecraft Botları</span>
                   <span id="admValBots">0 Adet (%0)</span>
                 </div>
                 <div class="cat-bar-bg">
@@ -901,7 +901,7 @@
               </div>
               <div class="cat-progress-item">
                 <div class="cat-progress-meta">
-                  <span>🎨 UI/UX Tasarım</span>
+                  <span>UI/UX Tasarım</span>
                   <span id="admValUiUx">0 Adet (%0)</span>
                 </div>
                 <div class="cat-bar-bg">
@@ -910,7 +910,7 @@
               </div>
               <div class="cat-progress-item">
                 <div class="cat-progress-meta">
-                  <span>📑 Sunum Hizmetleri</span>
+                  <span>Sunum Hizmetleri</span>
                   <span id="admValSlides">0 Adet (%0)</span>
                 </div>
                 <div class="cat-bar-bg">
@@ -986,7 +986,7 @@
         <section class="view-section" id="admSection_system">
           <div class="overview-split">
             <div class="card-box">
-              <h3>⚡ Sistem & Veritabanı Durumu</h3>
+              <h3>Sistem & Veritabanı Durumu</h3>
               <div style="display: grid; gap: 12px; font-size: 13px;">
                 <div style="display: flex; justify-content: space-between; padding-bottom: 8px; border-bottom: 1px solid var(--border-light);">
                   <span style="color: var(--text-muted);">Veritabanı Sağlayıcı:</span>
@@ -994,7 +994,7 @@
                 </div>
                 <div style="display: flex; justify-content: space-between; padding-bottom: 8px; border-bottom: 1px solid var(--border-light);">
                   <span style="color: var(--text-muted);">Bağlantı Durumu:</span>
-                  <strong style="color: var(--green);">Bağlı & Aktif 🟢</strong>
+                  <strong style="color: var(--green);">Bağlı ve Aktif</strong>
                 </div>
                 <div style="display: flex; justify-content: space-between; padding-bottom: 8px; border-bottom: 1px solid var(--border-light);">
                   <span style="color: var(--text-muted);">Discord Ticket Bot:</span>
@@ -1008,7 +1008,7 @@
             </div>
 
             <div class="card-box">
-              <h3>🔐 Oturum Bilgileri</h3>
+              <h3>Oturum Bilgileri</h3>
               <div style="display: grid; gap: 12px; font-size: 13px;">
                 <div style="display: flex; justify-content: space-between; padding-bottom: 8px; border-bottom: 1px solid var(--border-light);">
                   <span style="color: var(--text-muted);">Yetkili Kullanıcı:</span>
@@ -1033,7 +1033,7 @@
   <!-- Order Detail Dialog -->
   <dialog class="detail-dialog" id="adminOrderDetailDialog">
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
-      <h3 style="font: 700 16px var(--font-mono); color: #fff;">📦 Sipariş Detayları</h3>
+      <h3 style="font: 700 16px var(--font-mono); color: #fff;">Sipariş Detayları</h3>
       <button type="button" onclick="document.querySelector('#adminOrderDetailDialog').close()" style="background: transparent; border: 0; color: #94a3b8; font-size: 22px; cursor: pointer;">×</button>
     </div>
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 12.5px; margin-bottom: 18px;">
@@ -1048,8 +1048,8 @@
       <div id="modalOrderItemsList" style="background: #090d16; border: 1px solid var(--border); border-radius: 6px; padding: 10px; max-height: 140px; overflow-y: auto; font-size: 12px;"></div>
     </div>
     <div style="display: flex; gap: 10px;">
-      <button type="button" id="modalActionDone" style="flex: 1; padding: 10px; background: #16a34a; border: 0; color: #fff; font: 700 12px var(--font-mono); border-radius: 6px; cursor: pointer;">✅ Tamamla (Kapat)</button>
-      <button type="button" id="modalActionCancel" style="flex: 1; padding: 10px; background: #e11d48; border: 0; color: #fff; font: 700 12px var(--font-mono); border-radius: 6px; cursor: pointer;">❌ İptal Et</button>
+      <button type="button" id="modalActionDone" style="flex: 1; padding: 10px; background: #16a34a; border: 0; color: #fff; font: 700 12px var(--font-mono); border-radius: 6px; cursor: pointer;">Tamamla (Kapat)</button>
+      <button type="button" id="modalActionCancel" style="flex: 1; padding: 10px; background: #e11d48; border: 0; color: #fff; font: 700 12px var(--font-mono); border-radius: 6px; cursor: pointer;">İptal Et</button>
     </div>
   </dialog>
 
@@ -1131,7 +1131,7 @@
       togglePwdBtn.addEventListener('click', () => {
         const isPwd = passwordInput.type === 'password';
         passwordInput.type = isPwd ? 'text' : 'password';
-        togglePwdBtn.textContent = isPwd ? '🙈' : '👁️';
+        togglePwdBtn.textContent = isPwd ? 'GİZLE' : 'GÖSTER';
       });
     }
 
@@ -1300,7 +1300,7 @@
             <td><strong style="color: #10b981; font-family: var(--font-mono);">${o.total_price} TL</strong></td>
             <td>${getStatusBadgeHTML(o.status)}</td>
             <td>
-              <button type="button" class="btn-action-small" onclick="window.openDetailModal('${o.order_code}')">İncele 🔍</button>
+              <button type="button" class="btn-action-small" onclick="window.openDetailModal('${o.order_code}')">İncele</button>
             </td>
           </tr>
         `;

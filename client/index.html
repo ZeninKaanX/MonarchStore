@@ -462,155 +462,6 @@
       .account-note { margin: 14px 0 0; color: #7a8fa0; font-size: 10.5px; font-family: "Space Mono", monospace; line-height: 1.5; text-align: center; }
       :focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
 
-      /* Admin Dashboard Full Modal */
-      .admin-dashboard-dialog { width: min(1200px, calc(100% - 24px)); height: min(90vh, 850px); max-height: 90vh; padding: 0; border: 1px solid #7c3aed; color: var(--ink); background: #ffffff; box-shadow: 0 30px 80px rgba(0, 0, 0, .35); border-radius: 8px; z-index: 35; display: flex; flex-direction: column; }
-      /* ==================== ELITE SAAS ADMIN DASHBOARD ==================== */
-      .adm-dashboard-dialog { width: min(1380px, calc(100% - 24px)); height: min(94vh, 920px); max-height: 94vh; padding: 0; border: 1px solid #7c3aed; color: var(--ink); background: #ffffff; box-shadow: 0 35px 95px rgba(15, 23, 42, .45); border-radius: 10px; z-index: 40; display: flex; flex-direction: column; overflow: hidden; }
-      .adm-dashboard-dialog::backdrop { background: rgba(10, 15, 25, .86); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
-      
-      /* Anime Mascot Styling */
-      .account-mascot-header { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
-      .account-mascot-avatar-wrap { width: 52px; height: 52px; border-radius: 50%; border: 2px solid var(--blue); padding: 2px; background: #fff; box-shadow: 0 4px 14px rgba(62, 131, 184, 0.25); flex-shrink: 0; }
-      .account-mascot-avatar-wrap img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; }
-      
-      .adm-mascot-logo { width: 32px; height: 32px; border-radius: 6px; object-fit: cover; display: block; }
-      .adm-mascot-avatar-circle { width: 36px; height: 36px; border-radius: 50%; border: 2px solid #a855f7; padding: 1px; background: #1e293b; box-shadow: 0 0 10px rgba(168, 85, 247, 0.4); flex-shrink: 0; overflow: hidden; }
-      .adm-mascot-avatar-circle img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; }
-      
-      .adm-svg-icon { width: 16px; height: 16px; stroke-width: 2; flex-shrink: 0; }
-      .adm-svg-stat-icon { width: 18px; height: 18px; stroke-width: 2; color: #64748b; }
-      .adm-svg-action-icon { width: 14px; height: 14px; stroke-width: 2; display: inline-block; vertical-align: middle; }
-      .adm-badge-svg { width: 12px; height: 12px; stroke-width: 2.5; flex-shrink: 0; }
-
-      .adm-layout { display: grid; grid-template-columns: 260px 1fr; height: 100%; overflow: hidden; }
-      
-      /* Sidebar */
-      .adm-sidebar { display: flex; flex-direction: column; background: #0f172a; color: #f8fafc; border-right: 1px solid #1e293b; padding: 20px 16px; user-select: none; }
-      .adm-brand { display: flex; align-items: center; gap: 10px; padding-bottom: 16px; border-bottom: 1px solid #1e293b; margin-bottom: 16px; }
-      .adm-brand-icon { width: 32px; height: 32px; border-radius: 6px; overflow: hidden; display: grid; place-items: center; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4); flex-shrink: 0; }
-      .adm-brand-text strong { display: block; font: 700 13px "Space Mono", monospace; letter-spacing: .04em; color: #f8fafc; }
-      .adm-brand-text small { display: block; font: 9px "Space Mono", monospace; color: #94a3b8; }
-      
-      .adm-user-profile { padding: 12px; background: #1e293b; border-radius: 6px; margin-bottom: 18px; border: 1px solid #334155; }
-      .adm-user-profile-top { display: flex; align-items: center; gap: 10px; }
-      .adm-user-info { flex: 1; min-width: 0; }
-      .adm-user-info strong { display: block; font-size: 13px; color: #f8fafc; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-      .adm-user-role-badge { display: inline-block; padding: 1px 6px; background: rgba(124, 58, 237, 0.3); border: 1px solid #7c3aed; color: #c4b5fd; font: 700 8.5px "Space Mono", monospace; border-radius: 3px; text-transform: uppercase; margin-top: 2px; }
-      .adm-user-discord-tag { display: block; font: 10px "Space Mono", monospace; color: #38bdf8; margin-top: 5px; }
-
-      .adm-nav-menu { display: flex; flex-direction: column; gap: 4px; flex: 1; }
-      .adm-sidebar-tab { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 6px; border: 1px solid transparent; background: transparent; color: #94a3b8; font: 700 12px "Space Mono", monospace; cursor: pointer; transition: all .16s; text-align: left; }
-      .adm-sidebar-tab:hover { background: #1e293b; color: #f8fafc; }
-      .adm-sidebar-tab.active { background: #7c3aed; color: #fff; box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35); }
-      .adm-sidebar-tab-icon { font-size: 15px; }
-
-      .adm-sidebar-bottom { border-top: 1px solid #1e293b; padding-top: 14px; display: flex; flex-direction: column; gap: 8px; font-size: 11px; }
-      .adm-live-clock { display: flex; align-items: center; gap: 6px; color: #38bdf8; font: 700 10.5px "Space Mono", monospace; padding: 4px 6px; background: rgba(56, 189, 248, 0.1); border-radius: 4px; }
-      .adm-db-status { display: flex; align-items: center; gap: 6px; color: #4ade80; font: 10px "Space Mono", monospace; }
-      .adm-db-status::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 8px #4ade80; }
-      .adm-btn-sidebar-logout { width: 100%; padding: 8px; background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; font: 700 11px "Space Mono", monospace; border-radius: 4px; cursor: pointer; transition: all .16s; }
-      .adm-btn-sidebar-logout:hover { background: #ef4444; color: #fff; }
-
-      /* Main Content Area */
-      .adm-main { display: flex; flex-direction: column; height: 100%; overflow: hidden; background: #f8fafc; }
-      .adm-topbar { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 16px 24px; background: #ffffff; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
-      .adm-topbar-left { display: flex; align-items: center; gap: 10px; flex: 1; max-width: 540px; }
-      .adm-search-box { position: relative; width: 100%; }
-      .adm-search-input { width: 100%; min-height: 38px; padding: 0 12px 0 34px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 12px; color: var(--ink); background: #f8fafc; transition: all .16s; }
-      .adm-search-input:focus { border-color: #7c3aed; background: #fff; box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1); }
-      .adm-search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); font-size: 13px; color: #94a3b8; pointer-events: none; }
-
-      .adm-topbar-right { display: flex; align-items: center; gap: 8px; }
-      .adm-filter-select, .adm-sort-select { min-height: 38px; padding: 0 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 11px; font-weight: 700; color: #334155; background: #fff; cursor: pointer; }
-      .adm-btn-top { min-height: 38px; padding: 0 14px; border: 1px solid #cbd5e1; background: #fff; color: #1e293b; font: 700 11px "Space Mono", monospace; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all .16s; }
-      .adm-btn-top:hover { border-color: #7c3aed; color: #7c3aed; background: #f5f3ff; }
-      .adm-btn-top.spinning .adm-icon-refresh { animation: spin 0.6s linear infinite; }
-      @keyframes spin { 100% { transform: rotate(360deg); } }
-      .adm-btn-close-modal { width: 34px; height: 34px; border: 0; background: transparent; font-size: 20px; color: #64748b; cursor: pointer; border-radius: 4px; display: grid; place-items: center; }
-      .adm-btn-close-modal:hover { background: #fee2e2; color: #ef4444; }
-
-      .adm-content-scroll { flex: 1; overflow-y: auto; padding: 24px; }
-      .adm-view-section { display: none; }
-
-      /* Stat Cards Grid */
-      .adm-stats-grid-elite { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; margin-bottom: 24px; }
-      .adm-stat-card-elite { padding: 16px; background: #ffffff; border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: space-between; }
-      .adm-stat-card-elite small { display: flex; align-items: center; justify-content: space-between; color: #64748b; font: 700 10px "Space Mono", monospace; text-transform: uppercase; margin-bottom: 6px; }
-      .adm-stat-card-elite strong { font-size: 20px; color: #0f172a; font-family: "Space Mono", monospace; font-weight: 700; }
-      .adm-stat-card-elite .adm-stat-icon { font-size: 16px; }
-
-      /* Overview Split Layout */
-      .adm-overview-split { display: grid; grid-template-columns: 360px 1fr; gap: 20px; }
-      .adm-card-box { padding: 20px; background: #ffffff; border: 1px solid var(--line); border-radius: 8px; }
-      .adm-card-box h3 { margin: 0 0 14px; font-size: 15px; font-weight: 800; display: flex; align-items: center; justify-content: space-between; }
-      .adm-cat-progress-item { margin-bottom: 14px; }
-      .adm-cat-progress-meta { display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 700; margin-bottom: 5px; color: #334155; }
-      .adm-cat-bar-bg { width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
-      .adm-cat-bar-fill { height: 100%; border-radius: 4px; transition: width 0.4s ease; }
-
-      /* Orders Table */
-      .adm-table-wrap { background: #ffffff; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
-      .adm-table-header-info { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid var(--line); background: #ffffff; }
-      .adm-table-header-info h3 { margin: 0; font-size: 15px; display: flex; align-items: center; gap: 8px; }
-      .adm-count-badge { padding: 3px 8px; background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 4px; font: 700 10px "Space Mono", monospace; color: #475569; }
-
-      .adm-elite-table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; }
-      .adm-elite-table th { position: sticky; top: 0; background: #f8fafc; color: #475569; font: 700 10px "Space Mono", monospace; text-transform: uppercase; letter-spacing: .04em; padding: 12px 16px; border-bottom: 1px solid var(--line); z-index: 2; }
-      .adm-elite-table td { padding: 12px 16px; border-bottom: 1px solid var(--line); vertical-align: middle; }
-      .adm-elite-table tr:hover td { background: #f8fafc; }
-
-      .adm-code-cell { display: flex; align-items: center; gap: 6px; }
-      .adm-code { font: 700 12px "Space Mono", monospace; color: #7c3aed; background: #f5f3ff; padding: 2px 6px; border-radius: 4px; border: 1px solid #ddd6fe; cursor: pointer; }
-      .adm-code:hover { background: #ede9fe; }
-      .adm-btn-copy { border: 0; background: transparent; cursor: pointer; font-size: 12px; color: #94a3b8; padding: 2px; }
-      .adm-btn-copy:hover { color: #7c3aed; }
-
-      .adm-user-cell { display: flex; align-items: center; gap: 9px; }
-      .adm-avatar-circle { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #3b82f6, #06b6d4); color: #fff; font-weight: 800; font-size: 11px; display: grid; place-items: center; flex-shrink: 0; }
-      .adm-user-meta { min-width: 0; }
-      .adm-user-name { font-weight: 700; color: #0284c7; font-size: 12px; }
-      .adm-user-id { display: block; font: 9px "Space Mono", monospace; color: #64748b; }
-      .adm-user-id-waiting { display: block; font: 9px "Space Mono", monospace; color: #d97706; }
-
-      .adm-item-pill { display: inline-block; padding: 3px 7px; background: #f1f5f9; border: 1px solid #cbd5e1; color: #1e293b; font-size: 10.5px; border-radius: 4px; margin: 1px 2px; white-space: nowrap; }
-      .adm-item-pill b { color: #0f172a; }
-      .adm-price { font: 700 13.5px "Space Mono", monospace; color: #0f172a; white-space: nowrap; }
-      .adm-time-cell { display: flex; flex-direction: column; gap: 1px; }
-      .adm-rel-time { font-weight: 700; font-size: 11.5px; color: #334155; }
-      .adm-abs-time { font: 9.5px "Space Mono", monospace; color: #94a3b8; }
-      .adm-handled-tag { padding: 2px 6px; background: #e0f2fe; border: 1px solid #bae6fd; color: #0369a1; border-radius: 3px; font: 700 9px "Space Mono", monospace; }
-
-      .adm-badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 9px; border-radius: 4px; font: 700 9.5px "Space Mono", monospace; text-transform: uppercase; letter-spacing: .03em; white-space: nowrap; }
-      .adm-badge-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
-      
-      .adm-count-pill { padding: 3px 8px; background: #f5f3ff; border: 1px solid #ddd6fe; color: #7c3aed; border-radius: 4px; font: 700 11px "Space Mono", monospace; }
-
-      .adm-actions-group { display: flex; align-items: center; gap: 6px; }
-      .adm-status-select { min-height: 30px; font-size: 11px; padding: 0 6px; border: 1px solid #cbd5e1; border-radius: 4px; background: #fff; cursor: pointer; }
-      .adm-btn-inspect { min-height: 30px; padding: 0 8px; border: 1px solid #cbd5e1; background: #f8fafc; color: #334155; font: 700 10.5px "Space Mono", monospace; border-radius: 4px; cursor: pointer; transition: all .16s; }
-      .adm-btn-inspect:hover { border-color: #7c3aed; color: #7c3aed; background: #f5f3ff; }
-
-      .adm-btn-table-action { padding: 5px 10px; border: 1px solid #cbd5e1; background: #f8fafc; font: 700 10.5px "Space Mono", monospace; color: #334155; border-radius: 4px; cursor: pointer; }
-      .adm-btn-table-action:hover { border-color: #0284c7; color: #0284c7; }
-
-      /* Detail Inspector Drawer Dialog */
-      .adm-detail-dialog { width: min(580px, calc(100% - 24px)); padding: 0; border: 1px solid #7c3aed; border-radius: 8px; box-shadow: 0 30px 80px rgba(0,0,0,0.35); background: #ffffff; color: var(--ink); z-index: 50; }
-      .adm-detail-dialog::backdrop { background: rgba(10, 15, 25, 0.7); backdrop-filter: blur(4px); }
-      .adm-detail-panel { padding: 24px; }
-      .adm-detail-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); padding-bottom: 14px; margin-bottom: 16px; }
-      .adm-detail-header h3 { margin: 0; font-size: 18px; color: #7c3aed; }
-      .adm-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px; }
-      .adm-detail-box { padding: 10px 12px; background: #f8fafc; border: 1px solid var(--line); border-radius: 6px; }
-      .adm-detail-box small { display: block; font: 700 9.5px "Space Mono", monospace; color: #64748b; text-transform: uppercase; margin-bottom: 3px; }
-      .adm-detail-box strong { font-size: 13px; color: #0f172a; }
-      .adm-modal-items-wrap { border: 1px solid var(--line); border-radius: 6px; padding: 12px; margin-bottom: 18px; }
-      .adm-modal-item-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px dashed var(--line); font-size: 12px; }
-      .adm-modal-item-row:last-child { border-bottom: 0; }
-      .adm-detail-actions { display: flex; gap: 8px; margin-top: 18px; }
-      .adm-btn-modal-action { flex: 1; min-height: 40px; border: 0; font: 700 11px "Space Mono", monospace; border-radius: 4px; cursor: pointer; }
-      .adm-btn-modal-done { background: #16a34a; color: #fff; }
-      .adm-btn-modal-cancel { background: #dc2626; color: #fff; }
-
       /* ==================== COMPLETE GLOBAL DARK THEME RULES ==================== */
       html[data-theme="dark"] {
         --ink: #edf4fb;
@@ -999,8 +850,8 @@
         </div>
       </section>
 
-      <!-- Discord Topluluk Alanı -->
-      <section class="container discord-section" aria-labelledby="discord-title">
+      <!-- Discord Topluluk ve İletişim Alanı -->
+      <section class="container discord-section" id="iletisim" aria-labelledby="discord-title">
         <div class="discord-card">
           <div>
             <p class="eyebrow">Topluluk ve destek</p>
@@ -1017,7 +868,7 @@
       </section>
     </main>
 
-    <footer id="iletisim">
+    <footer class="site-footer">
       <div class="container footer">
         <div class="footer-brand">
           <img class="footer-logo logo-light-mode" src="images/logo-dark.webp" alt="Monarch Store logosu" loading="lazy" decoding="async" width="102" height="28" />
@@ -1037,9 +888,9 @@
         <p>Ödeme bilgisi istemiyoruz. Discord sunucusundaki kullanıcı adını doğrulayıp sana özel ticket açacağız.</p>
         <div class="order-summary" id="orderSummary"></div>
         <form class="order-form" id="orderForm">
-          <!-- Önemli Discord Uyarısı -->
+          <!-- Önemli Discord Uyarısı (No Emojis) -->
           <div class="order-notice" role="alert">
-            <span class="notice-icon">⚠️</span>
+            <span class="notice-icon">(!)</span>
             <div>
               <strong>Önemli Uyarı:</strong>
               <p>Eğer Discord'umuzda değilseniz siparişiniz geçersiz sayılır, lütfen gerçek Discord adınızı yazın.</p>
@@ -1117,376 +968,17 @@
             </label>
           </div>
 
-          <button class="account-submit" id="accountSubmit" type="submit">Giriş Yap ➔</button>
+          <button class="account-submit" id="accountSubmit" type="submit">Giriş Yap</button>
         </form>
         <button class="account-logout" id="accountLogout" type="button" style="display: none;">Çıkış Yap</button>
         <p class="account-note">Monarch Store Güvenli Giriş Sistemi © 2026</p>
       </div>
     </dialog>
 
-    <!-- ==================== ELITE SAAS ADMIN DASHBOARD ==================== -->
-    <dialog class="adm-dashboard-dialog" id="adminDashboardDialog" aria-labelledby="adminDashTitle">
-      <div class="adm-layout">
-        <!-- Sidebar -->
-        <aside class="adm-sidebar">
-          <div class="adm-brand">
-            <div class="adm-brand-icon">
-              <img src="images/mascot.webp" alt="Monarch Mascot" class="adm-mascot-logo" width="32" height="32" />
-            </div>
-            <div class="adm-brand-text">
-              <strong id="adminDashTitle">MONARCH SUITE</strong>
-              <small>v2.6 Enterprise Control</small>
-            </div>
-          </div>
-
-          <!-- Admin Profile Card -->
-          <div class="adm-user-profile">
-            <div class="adm-user-profile-top">
-              <div class="adm-mascot-avatar-circle">
-                <img src="images/mascot.webp" alt="Founder Mascot Avatar" width="36" height="36" />
-              </div>
-              <div class="adm-user-info">
-                <strong id="adminUserBadge">admin</strong>
-                <span class="adm-user-role-badge">FOUNDER 👑</span>
-              </div>
-            </div>
-            <span class="adm-user-discord-tag" id="adminDiscordTag">@yetkili</span>
-          </div>
-
-          <!-- Navigation Tabs -->
-          <nav class="adm-nav-menu">
-            <button type="button" class="adm-sidebar-tab" data-tab="overview">
-              <svg class="adm-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
-              <span>Genel Bakış</span>
-            </button>
-            <button type="button" class="adm-sidebar-tab active" data-tab="orders" id="tabOrdersBtn">
-              <svg class="adm-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-              <span>Siparişler & Destek</span>
-            </button>
-            <button type="button" class="adm-sidebar-tab" data-tab="clients">
-              <svg class="adm-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-              <span>Müşteri Dizini</span>
-            </button>
-            <button type="button" class="adm-sidebar-tab" data-tab="system">
-              <svg class="adm-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
-              <span>Sistem & Bot</span>
-            </button>
-          </nav>
-
-          <!-- Sidebar Footer Info -->
-          <div class="adm-sidebar-bottom">
-            <div class="adm-live-clock">
-              <span>🕒</span>
-              <span id="adminClock">12:00:00 (İST)</span>
-            </div>
-            <div class="adm-db-status">Supabase DB Bağlı</div>
-            <button type="button" class="adm-btn-sidebar-logout" id="adminLogoutBtn">
-              <svg class="adm-svg-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-              <span>Güvenli Çıkış</span>
-            </button>
-          </div>
-        </aside>
-
-        <!-- Main Content Area -->
-        <main class="adm-main">
-          <!-- Topbar Toolbar -->
-          <div class="adm-topbar">
-            <div class="adm-topbar-left">
-              <div class="adm-search-box">
-                <span class="adm-search-icon">🔍</span>
-                <input type="search" class="adm-search-input" id="adminSearchInput" placeholder="Sipariş kodu, Discord adı veya ID ile ara…" />
-              </div>
-            </div>
-            <div class="adm-topbar-right">
-              <select class="adm-filter-select" id="adminStatusFilterSelect" title="Duruma Göre Filtrele">
-                <option value="all">Filtre: Tüm Durumlar</option>
-                <option value="pending">⏳ Bekleyenler</option>
-                <option value="active">⚡ Aktif / Sırada / Ticket Açık</option>
-                <option value="closed">✅ Tamamlanan / Kapalı</option>
-                <option value="cancelled">❌ İptal Edilenler</option>
-              </select>
-              <select class="adm-sort-select" id="adminSortSelect" title="Sıralama">
-                <option value="newest">Sırala: En Yeni</option>
-                <option value="oldest">Sırala: En Eski</option>
-                <option value="price_high">Sırala: Fiyat Azalan</option>
-                <option value="price_low">Sırala: Fiyat Artan</option>
-              </select>
-              <button type="button" class="adm-btn-top" id="adminRefreshBtn" title="Canlı Verileri Yenile">
-                <span class="adm-icon-refresh">🔄</span>
-                <span>Yenile</span>
-              </button>
-              <button type="button" class="adm-btn-top" id="adminExportCsvBtn" title="Excel / CSV Formatında İndir">
-                <span>📥</span>
-                <span>CSV</span>
-              </button>
-              <button type="button" class="adm-btn-close-modal" onclick="document.querySelector('#adminDashboardDialog').close()" title="Kapat" aria-label="Kapat">×</button>
-            </div>
-          </div>
-
-          <!-- Content Scroll Area -->
-          <div class="adm-content-scroll">
-            
-            <!-- SECTION 1: GENEL BAKIŞ (OVERVIEW) -->
-            <section class="adm-view-section" id="admSection_overview">
-              <div class="adm-stats-grid-elite">
-                <div class="adm-stat-card-elite">
-                  <small>
-                    <span>Toplam Ciro</span>
-                    <svg class="adm-svg-stat-icon" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                  </small>
-                  <strong id="admStatTotalRevenue" style="color: #10b981;">0 TL</strong>
-                </div>
-                <div class="adm-stat-card-elite">
-                  <small>
-                    <span>Toplam Talep</span>
-                    <svg class="adm-svg-stat-icon" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-                  </small>
-                  <strong id="admStatTotalOrders">0</strong>
-                </div>
-                <div class="adm-stat-card-elite">
-                  <small>
-                    <span>Ortalama Sepet</span>
-                    <svg class="adm-svg-stat-icon" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-                  </small>
-                  <strong id="admStatAvgOrder">0 TL</strong>
-                </div>
-                <div class="adm-stat-card-elite">
-                  <small>
-                    <span>Bekleyen</span>
-                    <svg class="adm-svg-stat-icon" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                  </small>
-                  <strong id="admStatPending" style="color: #f59e0b;">0</strong>
-                </div>
-                <div class="adm-stat-card-elite">
-                  <small>
-                    <span>İşlemde / Sırada</span>
-                    <svg class="adm-svg-stat-icon" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                  </small>
-                  <strong id="admStatValidated" style="color: #3b82f6;">0</strong>
-                </div>
-                <div class="adm-stat-card-elite">
-                  <small>
-                    <span>Tamamlanan</span>
-                    <svg class="adm-svg-stat-icon" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-                  </small>
-                  <strong id="admStatCompleted" style="color: #16a34a;">0</strong>
-                </div>
-              </div>
-
-              <div class="adm-overview-split">
-                <!-- Kategori Dağılım Kartı -->
-                <div class="adm-card-box">
-                  <h3>
-                    <span>Hizmet Satış Dağılımı</span>
-                    <svg class="adm-svg-stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-                  </h3>
-                  <div class="adm-cat-progress-item">
-                    <div class="adm-cat-progress-meta">
-                      <span>Minecraft Botları</span>
-                      <span id="admValBots">0 Adet (%0)</span>
-                    </div>
-                    <div class="adm-cat-bar-bg">
-                      <div class="adm-cat-bar-fill" id="admBarBots" style="width: 0%; background: #3b82f6;"></div>
-                    </div>
-                  </div>
-                  <div class="adm-cat-progress-item">
-                    <div class="adm-cat-progress-meta">
-                      <span>UI/UX Tasarım</span>
-                      <span id="admValUiUx">0 Adet (%0)</span>
-                    </div>
-                    <div class="adm-cat-bar-bg">
-                      <div class="adm-cat-bar-fill" id="admBarUiUx" style="width: 0%; background: #8b5cf6;"></div>
-                    </div>
-                  </div>
-                  <div class="adm-cat-progress-item">
-                    <div class="adm-cat-progress-meta">
-                      <span>Sunum Hizmetleri</span>
-                      <span id="admValSlides">0 Adet (%0)</span>
-                    </div>
-                    <div class="adm-cat-bar-bg">
-                      <div class="adm-cat-bar-fill" id="admBarSlides" style="width: 0%; background: #ec4899;"></div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Son Aktiviteler Tablosu -->
-                <div class="adm-card-box">
-                  <h3>
-                    <span>Son Aktiviteler</span>
-                    <svg class="adm-svg-stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 10"/></svg>
-                  </h3>
-                  <table class="adm-elite-table">
-                    <thead>
-                      <tr>
-                        <th>Kod</th>
-                        <th>Kullanıcı</th>
-                        <th>Tutar</th>
-                        <th>Durum</th>
-                      </tr>
-                    </thead>
-                    <tbody id="admRecentActivitiesBody">
-                      <tr><td colspan="4" class="adm-loading">Yükleniyor…</td></tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </section>
-
-            <!-- SECTION 2: SİPARİŞLER VE DESTEK (DATA GRID) -->
-            <section class="adm-view-section" id="admSection_orders" style="display: block;">
-              <div class="adm-table-wrap">
-                <div class="adm-table-header-info">
-                  <h3>
-                    <span>📦 Sipariş & Destek Yönetim Matrisi</span>
-                    <span class="adm-count-badge" id="admOrdersCountBadge">0 Sipariş</span>
-                  </h3>
-                  <small style="color: #64748b; font-family: 'Space Mono', monospace; font-size: 10px;">CANLI SYNC AKTİF</small>
-                </div>
-                <div style="overflow-x: auto;">
-                  <table class="adm-elite-table">
-                    <thead>
-                      <tr>
-                        <th>Talep Kodu</th>
-                        <th>Discord Müşterisi</th>
-                        <th>Ürünler / Paketler</th>
-                        <th>Tutar</th>
-                        <th>Durum</th>
-                        <th>Tarih</th>
-                        <th>Yetkili</th>
-                        <th>İşlem & Detay</th>
-                      </tr>
-                    </thead>
-                    <tbody id="adminOrdersTableBody">
-                      <tr><td colspan="8" class="adm-loading">Sipariş verileri yükleniyor…</td></tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </section>
-
-            <!-- SECTION 3: MÜŞTERİ DİZİNİ (CLIENTS) -->
-            <section class="adm-view-section" id="admSection_clients">
-              <div class="adm-table-wrap">
-                <div class="adm-table-header-info">
-                  <h3>👥 Kayıtlı Discord Müşteri Veritabanı</h3>
-                </div>
-                <div style="overflow-x: auto;">
-                  <table class="adm-elite-table">
-                    <thead>
-                      <tr>
-                        <th>Discord Kullanıcısı</th>
-                        <th>Toplam Sipariş</th>
-                        <th>Kümülatif Harcama</th>
-                        <th>Son Etkileşim</th>
-                        <th>Filtrele</th>
-                      </tr>
-                    </thead>
-                    <tbody id="adminClientsTableBody">
-                      <tr><td colspan="5" class="adm-loading">Müşteri listesi hazırlanıyor…</td></tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </section>
-
-            <!-- SECTION 4: SİSTEM & BOT DURUMU (SYSTEM) -->
-            <section class="adm-view-section" id="admSection_system">
-              <div class="adm-stats-grid-elite" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 20px;">
-                <div class="adm-card-box">
-                  <h3>🗄️ Supabase PostgreSQL</h3>
-                  <p style="font-size: 12px; color: #64748b; margin: 4px 0 12px;">Veritabanı API ve RPC bağlantısı.</p>
-                  <div style="display: flex; flex-direction: column; gap: 6px; font-size: 11.5px; font-family: 'Space Mono', monospace;">
-                    <div>Durum: <b style="color: #16a34a;">🟢 Çevrimiçi (Connected)</b></div>
-                    <div>Bölge: <b>AWS eu-central-1</b></div>
-                    <div>Şifreleme: <b>SHA-256 + RLS Korumalı</b></div>
-                  </div>
-                </div>
-
-                <div class="adm-card-box">
-                  <h3>🤖 Monarch Discord Bot</h3>
-                  <p style="font-size: 12px; color: #64748b; margin: 4px 0 12px;">Discord.js v14 Ticket & 2FA Köprüsü.</p>
-                  <div style="display: flex; flex-direction: column; gap: 6px; font-size: 11.5px; font-family: 'Space Mono', monospace;">
-                    <div>Durum: <b style="color: #16a34a;">🟢 Aktif Polling (2.5s)</b></div>
-                    <div>Kanal: <b>#admin-2fa</b></div>
-                    <div>İzinli Roller: <b>Founder, Destek</b></div>
-                  </div>
-                </div>
-
-                <div class="adm-card-box">
-                  <h3>🔐 Aktif Güvenlik Oturumu</h3>
-                  <p style="font-size: 12px; color: #64748b; margin: 4px 0 12px;">Oturum tokenı ve güvenlik detayları.</p>
-                  <div style="display: flex; flex-direction: column; gap: 6px; font-size: 11.5px; font-family: 'Space Mono', monospace;">
-                    <div>Protokol: <b>UUIDv4 64-Bit Token</b></div>
-                    <div>Geçerlilik: <b>12 Saat</b></div>
-                    <div>Yetki Derecesi: <b style="color: #7c3aed;">Founder Root</b></div>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-          </div>
-        </main>
-      </div>
-    </dialog>
-
-    <!-- SİPARİŞ DETAY INSPECTOR MODALI -->
-    <dialog class="adm-detail-dialog" id="adminOrderDetailDialog" aria-labelledby="modalDetailTitle">
-      <div class="adm-detail-panel">
-        <div class="adm-detail-header">
-          <h3 id="modalDetailTitle">🔍 Sipariş Detay Analizi</h3>
-          <button type="button" class="adm-btn-close-modal" onclick="document.querySelector('#adminOrderDetailDialog').close()" aria-label="Kapat">×</button>
-        </div>
-        
-        <div class="adm-detail-grid">
-          <div class="adm-detail-box">
-            <small>Talep Kodu</small>
-            <strong id="modalOrderCode" style="color: #7c3aed; font-family: 'Space Mono', monospace;">—</strong>
-          </div>
-          <div class="adm-detail-box">
-            <small>Toplam Tutar</small>
-            <strong id="modalOrderPrice" style="color: #16a34a; font-family: 'Space Mono', monospace;">—</strong>
-          </div>
-          <div class="adm-detail-box">
-            <small>Discord Kullanıcısı</small>
-            <strong id="modalOrderUser">—</strong>
-          </div>
-          <div class="adm-detail-box">
-            <small>Discord ID</small>
-            <strong id="modalOrderUserId" style="font-family: 'Space Mono', monospace; font-size: 11px;">—</strong>
-          </div>
-          <div class="adm-detail-box">
-            <small>Oluşturulma Tarihi</small>
-            <strong id="modalOrderDate" style="font-size: 11.5px;">—</strong>
-          </div>
-          <div class="adm-detail-box">
-            <small>Sorumlu Yetkili</small>
-            <strong id="modalOrderHandledBy">—</strong>
-          </div>
-          <div class="adm-detail-box" style="grid-column: span 2;">
-            <small>Mevcut Durum</small>
-            <div id="modalOrderStatus" style="margin-top: 4px;">—</div>
-          </div>
-          <div class="adm-detail-box" style="grid-column: span 2;">
-            <small>Ticket Kanalı</small>
-            <strong id="modalOrderTicketId" style="font-family: 'Space Mono', monospace; color: #0284c7;">—</strong>
-          </div>
-        </div>
-
-        <small style="display: block; font: 700 10px 'Space Mono', monospace; color: #64748b; text-transform: uppercase; margin-bottom: 6px;">Sipariş Edilen Kalemler</small>
-        <div class="adm-modal-items-wrap" id="modalOrderItemsList"></div>
-
-        <div class="adm-detail-actions">
-          <button type="button" class="adm-btn-modal-action adm-btn-modal-done" id="modalActionDone">✅ Siparişi Tamamla (Kapat)</button>
-          <button type="button" class="adm-btn-modal-action adm-btn-modal-cancel" id="modalActionCancel">❌ Siparişi İptal Et</button>
-        </div>
-      </div>
-    </dialog>
-
-    <script type="module" src="./theme-toggle.js?v=20260829_v3"></script>
+    <script type="module" src="./theme-toggle.js?v=20260829_v4"></script>
     <script type="module">
-      import { bindLocalAccountUI } from './account-local.js?v=20260829_hero_v3';
-      import { bindOrderUI, bindCommunityStats } from './store-orders.js?v=20260829_hero_v3';
-      import { initAdminDashboardUI } from './admin-panel.js?v=20260829_hero_v3';
+      import { bindLocalAccountUI } from './account-local.js?v=20260829_noemojis_v4';
+      import { bindOrderUI, bindCommunityStats } from './store-orders.js?v=20260829_noemojis_v4';
 
       const cartCount = document.querySelector('#cartCount');
       const toast = document.querySelector('#toast');
@@ -1498,8 +990,6 @@
       
       bindOrderUI({ cartButton: document.querySelector('#cartButton'), cartCount, dialog: document.querySelector('#orderDialog'), closeButton: document.querySelector('#orderClose'), form: document.querySelector('#orderForm'), discordInput: document.querySelector('#orderDiscordUsername'), summary: document.querySelector('#orderSummary'), submitButton: document.querySelector('#orderSubmit'), notify });
       bindCommunityStats({ countElement: document.querySelector('#discordActiveCount'), statusElement: document.querySelector('#discordActiveStatus') });
-      
-      const adminDashboard = initAdminDashboardUI({ notify });
 
       bindLocalAccountUI({ 
         button: document.querySelector('#accountButton'), 

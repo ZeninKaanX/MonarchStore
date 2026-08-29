@@ -107,7 +107,7 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
     const session = getLocalSession(storage);
     if (session?.isAdmin) {
       const disc = session.discordUsername ? ` (@${session.discordUsername})` : '';
-      button.textContent = `🛡️ Admin: ${session.username}${disc}`;
+      button.textContent = `Admin: ${session.username}${disc}`;
       button.classList.add("is-signed-in");
     } else if (session) {
       button.textContent = `Hesap: ${session.username}`;
@@ -262,7 +262,7 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
       if (!passwordInput) return;
       const isPwd = passwordInput.type === "password";
       passwordInput.type = isPwd ? "text" : "password";
-      togglePwdBtn.textContent = isPwd ? "🙈" : "👁️";
+      togglePwdBtn.textContent = isPwd ? "GİZLE" : "GÖSTER";
     });
   }
 

@@ -225,25 +225,98 @@ export async function appendAdminTicketReply (orderCode, messageText, authorName
   return updated
 }
 
-export function getAdminProfileData (username) {
-  const accountsRaw = localStorage.getItem('monarch_accounts_v1') || '[]'
-  const accounts = JSON.parse(accountsRaw)
-  const norm = (username || '').trim().toLowerCase()
-  const found = accounts.find(a => (a.username || '').toLowerCase() === norm)
-  return found || {
-    username: username || 'Admin',
-    avatarUrl: localStorage.getItem('monarch_admin_avatar') || 'images/lena-officer-avatar.jpg',
-    discordUsername: localStorage.getItem('monarch_admin_discord_user') || 'yetkili',
-    email: localStorage.getItem('monarch_admin_email') || 'admin@monarchstore.com',
+export const FOUNDER_DEFAULTS = {
+  'kaan': {
+    username: 'Kaan',
+    avatarUrl: 'images/hero-whitehair.webp',
+    discordUsername: 'kaan',
+    email: 'kaan@monarchstore.com',
+    role: 'Kurucu / Founder (Yazılım & Yönetim)'
+  },
+  'krox08': {
+    username: 'krox08',
+    avatarUrl: 'images/mascot.webp',
+    discordUsername: 'krox08',
+    email: 'krox08@monarchstore.com',
+    role: 'Kurucu / Founder (Sistem & Altyapı)'
+  },
+  'emre': {
+    username: 'Emre',
+    avatarUrl: 'images/default-avatar.jpg',
+    discordUsername: 'emre',
+    email: 'emre@monarchstore.com',
+    role: 'Kurucu / Founder (Topluluk & Operasyon)'
+  },
+  'omer': {
+    username: 'Ömer',
+    avatarUrl: 'images/lena-officer-avatar.jpg',
+    discordUsername: 'omer',
+    email: 'omer@monarchstore.com',
+    role: 'Kurucu / Founder (Güvenlik & Denetim)'
+  },
+  'eververity': {
+    username: 'eververity',
+    avatarUrl: 'images/hero-whitehair.webp',
+    discordUsername: 'eververity',
+    email: 'eververity@monarchstore.com',
+    role: 'Kurucu / Founder'
+  },
+  'admin': {
+    username: 'Admin',
+    avatarUrl: 'images/lena-officer-avatar.jpg',
+    discordUsername: 'yetkili',
+    email: 'admin@monarchstore.com',
     role: 'Sistem Yöneticisi / Founder'
+  },
+  'founder': {
+    username: 'Founder',
+    avatarUrl: 'images/lena-officer-avatar.jpg',
+    discordUsername: 'founder',
+    email: 'founder@monarchstore.com',
+    role: 'Kurucu / Founder'
   }
+};
+
+export function getAdminProfileData (username) {
+  const norm = (username || '').trim().toLowerCase();
+  
+  // 1. Check user-specific cache
+  const specificKey = `monarch_admin_profile_${norm}`;
+  const cached = localStorage.getItem(specificKey);
+  if (cached) {
+    try { return JSON.parse(cached); } catch {}
+  }
+
+  // 2. Check local accounts
+  const accountsRaw = localStorage.getItem('monarch_accounts_v1') || '[]';
+  const accounts = JSON.parse(accountsRaw);
+  const found = accounts.find(a => (a.username || '').toLowerCase() === norm);
+  if (found) {
+    return {
+      username: found.username,
+      avatarUrl: found.avatarUrl || FOUNDER_DEFAULTS[norm]?.avatarUrl || 'images/lena-officer-avatar.jpg',
+      discordUsername: found.discordUsername || FOUNDER_DEFAULTS[norm]?.discordUsername || norm,
+      email: found.email || FOUNDER_DEFAULTS[norm]?.email || `${norm}@monarchstore.com`,
+      role: found.role || FOUNDER_DEFAULTS[norm]?.role || 'Kurucu / Founder'
+    };
+  }
+
+  // 3. Fallback to founder defaults
+  const def = FOUNDER_DEFAULTS[norm] || FOUNDER_DEFAULTS['admin'];
+  return {
+    username: def.username || username || 'Admin',
+    avatarUrl: def.avatarUrl || 'images/lena-officer-avatar.jpg',
+    discordUsername: def.discordUsername || norm || 'yetkili',
+    email: def.email || `${norm}@monarchstore.com`,
+    role: def.role || 'Kurucu / Founder'
+  };
 }
 
 export async function saveAdminProfileData (username, updates) {
-  const accountsRaw = localStorage.getItem('monarch_accounts_v1') || '[]'
-  const accounts = JSON.parse(accountsRaw)
-  const norm = (username || '').trim().toLowerCase()
-  let found = accounts.find(a => (a.username || '').toLowerCase() === norm)
+  const norm = (username || '').trim().toLowerCase();
+  const accountsRaw = localStorage.getItem('monarch_accounts_v1') || '[]';
+  const accounts = JSON.parse(accountsRaw);
+  let found = accounts.find(a => (a.username || '').toLowerCase() === norm);
 
   if (!found) {
     found = {
@@ -251,24 +324,46 @@ export async function saveAdminProfileData (username, updates) {
       normalized: norm,
       isAdmin: true,
       createdAt: new Date().toISOString()
-    }
-    accounts.push(found)
+    };
+    accounts.push(found);
   }
 
-  if (updates.avatarUrl) found.avatarUrl = updates.avatarUrl
-  if (updates.discordUsername !== undefined) found.discordUsername = updates.discordUsername
-  if (updates.email !== undefined) found.email = updates.email
-  if (updates.role !== undefined) found.role = updates.role
+  if (updates.avatarUrl) found.avatarUrl = updates.avatarUrl;
+  if (updates.discordUsername !== undefined) found.discordUsername = updates.discordUsername;
+  if (updates.email !== undefined) found.email = updates.email;
+  if (updates.role !== undefined) found.role = updates.role;
   if (updates.newPassword) {
-    found.passwordHash = await sha256(updates.newPassword)
+    found.passwordHash = await sha256(updates.newPassword);
+    
+    // Also sync password to Supabase monarch_admin_accounts table if possible
+    try {
+      const supabase = getSupabase();
+      await supabase
+        .from('monarch_admin_accounts')
+        .update({ password_hash: found.passwordHash, updated_at: new Date().toISOString() })
+        .ilike('username', norm);
+    } catch (e) {
+      console.warn('Supabase admin account password update fallback:', e);
+    }
   }
 
-  localStorage.setItem('monarch_accounts_v1', JSON.stringify(accounts))
-  if (updates.avatarUrl) localStorage.setItem('monarch_admin_avatar', updates.avatarUrl)
-  if (updates.discordUsername) localStorage.setItem('monarch_admin_discord_user', updates.discordUsername)
-  if (updates.email) localStorage.setItem('monarch_admin_email', updates.email)
+  localStorage.setItem('monarch_accounts_v1', JSON.stringify(accounts));
+  
+  // Save dedicated profile cache
+  const profileData = {
+    username: found.username,
+    avatarUrl: found.avatarUrl,
+    discordUsername: found.discordUsername,
+    email: found.email,
+    role: found.role
+  };
+  localStorage.setItem(`monarch_admin_profile_${norm}`, JSON.stringify(profileData));
 
-  return found
+  // Update session
+  if (updates.avatarUrl) localStorage.setItem('monarch_admin_avatar', updates.avatarUrl);
+  if (updates.discordUsername) localStorage.setItem('monarch_admin_discord_user', updates.discordUsername);
+
+  return found;
 }
 
 export async function cancelSingleOrder (orderCode) {

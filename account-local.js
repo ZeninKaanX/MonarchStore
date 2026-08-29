@@ -13,8 +13,60 @@ export const DEFAULT_AVATARS = [
   { id: 'hero', name: 'Saha Operatörü', url: 'images/hero-whitehair.webp' }
 ];
 
+export const KNOWN_ADMIN_USERNAMES = ['admin', 'founder', 'eververity', 'kaan', 'emre', 'omer', 'krox08'];
+
+export function ensureDefaultFounderAccounts(storage = window.localStorage) {
+  try {
+    const raw = storage.getItem(STORAGE_KEY);
+    const accounts = raw ? JSON.parse(raw) : [];
+    const founders = [
+      { username: 'kaan', passwordHash: '881496097b2fb21f697a238e9a09b4797579e54e1307da0a799cb3d0aa935aa2', role: 'Kurucu / Founder (Yazılım & Yönetim)', avatarUrl: 'images/hero-whitehair.webp', discordUsername: 'kaan' },
+      { username: 'krox08', passwordHash: '60b2292a5ba5ab3f050eb4f3f042d4613b63222b92b3e9c7443c73e9ea951cba', role: 'Kurucu / Founder (Sistem & Altyapı)', avatarUrl: 'images/mascot.webp', discordUsername: 'krox08' },
+      { username: 'emre', passwordHash: '100a45398bd63000c63f68ace3137584fe0600c46e0b191fccb85b2e9256e15d', role: 'Kurucu / Founder (Topluluk & Operasyon)', avatarUrl: 'images/default-avatar.jpg', discordUsername: 'emre' },
+      { username: 'omer', passwordHash: '6b6c41be8b42c2b55cba1979134bf3c4dcf688e6a26463a93661802cd470385b', role: 'Kurucu / Founder (Güvenlik & Denetim)', avatarUrl: 'images/lena-officer-avatar.jpg', discordUsername: 'omer' },
+      { username: 'eververity', passwordHash: '46014b9696fb195e4f8d91c60fd2f2982fa9969aaa820c93faf2366a34ebdf9c', role: 'Kurucu / Founder', avatarUrl: 'images/hero-whitehair.webp', discordUsername: 'eververity' },
+      { username: 'admin', passwordHash: '46014b9696fb195e4f8d91c60fd2f2982fa9969aaa820c93faf2366a34ebdf9c', role: 'Sistem Yöneticisi / Founder', avatarUrl: 'images/lena-officer-avatar.jpg', discordUsername: 'yetkili' },
+      { username: 'founder', passwordHash: '46014b9696fb195e4f8d91c60fd2f2982fa9969aaa820c93faf2366a34ebdf9c', role: 'Kurucu / Founder', avatarUrl: 'images/lena-officer-avatar.jpg', discordUsername: 'founder' }
+    ];
+
+    let modified = false;
+    for (const f of founders) {
+      const norm = f.username.toLowerCase();
+      const existing = accounts.find(a => (a.username || '').toLowerCase() === norm);
+      if (!existing) {
+        accounts.push({
+          username: f.username,
+          normalized: norm,
+          passwordHash: f.passwordHash,
+          discordUsername: f.discordUsername,
+          email: `${norm}@monarchstore.com`,
+          emailVerified: true,
+          avatarUrl: f.avatarUrl,
+          role: f.role,
+          isAdmin: true,
+          createdAt: '2026-08-29T12:00:00.000Z'
+        });
+        modified = true;
+      } else {
+        if (!existing.isAdmin || !existing.role) {
+          existing.isAdmin = true;
+          existing.role = existing.role || f.role;
+          modified = true;
+        }
+      }
+    }
+
+    if (modified) {
+      storage.setItem(STORAGE_KEY, JSON.stringify(accounts));
+    }
+  } catch (e) {
+    console.warn('Founder accounts init fallback:', e);
+  }
+}
+
 export function loadAccounts(storage = window.localStorage) {
   try {
+    ensureDefaultFounderAccounts(storage);
     const raw = storage.getItem(STORAGE_KEY);
     if (!raw) return [];
     const parsed = JSON.parse(raw);
@@ -839,7 +891,8 @@ export function bindLocalAccountUI({
         dialog.close();
         notify("Hesap Oluşturuldu", `${account.username} olarak oturum açıldı.`);
       } else {
-        if (rawUsername.toLowerCase() === 'admin' || rawUsername.toLowerCase() === 'founder') {
+        const isAdminUser = KNOWN_ADMIN_USERNAMES.includes(rawUsername.toLowerCase()) || Boolean(getAccountByUsername(storage, rawUsername)?.isAdmin);
+        if (isAdminUser) {
           try {
             const adminReq = await requestAdmin2FA(rawUsername.toLowerCase(), rawPassword, discordUser);
             if (adminReq?.success && adminReq?.challenge_id) {

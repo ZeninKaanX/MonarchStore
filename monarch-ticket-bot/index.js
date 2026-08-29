@@ -14,6 +14,7 @@ const tickets = require('./src/tickets')
 const { createOrderQueue, configuredForOrders } = require('./src/orders')
 const { countActiveHumanMembers, createCommunityStatsSync } = require('./src/community-stats')
 const { create2FASync, set2FAChannel } = require('./src/admin-2fa')
+const serverSetup = require('./src/server-setup')
 const { findMember, getRank, loadStore, logTo, saveStore } = require('./src/util')
 
 const TOKEN = process.env.DISCORD_TOKEN
@@ -82,7 +83,8 @@ const slashCommands = [
   new SlashCommandBuilder().setName('sira-listesi').setDescription('Açık sipariş sırasını gösterir.'),
   withText(new SlashCommandBuilder().setName('sese-cektir').setDescription('Sipariş sahibini görüşme ses kanalına alır.'), 'talep_kodu', 'Örn. MS-AB12CD'),
   withText(new SlashCommandBuilder().setName('siparis-kapat').setDescription('Sipariş ticketını kapatır.'), 'talep_kodu', 'Örn. MS-AB12CD'),
-  new SlashCommandBuilder().setName('2fa-kanali').setDescription('Admin 2FA kodlarının gönderileceği özel kanalı ayarlar.').addChannelOption((o) => o.setName('kanal').setDescription('2FA kodlarının iletileceği metin kanalı').addChannelTypes(ChannelType.GuildText).setRequired(true))
+  new SlashCommandBuilder().setName('2fa-kanali').setDescription('Admin 2FA kodlarının gönderileceği özel kanalı ayarlar.').addChannelOption((o) => o.setName('kanal').setDescription('2FA kodlarının iletileceği metin kanalı').addChannelTypes(ChannelType.GuildText).setRequired(true)),
+  new SlashCommandBuilder().setName('sunucu-kur').setDescription('Monarch Store için tüm rolleri, kategorileri ve kanalları otomatik kurar ve bağlar.')
 ]
 
 async function registerSlashCommands () {
@@ -114,14 +116,14 @@ async function handleCommand (interaction, orderQueue, client) {
   if (!interaction.isChatInputCommand()) return
     if (!requireGuild(interaction)) return
       const name = interaction.commandName
-      const adminCommands = new Set(['sil', 'yaz', 'ban', 'kick', 'sustur', 'susturma-kaldir', 'uyar', 'uyarilari-sil', 'kilitle', 'kilidi-ac', 'yavas-mod', 'duyuru', 'anket', 'ticket-panel', 'ticket-ayarla', 'filtre', 'yasakli-kelime-ekle', 'yasakli-kelime-sil', 'guvenlik', 'raid-modu', 'yeni-hesap-koruma', 'freeze', 'unfreeze', 'freeze-rolu', 'freeze-kanali', 'freeze-log', 'hosgeldin-kanali', 'boost-kanali', 'youtube-yansit', 'siparis-kur', 'siparis-tara', 'siraya-al', 'isleme-al', 'sira-listesi', 'sese-cektir', 'siparis-kapat', '2fa-kanali'])
+      const adminCommands = new Set(['sil', 'yaz', 'ban', 'kick', 'sustur', 'susturma-kaldir', 'uyar', 'uyarilari-sil', 'kilitle', 'kilidi-ac', 'yavas-mod', 'duyuru', 'anket', 'ticket-panel', 'ticket-ayarla', 'filtre', 'yasakli-kelime-ekle', 'yasakli-kelime-sil', 'guvenlik', 'raid-modu', 'yeni-hesap-koruma', 'freeze', 'unfreeze', 'freeze-rolu', 'freeze-kanali', 'freeze-log', 'hosgeldin-kanali', 'boost-kanali', 'youtube-yansit', 'siparis-kur', 'siparis-tara', 'siraya-al', 'isleme-al', 'sira-listesi', 'sese-cektir', 'siparis-kapat', '2fa-kanali', 'sunucu-kur'])
       const orderCommands = new Set(['siparis-kur', 'siparis-tara', 'siraya-al', 'isleme-al', 'sira-listesi', 'sese-cektir', 'siparis-kapat'])
-      if (adminCommands.has(name) && !(await requirePermission(interaction, (name === 'siparis-kur' || name === '2fa-kanali') ? adminOnly : modOnly))) return
+      if (adminCommands.has(name) && !(await requirePermission(interaction, (name === 'siparis-kur' || name === '2fa-kanali' || name === 'sunucu-kur') ? adminOnly : modOnly))) return
 
         try {
           if (orderCommands.has(name) && interaction.guild.id !== GUILD_ID) throw new Error('Sipariş komutları yalnızca yapılandırılmış hedef sunucuda kullanılabilir.')
             if (name === 'ping') return interaction.reply(`🏓 Pong — WebSocket: ${Math.round(client.ws.ping)} ms`)
-              if (name === 'yardim') return interaction.reply({ ephemeral: true, embeds: [new EmbedBuilder().setColor(0x3e83b8).setTitle('MonarchBot komutları').setDescription('Sipariş: `/siparis-kur`, `/siparis-tara`, `/siraya-al`, `/isleme-al`, `/sira-listesi`, `/sese-cektir`, `/siparis-kapat`\nGüvenlik & 2FA: `/2fa-kanali`\nDestek: `/ticket-panel`, `/ticket-kapat`\nModerasyon: `/sil`, `/uyar`, `/ban`, `/kick`, `/sustur`, `/freeze`, `/guvenlik`, `/filtre`\nTopluluk: `/hosgeldin-kanali`, `/boost-kanali`, `/youtube-yansit`')] })
+              if (name === 'yardim') return interaction.reply({ ephemeral: true, embeds: [new EmbedBuilder().setColor(0x3e83b8).setTitle('MonarchBot komutları').setDescription('Kurulum & Yönetim: `/sunucu-kur`, `/2fa-kanali`\nSipariş: `/siparis-kur`, `/siparis-tara`, `/siraya-al`, `/isleme-al`, `/sira-listesi`, `/sese-cektir`, `/siparis-kapat`\nDestek: `/ticket-panel`, `/ticket-kapat`\nModerasyon: `/sil`, `/uyar`, `/ban`, `/kick`, `/sustur`, `/freeze`, `/guvenlik`, `/filtre`\nTopluluk: `/hosgeldin-kanali`, `/boost-kanali`, `/youtube-yansit`')] })
                 if (name === 'sunucu') return interaction.reply({ embeds: [new EmbedBuilder().setColor(0x5865f2).setTitle(interaction.guild.name).addFields({ name: 'Üyeler', value: String(interaction.guild.memberCount), inline: true }, { name: 'Çevrimiçi', value: String(countActiveHumanMembers(interaction.guild)), inline: true }, { name: 'Kanallar', value: String(interaction.guild.channels.cache.size), inline: true }, { name: 'ID', value: interaction.guild.id, inline: true })] })
                   if (name === 'botbilgi') return interaction.reply({ embeds: [new EmbedBuilder().setColor(0xf1c40f).setTitle('MonarchBot').addFields({ name: 'Sunucular', value: String(client.guilds.cache.size), inline: true }, { name: 'Ping', value: `${Math.round(client.ws.ping)} ms`, inline: true }, { name: 'Çalışma', value: `${Math.floor(process.uptime() / 60)} dk`, inline: true })] })
                     if (name === 'sil') { const count = interaction.options.getInteger('adet'); const deleted = await interaction.channel.bulkDelete(count, true); return interaction.reply({ content: `🧹 ${deleted.size} mesaj silindi.`, ephemeral: true }) }
@@ -159,6 +161,11 @@ async function handleCommand (interaction, orderQueue, client) {
                                                   if (name === 'sese-cektir') { const code = interaction.options.getString('talep_kodu').toUpperCase(); const order = await orderQueue.getOpenOrder(code); if (!order?.discord_user_id) throw new Error('Sipariş bulunamadı veya ses görüşmesi için uygun değil.'); const settings = orderQueue.getOrderSettings(interaction.guild.id); if (!configuredForOrders(settings)) throw new Error('Sipariş kanalı ayarları eksik. Önce `/siparis-kur` komutunu kullan.'); const member = await interaction.guild.members.fetch(order.discord_user_id).catch(() => null); if (!member) throw new Error('Sipariş sahibi artık bu Discord sunucusunda değil.'); if (!member.voice.channelId) throw new Error('Kullanıcı şu an bir ses kanalında değil; önce bir ses kanalına katılması gerekir.'); const destination = await interaction.guild.channels.fetch(settings.voiceChannelId).catch(() => null); if (!destination?.isVoiceBased()) throw new Error('Ayarlanan görüşme kanalı artık geçerli değil.'); await member.voice.setChannel(destination, `Sipariş görüşmesi: ${code}`); return interaction.reply(`✅ ${member} görüşme kanalına alındı.`) }
                                                   if (name === 'siparis-kapat') { const order = await orderQueue.closeOrder(interaction, interaction.options.getString('talep_kodu')); return interaction.reply(`✅ ${order.order_code} siparişi kapatıldı.`) }
                                                   if (name === '2fa-kanali') return set2FAChannel(interaction)
+                                                  if (name === 'sunucu-kur') {
+                                                    await interaction.deferReply({ ephemeral: true })
+                                                    await serverSetup.setupFullServerHierarchy(interaction.guild)
+                                                    return interaction.editReply('✅ Monarch Store rol, kategori ve kanal mimarisi başarıyla kuruldu ve tüm bot servisleri bağlandı!')
+                                                  }
         } catch (error) {
           console.error('[KOMUT HATASI]', name, error)
           if (interaction.deferred || interaction.replied) await interaction.followUp({ content: `❌ ${error.message || 'İşlem tamamlanamadı.'}`, ephemeral: true })

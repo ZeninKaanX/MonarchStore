@@ -135,16 +135,16 @@ function formatRelativeTime (isoString) {
 
 function formatStatusBadge (status) {
   const map = {
-    'pending_validation': { label: 'Doğrulama Bekliyor', color: 'badge-pending', icon: '⏳' },
-    'processing': { label: 'İşleniyor', color: 'badge-processing', icon: '⚙️' },
-    'validated': { label: 'Doğrulandı (Ticket Açık)', color: 'badge-validated', icon: '🎫' },
-    'queued': { label: 'Sırada', color: 'badge-queued', icon: '📋' },
-    'in_progress': { label: 'Aktif İşlemde', color: 'badge-progress', icon: '⚡' },
-    'closed': { label: 'Tamamlandı / Kapalı', color: 'badge-closed', icon: '✅' },
-    'cancelled': { label: 'İptal Edildi', color: 'badge-cancelled', icon: '❌' }
+    'pending_validation': { label: 'Doğrulama Bekliyor', color: 'badge-pending', svg: '<svg class="adm-badge-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' },
+    'processing': { label: 'İşleniyor', color: 'badge-processing', svg: '<svg class="adm-badge-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>' },
+    'validated': { label: 'Doğrulandı (Ticket Açık)', color: 'badge-validated', svg: '<svg class="adm-badge-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>' },
+    'queued': { label: 'Sırada', color: 'badge-queued', svg: '<svg class="adm-badge-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>' },
+    'in_progress': { label: 'Aktif İşlemde', color: 'badge-progress', svg: '<svg class="adm-badge-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>' },
+    'closed': { label: 'Tamamlandı / Kapalı', color: 'badge-closed', svg: '<svg class="adm-badge-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>' },
+    'cancelled': { label: 'İptal Edildi', color: 'badge-cancelled', svg: '<svg class="adm-badge-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' }
   }
-  const item = map[status] || { label: status, color: 'badge-default', icon: '📌' }
-  return `<span class="adm-badge ${item.color}"><span class="adm-badge-dot"></span>${item.icon} ${escapeHtml(item.label)}</span>`
+  const item = map[status] || { label: status, color: 'badge-default', svg: '<span class="adm-badge-dot"></span>' }
+  return `<span class="adm-badge ${item.color}">${item.svg}<span>${escapeHtml(item.label)}</span></span>`
 }
 
 function formatItems (items) {
@@ -173,7 +173,6 @@ export function initAdminDashboardUI ({ notify }) {
 
   let cachedOrders = []
   let activeTab = 'orders'
-  let activeFilter = 'all'
   let autoRefreshTimer = null
 
   // Canlı Saat Ticker'ı
@@ -283,9 +282,9 @@ export function initAdminDashboardUI ({ notify }) {
     if (elBarUiUx) elBarUiUx.style.width = `${pctUiUx}%`
     if (elBarSlides) elBarSlides.style.width = `${pctSlides}%`
 
-    if (elValBots) elValBots.textContent = `${countBots} adet (%${pctBots})`
-    if (elValUiUx) elValUiUx.textContent = `${countUiUx} adet (%${pctUiUx})`
-    if (elValSlides) elValSlides.textContent = `${countSlides} adet (%${pctSlides})`
+    if (elValBots) elValBots.textContent = `${countBots} Adet (%${pctBots})`
+    if (elValUiUx) elValUiUx.textContent = `${countUiUx} Adet (%${pctUiUx})`
+    if (elValSlides) elValSlides.textContent = `${countSlides} Adet (%${pctSlides})`
 
     // Son Aktiviteler Mini Tablosu
     const recentTbody = document.querySelector('#admRecentActivitiesBody')
@@ -363,7 +362,9 @@ export function initAdminDashboardUI ({ notify }) {
         <td>
           <div class="adm-code-cell">
             <strong class="adm-code" title="Tıklayarak Kopyala" data-copy="${escapeHtml(order.order_code)}">${escapeHtml(order.order_code)}</strong>
-            <button type="button" class="adm-btn-copy" data-copy="${escapeHtml(order.order_code)}" title="Kodu Kopyala">📋</button>
+            <button type="button" class="adm-btn-copy" data-copy="${escapeHtml(order.order_code)}" title="Kodu Kopyala">
+              <svg class="adm-svg-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            </button>
           </div>
         </td>
         <td>
@@ -398,14 +399,17 @@ export function initAdminDashboardUI ({ notify }) {
         <td>
           <div class="adm-actions-group">
             <select class="adm-status-select" data-code="${escapeHtml(order.order_code)}" title="Durumu Değiştir">
-              <option value="" disabled selected>Durum Değiştir</option>
-              <option value="validated" ${order.status === 'validated' ? 'selected' : ''}>🎫 Doğrulandı</option>
-              <option value="queued" ${order.status === 'queued' ? 'selected' : ''}>📋 Sırada</option>
-              <option value="in_progress" ${order.status === 'in_progress' ? 'selected' : ''}>⚡ İşlemde</option>
-              <option value="closed" ${order.status === 'closed' ? 'selected' : ''}>✅ Tamamlandı / Kapat</option>
-              <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>❌ İptal Et</option>
+              <option value="" disabled selected>Durum Seç</option>
+              <option value="validated" ${order.status === 'validated' ? 'selected' : ''}>Doğrulandı</option>
+              <option value="queued" ${order.status === 'queued' ? 'selected' : ''}>Sırada</option>
+              <option value="in_progress" ${order.status === 'in_progress' ? 'selected' : ''}>İşlemde</option>
+              <option value="closed" ${order.status === 'closed' ? 'selected' : ''}>Tamamla</option>
+              <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>İptal Et</option>
             </select>
-            <button type="button" class="adm-btn-inspect" data-inspect-code="${escapeHtml(order.order_code)}" title="Detay İncele">🔍 Detay</button>
+            <button type="button" class="adm-btn-inspect" data-inspect-code="${escapeHtml(order.order_code)}" title="Detay İncele">
+              <svg class="adm-svg-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <span>Detay</span>
+            </button>
           </div>
         </td>
       </tr>
@@ -499,7 +503,8 @@ export function initAdminDashboardUI ({ notify }) {
         <td><span class="adm-rel-time">${formatRelativeTime(c.last_order_at)}</span></td>
         <td>
           <button type="button" class="adm-btn-table-action" onclick="document.querySelector('#adminSearchInput').value='${escapeHtml(c.username)}'; document.querySelector('#tabOrdersBtn').click();">
-            📦 Siparişleri Gör
+            <svg class="adm-svg-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+            <span>Siparişleri Gör</span>
           </button>
         </td>
       </tr>

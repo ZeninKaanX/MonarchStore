@@ -291,18 +291,31 @@
       .adm-dashboard-dialog { width: min(1380px, calc(100% - 24px)); height: min(94vh, 920px); max-height: 94vh; padding: 0; border: 1px solid #7c3aed; color: var(--ink); background: #ffffff; box-shadow: 0 35px 95px rgba(15, 23, 42, .45); border-radius: 10px; z-index: 40; display: flex; flex-direction: column; overflow: hidden; }
       .adm-dashboard-dialog::backdrop { background: rgba(10, 15, 25, .86); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
       
+      /* Anime Mascot Styling */
+      .account-mascot-header { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+      .account-mascot-avatar-wrap { width: 52px; height: 52px; border-radius: 50%; border: 2px solid var(--blue); padding: 2px; background: #fff; box-shadow: 0 4px 14px rgba(62, 131, 184, 0.25); flex-shrink: 0; }
+      .account-mascot-avatar-wrap img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; }
+      
+      .adm-mascot-logo { width: 32px; height: 32px; border-radius: 6px; object-fit: cover; display: block; }
+      .adm-mascot-avatar-circle { width: 36px; height: 36px; border-radius: 50%; border: 2px solid #a855f7; padding: 1px; background: #1e293b; box-shadow: 0 0 10px rgba(168, 85, 247, 0.4); flex-shrink: 0; overflow: hidden; }
+      .adm-mascot-avatar-circle img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; }
+      
+      .adm-svg-icon { width: 16px; height: 16px; stroke-width: 2; flex-shrink: 0; }
+      .adm-svg-stat-icon { width: 18px; height: 18px; stroke-width: 2; color: #64748b; }
+      .adm-svg-action-icon { width: 14px; height: 14px; stroke-width: 2; display: inline-block; vertical-align: middle; }
+      .adm-badge-svg { width: 12px; height: 12px; stroke-width: 2.5; flex-shrink: 0; }
+
       .adm-layout { display: grid; grid-template-columns: 260px 1fr; height: 100%; overflow: hidden; }
       
       /* Sidebar */
       .adm-sidebar { display: flex; flex-direction: column; background: #0f172a; color: #f8fafc; border-right: 1px solid #1e293b; padding: 20px 16px; user-select: none; }
       .adm-brand { display: flex; align-items: center; gap: 10px; padding-bottom: 16px; border-bottom: 1px solid #1e293b; margin-bottom: 16px; }
-      .adm-brand-icon { width: 32px; height: 32px; border-radius: 6px; background: linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%); display: grid; place-items: center; font-size: 16px; font-weight: 800; color: #fff; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4); }
+      .adm-brand-icon { width: 32px; height: 32px; border-radius: 6px; overflow: hidden; display: grid; place-items: center; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4); flex-shrink: 0; }
       .adm-brand-text strong { display: block; font: 700 13px "Space Mono", monospace; letter-spacing: .04em; color: #f8fafc; }
       .adm-brand-text small { display: block; font: 9px "Space Mono", monospace; color: #94a3b8; }
       
       .adm-user-profile { padding: 12px; background: #1e293b; border-radius: 6px; margin-bottom: 18px; border: 1px solid #334155; }
       .adm-user-profile-top { display: flex; align-items: center; gap: 10px; }
-      .adm-user-avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #8b5cf6, #ec4899); display: grid; place-items: center; font-weight: 800; font-size: 14px; color: #fff; }
       .adm-user-info { flex: 1; min-width: 0; }
       .adm-user-info strong { display: block; font-size: 13px; color: #f8fafc; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
       .adm-user-role-badge { display: inline-block; padding: 1px 6px; background: rgba(124, 58, 237, 0.3); border: 1px solid #7c3aed; color: #c4b5fd; font: 700 8.5px "Space Mono", monospace; border-radius: 3px; text-transform: uppercase; margin-top: 2px; }
@@ -758,8 +771,17 @@
     <dialog class="account-dialog" id="accountDialog" aria-labelledby="accountTitle">
       <div class="account-panel">
         <button class="dialog-close" id="accountClose" type="button" aria-label="Pencereyi kapat">×</button>
-        <h2 id="accountTitle">Hesabına Giriş Yap</h2>
-        <p id="accountDescription">Kullanıcı adı ve şifrenizi girerek oturum açın.</p>
+        
+        <!-- Chibi Anime Mascot Header -->
+        <div class="account-mascot-header">
+          <div class="account-mascot-avatar-wrap">
+            <img src="images/mascot.webp" alt="Monarch Chibi Mascot" width="48" height="48" />
+          </div>
+          <div>
+            <h2 id="accountTitle" style="font-size: 22px; margin: 0;">Hesabına Giriş Yap</h2>
+            <p id="accountDescription" style="margin: 3px 0 0; font-size: 12px; color: var(--muted);">Kullanıcı adı ve şifrenizi girerek oturum açın.</p>
+          </div>
+        </div>
         
         <!-- Giriş / Kayıt Sekmeleri -->
         <div class="account-modal-tabs" id="accountModalTabs">
@@ -815,7 +837,9 @@
         <!-- Sidebar -->
         <aside class="adm-sidebar">
           <div class="adm-brand">
-            <div class="adm-brand-icon">M</div>
+            <div class="adm-brand-icon">
+              <img src="images/mascot.webp" alt="Monarch Mascot" class="adm-mascot-logo" width="32" height="32" />
+            </div>
             <div class="adm-brand-text">
               <strong id="adminDashTitle">MONARCH SUITE</strong>
               <small>v2.6 Enterprise Control</small>
@@ -825,10 +849,12 @@
           <!-- Admin Profile Card -->
           <div class="adm-user-profile">
             <div class="adm-user-profile-top">
-              <div class="adm-user-avatar">👑</div>
+              <div class="adm-mascot-avatar-circle">
+                <img src="images/mascot.webp" alt="Founder Mascot Avatar" width="36" height="36" />
+              </div>
               <div class="adm-user-info">
                 <strong id="adminUserBadge">admin</strong>
-                <span class="adm-user-role-badge">FOUNDER</span>
+                <span class="adm-user-role-badge">FOUNDER 👑</span>
               </div>
             </div>
             <span class="adm-user-discord-tag" id="adminDiscordTag">@yetkili</span>
@@ -837,19 +863,19 @@
           <!-- Navigation Tabs -->
           <nav class="adm-nav-menu">
             <button type="button" class="adm-sidebar-tab" data-tab="overview">
-              <span class="adm-sidebar-tab-icon">📊</span>
+              <svg class="adm-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
               <span>Genel Bakış</span>
             </button>
             <button type="button" class="adm-sidebar-tab active" data-tab="orders" id="tabOrdersBtn">
-              <span class="adm-sidebar-tab-icon">📦</span>
+              <svg class="adm-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
               <span>Siparişler & Destek</span>
             </button>
             <button type="button" class="adm-sidebar-tab" data-tab="clients">
-              <span class="adm-sidebar-tab-icon">👥</span>
+              <svg class="adm-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
               <span>Müşteri Dizini</span>
             </button>
             <button type="button" class="adm-sidebar-tab" data-tab="system">
-              <span class="adm-sidebar-tab-icon">⚡</span>
+              <svg class="adm-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
               <span>Sistem & Bot</span>
             </button>
           </nav>
@@ -861,7 +887,10 @@
               <span id="adminClock">12:00:00 (İST)</span>
             </div>
             <div class="adm-db-status">Supabase DB Bağlı</div>
-            <button type="button" class="adm-btn-sidebar-logout" id="adminLogoutBtn">🚪 Güvenli Çıkış Yap</button>
+            <button type="button" class="adm-btn-sidebar-logout" id="adminLogoutBtn">
+              <svg class="adm-svg-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              <span>Güvenli Çıkış</span>
+            </button>
           </div>
         </aside>
 
@@ -908,27 +937,45 @@
             <section class="adm-view-section" id="admSection_overview">
               <div class="adm-stats-grid-elite">
                 <div class="adm-stat-card-elite">
-                  <small>Toplam Ciro <span class="adm-stat-icon">💰</span></small>
+                  <small>
+                    <span>Toplam Ciro</span>
+                    <svg class="adm-svg-stat-icon" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                  </small>
                   <strong id="admStatTotalRevenue" style="color: #10b981;">0 TL</strong>
                 </div>
                 <div class="adm-stat-card-elite">
-                  <small>Toplam Talep <span class="adm-stat-icon">📦</span></small>
+                  <small>
+                    <span>Toplam Talep</span>
+                    <svg class="adm-svg-stat-icon" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                  </small>
                   <strong id="admStatTotalOrders">0</strong>
                 </div>
                 <div class="adm-stat-card-elite">
-                  <small>Ortalama Sepet <span class="adm-stat-icon">🏷️</span></small>
+                  <small>
+                    <span>Ortalama Sepet</span>
+                    <svg class="adm-svg-stat-icon" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                  </small>
                   <strong id="admStatAvgOrder">0 TL</strong>
                 </div>
                 <div class="adm-stat-card-elite">
-                  <small>Doğrulama Bekleyen <span class="adm-stat-icon">⏳</span></small>
+                  <small>
+                    <span>Bekleyen</span>
+                    <svg class="adm-svg-stat-icon" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  </small>
                   <strong id="admStatPending" style="color: #f59e0b;">0</strong>
                 </div>
                 <div class="adm-stat-card-elite">
-                  <small>Sırada / İşlemde <span class="adm-stat-icon">⚡</span></small>
+                  <small>
+                    <span>İşlemde / Sırada</span>
+                    <svg class="adm-svg-stat-icon" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                  </small>
                   <strong id="admStatValidated" style="color: #3b82f6;">0</strong>
                 </div>
                 <div class="adm-stat-card-elite">
-                  <small>Tamamlanan <span class="adm-stat-icon">✅</span></small>
+                  <small>
+                    <span>Tamamlanan</span>
+                    <svg class="adm-svg-stat-icon" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                  </small>
                   <strong id="admStatCompleted" style="color: #16a34a;">0</strong>
                 </div>
               </div>
@@ -936,11 +983,14 @@
               <div class="adm-overview-split">
                 <!-- Kategori Dağılım Kartı -->
                 <div class="adm-card-box">
-                  <h3>📊 Hizmet Satış Dağılımı</h3>
+                  <h3>
+                    <span>Hizmet Satış Dağılımı</span>
+                    <svg class="adm-svg-stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                  </h3>
                   <div class="adm-cat-progress-item">
                     <div class="adm-cat-progress-meta">
-                      <span>🤖 Minecraft Botları</span>
-                      <span id="admValBots">0 adet (%0)</span>
+                      <span>Minecraft Botları</span>
+                      <span id="admValBots">0 Adet (%0)</span>
                     </div>
                     <div class="adm-cat-bar-bg">
                       <div class="adm-cat-bar-fill" id="admBarBots" style="width: 0%; background: #3b82f6;"></div>
@@ -948,8 +998,8 @@
                   </div>
                   <div class="adm-cat-progress-item">
                     <div class="adm-cat-progress-meta">
-                      <span>🎨 UI/UX Tasarım</span>
-                      <span id="admValUiUx">0 adet (%0)</span>
+                      <span>UI/UX Tasarım</span>
+                      <span id="admValUiUx">0 Adet (%0)</span>
                     </div>
                     <div class="adm-cat-bar-bg">
                       <div class="adm-cat-bar-fill" id="admBarUiUx" style="width: 0%; background: #8b5cf6;"></div>
@@ -957,8 +1007,8 @@
                   </div>
                   <div class="adm-cat-progress-item">
                     <div class="adm-cat-progress-meta">
-                      <span>📑 Sunum Hizmetleri</span>
-                      <span id="admValSlides">0 adet (%0)</span>
+                      <span>Sunum Hizmetleri</span>
+                      <span id="admValSlides">0 Adet (%0)</span>
                     </div>
                     <div class="adm-cat-bar-bg">
                       <div class="adm-cat-bar-fill" id="admBarSlides" style="width: 0%; background: #ec4899;"></div>
@@ -968,7 +1018,10 @@
 
                 <!-- Son Aktiviteler Tablosu -->
                 <div class="adm-card-box">
-                  <h3>⚡ Son Talepler</h3>
+                  <h3>
+                    <span>Son Aktiviteler</span>
+                    <svg class="adm-svg-stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 10"/></svg>
+                  </h3>
                   <table class="adm-elite-table">
                     <thead>
                       <tr>
@@ -1138,9 +1191,9 @@
 
     <script type="module" src="./theme-toggle.js"></script>
     <script type="module">
-      import { bindLocalAccountUI } from './account-local.js?v=20260829_elite_admin_v3';
+      import { bindLocalAccountUI } from './account-local.js?v=20260829_mascot_svg_v1';
       import { bindOrderUI, bindCommunityStats } from './store-orders.js';
-      import { initAdminDashboardUI } from './admin-panel.js?v=20260829_elite_admin_v3';
+      import { initAdminDashboardUI } from './admin-panel.js?v=20260829_mascot_svg_v1';
 
       const cartCount = document.querySelector('#cartCount');
       const toast = document.querySelector('#toast');

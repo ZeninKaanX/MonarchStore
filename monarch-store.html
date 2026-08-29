@@ -611,6 +611,117 @@
       .adm-btn-modal-done { background: #16a34a; color: #fff; }
       .adm-btn-modal-cancel { background: #dc2626; color: #fff; }
 
+      /* ==================== COMPLETE GLOBAL DARK THEME RULES ==================== */
+      html[data-theme="dark"] {
+        --ink: #edf4fb;
+        --muted: #94a3b8;
+        --paper: #0a111b;
+        --line: #1e293b;
+        --blue: #38bdf8;
+        --blue-dark: #0284c7;
+        --white: #0f172a;
+        --green: #4ade80;
+        --amber: #fbbf24;
+        --shadow: 0 16px 38px rgba(0, 0, 0, .45);
+        color-scheme: dark;
+      }
+      html[data-theme="dark"] body {
+        background: #0a111b;
+        color: #edf4fb;
+      }
+      html[data-theme="dark"] header {
+        background: rgba(10, 17, 27, 0.88);
+        border-color: #1e293b;
+      }
+      html[data-theme="dark"] .logo-light-mode { display: none; }
+      html[data-theme="dark"] .logo-dark-mode { display: block; }
+      html[data-theme="dark"] .links { color: #94a3b8; }
+      html[data-theme="dark"] .links a:hover { color: #38bdf8; }
+      html[data-theme="dark"] .theme-toggle {
+        background: #0f172a;
+        border-color: #1e293b;
+        color: #edf4fb;
+      }
+      html[data-theme="dark"] .theme-toggle:hover {
+        border-color: #38bdf8;
+        color: #38bdf8;
+      }
+      html[data-theme="dark"] .theme-toggle-sun { display: none; }
+      html[data-theme="dark"] .theme-toggle-moon { display: inline-block; fill: currentColor; }
+      html[data-theme="dark"] .cart {
+        background: #0f172a;
+        border-color: #1e293b;
+        color: #edf4fb;
+      }
+      html[data-theme="dark"] .cart strong {
+        background: #38bdf8;
+        color: #0f172a;
+      }
+      html[data-theme="dark"] .cat-tab {
+        background: #0f172a;
+        border-color: #1e293b;
+        color: #edf4fb;
+      }
+      html[data-theme="dark"] .cat-tab:hover, html[data-theme="dark"] .cat-tab.active {
+        background: rgba(56, 189, 248, 0.12);
+        border-color: #38bdf8;
+        color: #38bdf8;
+        box-shadow: 0 4px 14px rgba(56, 189, 248, 0.15);
+      }
+      html[data-theme="dark"] .product {
+        background: #0f172a;
+        border-color: #1e293b;
+      }
+      html[data-theme="dark"] .product h3 { color: #f8fafc; }
+      html[data-theme="dark"] .product p { color: #94a3b8; }
+      html[data-theme="dark"] .product-row { border-color: #1e293b; }
+      html[data-theme="dark"] .price b { color: #f8fafc; }
+      html[data-theme="dark"] .price small { color: #64748b; }
+      html[data-theme="dark"] .buy {
+        background: #0f172a;
+        border-color: #38bdf8;
+        color: #38bdf8;
+      }
+      html[data-theme="dark"] .buy:hover {
+        background: #38bdf8;
+        color: #0f172a;
+      }
+      html[data-theme="dark"] .discord-card {
+        background: #0f172a;
+        border-color: #1e293b;
+        color: #edf4fb;
+      }
+      html[data-theme="dark"] .discord-card h2 { color: #f8fafc; }
+      html[data-theme="dark"] .discord-card p { color: #94a3b8; }
+      html[data-theme="dark"] .discord-stat { border-color: #1e293b; }
+      html[data-theme="dark"] footer {
+        background: #0a111b;
+        border-color: #1e293b;
+        color: #94a3b8;
+      }
+      html[data-theme="dark"] .order-dialog {
+        background: #0f172a;
+        border-color: #1e293b;
+        color: #edf4fb;
+      }
+      html[data-theme="dark"] .order-summary {
+        background: #0b111c;
+        border-color: #1e293b;
+      }
+      html[data-theme="dark"] .order-total {
+        border-color: #1e293b;
+        color: #f8fafc;
+      }
+      html[data-theme="dark"] .order-form label { color: #94a3b8; }
+      html[data-theme="dark"] .order-form input {
+        background: #0b111c;
+        border-color: #1e293b;
+        color: #f8fafc;
+      }
+      html[data-theme="dark"] .order-form input:focus {
+        border-color: #38bdf8;
+      }
+
       /* Dark Theme for Elite Dashboard */
       html[data-theme="dark"] .adm-dashboard-dialog { background: #0b1320; border-color: #8b5cf6; }
       html[data-theme="dark"] .adm-main { background: #080e18; color: #f1f5f9; }

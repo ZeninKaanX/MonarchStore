@@ -185,11 +185,11 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
     if (signedIn) {
       if (session.isAdmin) {
         const discText = session.discordUsername ? ` (@${session.discordUsername})` : '';
-        title.textContent = `🛡️ Yetkili: ${session.username}${discText}`;
-        description.textContent = "Monarch Store yönetim oturumunuz aktif. Yönetim panelini açabilir veya çıkış yapabilirsiniz.";
+        title.textContent = `🛡️ YETKİLİ OPERATÖR: ${session.username}${discText}`;
+        description.textContent = "YÖNETİM PROTOKOLÜ AKTİF // SECTOR 04 COMMAND";
       } else {
-        title.textContent = `Merhaba, ${session.username}`;
-        description.textContent = "Bu tarayıcıda oturumunuz açık. Siparişlerinizi takip edebilir veya çıkış yapabilirsiniz.";
+        title.textContent = `OPERATÖR: ${session.username}`;
+        description.textContent = "OTURUM AKTİF // SİPARİŞ VE PROTOKOL ERİŞİMİ AÇIK";
       }
       return;
     }
@@ -198,10 +198,10 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
     if (tabLogin) tabLogin.classList.toggle("active", !isRegister);
     if (tabRegister) tabRegister.classList.toggle("active", isRegister);
 
-    title.textContent = isRegister ? "Yeni Hesap Oluştur" : "Hesabına Giriş Yap";
+    title.textContent = isRegister ? "⚡ YENİ OPERATÖR PROTOKOLÜ" : "📡 OPERATÖR GİRİŞİ";
     description.textContent = isRegister 
-      ? "Sipariş ve talepleriniz için hesabınızı oluşturun." 
-      : "Kullanıcı adı ve şifrenizle giriş yapın (Yetkiliyseniz Discord'a 2FA kodu gelir).";
+      ? "Sistem ve lojistik operasyonları için yeni operatör kaydı." 
+      : "OPERATOR AUTH TERMINAL // PROTOCOL: ACTIVE";
 
     if (confirmLabel) {
       confirmLabel.style.display = isRegister ? "grid" : "none";
@@ -211,14 +211,14 @@ export function bindLocalAccountUI({ button, dialog, closeButton, form, username
       confirmInput.required = isRegister;
     }
 
-    submitButton.textContent = isRegister ? "Hesabı Oluştur ➔" : "Giriş Yap ➔";
+    submitButton.textContent = isRegister ? "⚡ KAYDI TAMAMLA // REGISTER ➔" : "⚡ GİRİŞ YAP // ACCESS ➔";
   };
 
   const show2FAView = (challengeId, passedDiscordUser = "") => {
     is2FAActive = true;
     activeChallengeId = challengeId;
-    title.textContent = "🔐 2FA Güvenlik Doğrulaması";
-    description.textContent = "Admin yetkisi algılandı. Discord #admin-2fa kanalına gelen kodu girin.";
+    title.textContent = "🚨 2FA GÜVENLİK PROTOKOLÜ";
+    description.textContent = "🚨 2FA LEVEL-4 DISPATCH // KOD #admin-2fa FREKANSINA İLETİLDİ.";
 
     const modalTabs = document.querySelector("#accountModalTabs");
     if (modalTabs) modalTabs.style.display = "none";

@@ -1207,7 +1207,7 @@
     <!-- Açılışa Özel %25 İndirim Panosu (Floating Launch Promo Widget) -->
     <aside class="launch-promo-widget" id="launchPromoWidget" aria-label="Açılışa Özel %25 İndirim">
       <div class="launch-promo-media">
-        <img src="video/аниме.gif" onerror="this.onerror=null; this.src='video/anime.gif'; this.onerror=function(){this.src='images/hero-whitehair.webp'}" alt="Açılışa Özel İndirim" class="launch-promo-gif" loading="lazy" />
+        <img src="video/anime.gif" onerror="this.onerror=null; this.src='video/аниме.gif';" alt="Açılışa Özel İndirim" class="launch-promo-gif" loading="eager" />
         <span class="launch-promo-badge">AÇILIŞA ÖZEL // %25 İNDİRİM</span>
         <button type="button" class="launch-promo-close" id="launchPromoCloseBtn" title="Panoyu Kapat" aria-label="Kapat">×</button>
       </div>
@@ -1698,10 +1698,10 @@
       </div>
     </dialog>
 
-    <script type="module" src="./theme-toggle.js?v=20260829_v4"></script>
+    <script type="module" src="./theme-toggle.js?v=20260830_final_v10"></script>
     <script type="module">
-      import { bindLocalAccountUI } from './account-local.js?v=20260830_auth_v8';
-      import { bindOrderUI, bindSupportUI, bindCommunityStats, bindLaunchPromoWidget } from './store-orders.js?v=20260830_auth_v8';
+      import { bindLocalAccountUI } from './account-local.js?v=20260830_final_v10';
+      import { bindOrderUI, bindSupportUI, bindCommunityStats, bindLaunchPromoWidget } from './store-orders.js?v=20260830_final_v10';
 
       const cartCount = document.querySelector('#cartCount');
       const toast = document.querySelector('#toast');

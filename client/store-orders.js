@@ -434,7 +434,6 @@ export function bindLaunchPromoWidget ({ widget, closeBtn, pill, copyBtn, applyB
     closeBtn.addEventListener('click', () => {
       widget.classList.add('minimized')
       if (pill) pill.style.display = 'inline-flex'
-      sessionStorage.setItem('monarch_promo_minimized', 'true')
     })
   }
 
@@ -443,7 +442,6 @@ export function bindLaunchPromoWidget ({ widget, closeBtn, pill, copyBtn, applyB
     pill.addEventListener('click', () => {
       widget.classList.remove('minimized')
       pill.style.display = 'none'
-      sessionStorage.removeItem('monarch_promo_minimized')
     })
   }
 
@@ -454,12 +452,6 @@ export function bindLaunchPromoWidget ({ widget, closeBtn, pill, copyBtn, applyB
         onApplyCoupon('Try2PhutHon!')
       }
     })
-  }
-
-  // Check if previously minimized
-  if (sessionStorage.getItem('monarch_promo_minimized') === 'true') {
-    widget.classList.add('minimized')
-    if (pill) pill.style.display = 'inline-flex'
   }
 }
 

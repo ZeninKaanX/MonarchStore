@@ -702,7 +702,7 @@ export function bindLocalAccountUI({
 
   // Profil Çıkış Yap Butonu
   document.querySelector("#profileLogoutBtn")?.addEventListener("click", () => {
-    storage.removeItem("monarch_session_v1");
+    signOutLocalAccount(storage);
     dialog.close();
     updateHeader();
     notify("Çıkış Yapıldı", "Hesabınızdan güvenle çıkış yaptınız.");
@@ -779,10 +779,6 @@ export function bindLocalAccountUI({
 
   button.addEventListener("click", () => {
     const session = getLocalSession(storage);
-    if (session?.isAdmin) {
-      window.open('admin.html', '_blank');
-      return;
-    }
     render(session ? "profile" : "login");
     dialog.showModal();
   });

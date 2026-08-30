@@ -57,10 +57,12 @@ export function clearAdminSession () {
   localStorage.removeItem(USERNAME_STORAGE_KEY)
   localStorage.removeItem(EXPIRES_STORAGE_KEY)
   localStorage.removeItem('monarch_admin_discord_user')
+  localStorage.removeItem('monarch_session_v1')
   sessionStorage.removeItem(SESSION_STORAGE_KEY)
   sessionStorage.removeItem(USERNAME_STORAGE_KEY)
   sessionStorage.removeItem(EXPIRES_STORAGE_KEY)
   sessionStorage.removeItem('monarch_admin_discord_user')
+  sessionStorage.removeItem('monarch_session_v1')
 }
 
 export async function requestAdmin2FA (username, password, discordUsername = null) {

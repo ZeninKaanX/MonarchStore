@@ -703,20 +703,22 @@
         .portal-chat-grid {
           grid-template-columns: 1fr !important;
         }
+        .portal-profile-grid {
+          grid-template-columns: 1fr !important;
         }
       }
 
       /* ==================== AÇILIŞA ÖZEL %25 İNDİRİM PANOSU (FLOATING PROMO WIDGET) ==================== */
       .launch-promo-widget {
         position: fixed;
-        bottom: 22px;
-        right: 22px;
-        width: 300px;
-        z-index: 100;
+        bottom: 24px;
+        right: 24px;
+        width: 310px;
+        z-index: 9999;
         background: #09131e;
         border: 1px solid rgba(56, 189, 248, 0.45);
         border-radius: 8px;
-        box-shadow: 0 18px 45px rgba(0, 0, 0, 0.75), 0 0 25px rgba(56, 189, 248, 0.18);
+        box-shadow: 0 18px 45px rgba(0, 0, 0, 0.8), 0 0 25px rgba(56, 189, 248, 0.25);
         overflow: hidden;
         font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
         transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, visibility 0.25s;

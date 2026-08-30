@@ -78,8 +78,8 @@ export function bindCommunityStats ({ countElement, statusElement }) {
 }
 
 export function validateCouponCode (code) {
-  const cleanCode = (code || '').trim().toUpperCase()
-  if (cleanCode !== 'MONARCH25') {
+  const cleanCode = (code || '').trim()
+  if (cleanCode.toLowerCase() !== 'try2phuthon!') {
     return { valid: false, message: 'Geçersiz kupon kodu.' }
   }
 
@@ -97,14 +97,14 @@ export function validateCouponCode (code) {
   // 2. Check if user already used this one-time coupon
   const username = session.username.toLowerCase()
   const usedLocalKey = `monarch_used_coupons_${username}`
-  const usedList = JSON.parse(localStorage.getItem(usedLocalKey) || '[]')
+  const usedList = JSON.parse(localStorage.getItem(usedLocalKey) || '[]').map(c => String(c).toLowerCase())
 
   const accountsRaw = localStorage.getItem('monarch_accounts_v1') || '[]'
   const accounts = JSON.parse(accountsRaw)
   const userAcc = accounts.find(a => (a.username || '').toLowerCase() === username)
-  const accUsed = userAcc?.usedCoupons || []
+  const accUsed = (userAcc?.usedCoupons || []).map(c => String(c).toLowerCase())
 
-  if (usedList.includes('MONARCH25') || accUsed.includes('MONARCH25')) {
+  if (usedList.includes('try2phuthon!') || accUsed.includes('try2phuthon!') || usedList.includes('monarch25') || accUsed.includes('monarch25')) {
     return {
       valid: false,
       message: 'Bu indirim kodu hesabınız tarafından daha önce kullanılmıştır (Hesap başına tek kullanımlık).'
@@ -113,7 +113,7 @@ export function validateCouponCode (code) {
 
   return {
     valid: true,
-    code: 'MONARCH25',
+    code: 'Try2PhutHon!',
     rate: 0.25,
     name: 'Açılışa Özel %25 İndirim'
   }
@@ -155,7 +155,7 @@ function renderCart (cart, summary, submitButton, appliedCoupon = null, couponEr
     <!-- Kupon Giriş Alanı -->
     <div class="cart-coupon-box" style="margin: 14px 0 10px; padding: 10px 12px; background: #070d14; border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 4px;">
       <div style="display: flex; gap: 8px; align-items: center;">
-        <input type="text" id="cartCouponInput" placeholder="İndirim Kuponu (örn: MONARCH25)" value="${appliedCoupon ? appliedCoupon.code : ''}" ${appliedCoupon ? 'disabled' : ''} style="flex: 1; min-height: 34px; padding: 0 10px; font-size: 11.5px; font-family: 'Space Mono', monospace; text-transform: uppercase; background: #0b1522; border: 1px solid #1e293b; color: #f8fafc; border-radius: 3px;" />
+        <input type="text" id="cartCouponInput" placeholder="İndirim Kuponu (örn: Try2PhutHon!)" value="${appliedCoupon ? appliedCoupon.code : ''}" ${appliedCoupon ? 'disabled' : ''} style="flex: 1; min-height: 34px; padding: 0 10px; font-size: 11.5px; font-family: 'Space Mono', monospace; text-transform: uppercase; background: #0b1522; border: 1px solid #1e293b; color: #f8fafc; border-radius: 3px;" />
         ${appliedCoupon ? `
           <button type="button" class="cart-btn-coupon-remove" data-action="remove_coupon" style="min-height: 34px; padding: 0 12px; background: #ef4444; color: #fff; border: 0; font-size: 11px; font-weight: 700; border-radius: 3px; cursor: pointer;">Kaldır</button>
         ` : `
@@ -413,18 +413,18 @@ export function bindLaunchPromoWidget ({ widget, closeBtn, pill, copyBtn, applyB
   // Copy coupon code
   if (copyBtn) {
     copyBtn.addEventListener('click', async () => {
-      const code = 'MONARCH25'
+      const code = 'Try2PhutHon!'
       try {
         await navigator.clipboard.writeText(code)
         copyBtn.textContent = 'Kopyalandı!'
         copyBtn.style.background = '#10b981'
-        notify('Kupon Kopyalandı', 'MONARCH25 panoya kopyalandı.')
+        notify('Kupon Kopyalandı', 'Try2PhutHon! panoya kopyalandı.')
         setTimeout(() => {
           copyBtn.textContent = 'Kopyala'
           copyBtn.style.background = ''
         }, 2200)
       } catch {
-        notify('Kupon Kodu', 'MONARCH25 kodunu sepette kullanabilirsiniz.')
+        notify('Kupon Kodu', 'Try2PhutHon! kodunu sepette kullanabilirsiniz.')
       }
     })
   }
@@ -451,7 +451,7 @@ export function bindLaunchPromoWidget ({ widget, closeBtn, pill, copyBtn, applyB
   if (applyBtn) {
     applyBtn.addEventListener('click', () => {
       if (typeof onApplyCoupon === 'function') {
-        onApplyCoupon('MONARCH25')
+        onApplyCoupon('Try2PhutHon!')
       }
     })
   }

@@ -218,9 +218,10 @@ export function bindOrderUI ({ cartButton, cartCount, dialog, closeButton, form,
       }
     }
     update()
-    if (!cart.length) return notify('Sepetin boş', 'Önce bir ürünü sepete ekle.')
     dialog.showModal()
-    window.setTimeout(() => discordInput.focus(), 30)
+    if (cart.length && discordInput) {
+      window.setTimeout(() => discordInput.focus(), 30)
+    }
   }
 
   summary.addEventListener('click', (event) => {

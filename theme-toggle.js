@@ -1,4 +1,4 @@
-import { THEME_STORAGE_KEY, nextTheme, normaliseTheme, storedTheme } from './client/theme-ui-core.js'
+import { THEME_STORAGE_KEY, nextTheme, normaliseTheme, storedTheme } from './theme-ui-core.js'
 
 function applyTheme(theme) {
   const value = normaliseTheme(theme)

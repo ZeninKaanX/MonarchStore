@@ -703,8 +703,210 @@
         .portal-chat-grid {
           grid-template-columns: 1fr !important;
         }
-        .portal-profile-grid {
-          grid-template-columns: 1fr !important;
+        }
+      }
+
+      /* ==================== AÇILIŞA ÖZEL %25 İNDİRİM PANOSU (FLOATING PROMO WIDGET) ==================== */
+      .launch-promo-widget {
+        position: fixed;
+        bottom: 22px;
+        right: 22px;
+        width: 300px;
+        z-index: 100;
+        background: #09131e;
+        border: 1px solid rgba(56, 189, 248, 0.45);
+        border-radius: 8px;
+        box-shadow: 0 18px 45px rgba(0, 0, 0, 0.75), 0 0 25px rgba(56, 189, 248, 0.18);
+        overflow: hidden;
+        font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+        transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, visibility 0.25s;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+      }
+      .launch-promo-widget.minimized {
+        transform: translateY(30px) scale(0.95);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+      .launch-promo-media {
+        position: relative;
+        height: 125px;
+        background: #050b12;
+        overflow: hidden;
+        border-bottom: 1px solid rgba(56, 189, 248, 0.25);
+      }
+      .launch-promo-gif {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+      }
+      .launch-promo-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: rgba(8, 16, 26, 0.85);
+        border: 1px solid rgba(56, 189, 248, 0.6);
+        color: #38bdf8;
+        font: 700 9px "Space Mono", monospace;
+        letter-spacing: 0.06em;
+        padding: 3px 7px;
+        border-radius: 3px;
+        backdrop-filter: blur(4px);
+      }
+      .launch-promo-close {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 24px;
+        height: 24px;
+        border-radius: 4px;
+        background: rgba(0, 0, 0, 0.65);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #94a3b8;
+        font-size: 15px;
+        line-height: 1;
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+        transition: all 0.15s;
+        z-index: 5;
+      }
+      .launch-promo-close:hover {
+        background: #ef4444;
+        border-color: #ef4444;
+        color: #ffffff;
+      }
+      .launch-promo-body {
+        padding: 14px 16px 16px;
+        background: #09131e;
+      }
+      .launch-promo-title {
+        margin: 0 0 4px;
+        font-size: 15px;
+        font-weight: 800;
+        color: #f8fafc;
+        letter-spacing: -0.02em;
+      }
+      .launch-promo-desc {
+        margin: 0 0 12px;
+        font-size: 11.5px;
+        line-height: 1.5;
+        color: #94a3b8;
+      }
+      .launch-promo-code-wrap {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 10px;
+      }
+      .launch-promo-code-box {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 6px 10px;
+        background: #060c14;
+        border: 1px dashed rgba(56, 189, 248, 0.55);
+        border-radius: 4px;
+      }
+      .launch-promo-code-label {
+        font: 700 9px "Space Mono", monospace;
+        color: #64748b;
+      }
+      .launch-promo-code-box strong {
+        font: 800 13px "Space Mono", monospace;
+        color: #38bdf8;
+        letter-spacing: 0.05em;
+      }
+      .launch-promo-btn-copy {
+        min-height: 32px;
+        padding: 0 12px;
+        border: 1px solid #0284c7;
+        background: #0284c7;
+        color: #ffffff;
+        font: 700 11px "Space Mono", monospace;
+        border-radius: 3px;
+        cursor: pointer;
+        transition: all 0.16s;
+        white-space: nowrap;
+      }
+      .launch-promo-btn-copy:hover {
+        background: #0369a1;
+        border-color: #0369a1;
+      }
+      .launch-promo-btn-apply {
+        width: 100%;
+        min-height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+        border: 1px solid rgba(56, 189, 248, 0.4);
+        color: #ffffff;
+        font: 700 11.5px "Space Mono", monospace;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: transform 0.15s, box-shadow 0.15s;
+        box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+      }
+      .launch-promo-btn-apply:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(2, 132, 199, 0.5);
+      }
+      .launch-promo-btn-apply:active {
+        transform: translateY(0);
+      }
+
+      /* Minimized Floating Pill */
+      .launch-promo-pill {
+        position: fixed;
+        bottom: 22px;
+        right: 22px;
+        z-index: 99;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 14px;
+        background: #09131e;
+        border: 1px solid rgba(56, 189, 248, 0.5);
+        color: #38bdf8;
+        font: 700 11px "Space Mono", monospace;
+        border-radius: 20px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.6), 0 0 15px rgba(56, 189, 248, 0.2);
+        cursor: pointer;
+        transition: all 0.18s;
+        animation: pulsePillGlow 2.5s infinite alternate;
+      }
+      .launch-promo-pill:hover {
+        background: #0f1f31;
+        border-color: #38bdf8;
+        transform: translateY(-2px);
+      }
+      .launch-promo-pill-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #34d399;
+        box-shadow: 0 0 8px #34d399;
+      }
+      @keyframes pulsePillGlow {
+        from { box-shadow: 0 8px 25px rgba(0,0,0,0.6), 0 0 12px rgba(56, 189, 248, 0.15); }
+        to { box-shadow: 0 8px 25px rgba(0,0,0,0.6), 0 0 22px rgba(56, 189, 248, 0.35); }
+      }
+      @media (max-width: 600px) {
+        .launch-promo-widget {
+          bottom: 14px;
+          right: 14px;
+          width: calc(100vw - 28px);
+          max-width: 320px;
+        }
+        .launch-promo-pill {
+          bottom: 14px;
+          right: 14px;
         }
       }
 
@@ -999,6 +1201,33 @@
     </footer>
 
     <div class="toast" id="toast" role="status" aria-live="polite"><b id="toastTitle">Sepete eklendi</b><span id="toastText"></span></div>
+
+    <!-- Açılışa Özel %25 İndirim Panosu (Floating Launch Promo Widget) -->
+    <aside class="launch-promo-widget" id="launchPromoWidget" aria-label="Açılışa Özel %25 İndirim">
+      <div class="launch-promo-media">
+        <img src="video/аниме.gif" onerror="this.onerror=null; this.src='video/anime.gif'; this.onerror=function(){this.src='images/hero-whitehair.webp'}" alt="Açılışa Özel İndirim" class="launch-promo-gif" loading="lazy" />
+        <span class="launch-promo-badge">AÇILIŞA ÖZEL // %25 İNDİRİM</span>
+        <button type="button" class="launch-promo-close" id="launchPromoCloseBtn" title="Panoyu Kapat" aria-label="Kapat">×</button>
+      </div>
+      <div class="launch-promo-body">
+        <h3 class="launch-promo-title">Açılışa Özel %25 İndirim!</h3>
+        <p class="launch-promo-desc">Tüm siparişlerde geçerli açılış fırsatı. Kod kayıtlı kullanıcılara özel tek kullanımlıktır.</p>
+        <div class="launch-promo-code-wrap">
+          <div class="launch-promo-code-box">
+            <span class="launch-promo-code-label">KUPON:</span>
+            <strong id="launchPromoCodeVal">MONARCH25</strong>
+          </div>
+          <button type="button" id="launchPromoCopyBtn" class="launch-promo-btn-copy" title="Kodu Kopyala">Kopyala</button>
+        </div>
+        <button type="button" id="launchPromoApplyBtn" class="launch-promo-btn-apply">Sepete Ekle & Uygula ↗</button>
+      </div>
+    </aside>
+
+    <!-- Minimized Floating Pill -->
+    <button type="button" class="launch-promo-pill" id="launchPromoPill" style="display: none;" title="Açılış İndirimini Göster">
+      <span class="launch-promo-pill-dot"></span>
+      <span>%25 Açılış İndirimi</span>
+    </button>
 
     <!-- Sipariş Penceresi / Modal -->
     <dialog class="order-dialog" id="orderDialog" aria-labelledby="orderTitle">
@@ -1469,8 +1698,8 @@
 
     <script type="module" src="./theme-toggle.js?v=20260829_v4"></script>
     <script type="module">
-      import { bindLocalAccountUI } from './account-local.js?v=20260829_auth_v7';
-      import { bindOrderUI, bindSupportUI, bindCommunityStats } from './store-orders.js?v=20260829_auth_v7';
+      import { bindLocalAccountUI } from './account-local.js?v=20260830_auth_v8';
+      import { bindOrderUI, bindSupportUI, bindCommunityStats, bindLaunchPromoWidget } from './store-orders.js?v=20260830_auth_v8';
 
       const cartCount = document.querySelector('#cartCount');
       const toast = document.querySelector('#toast');
@@ -1480,7 +1709,30 @@
       let toastTimer;
       const notify = (title, text) => { toastTitle.textContent = title; toastText.textContent = text; toast.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('show'), 2800); };
       
-      bindOrderUI({ cartButton: document.querySelector('#cartButton'), cartCount, dialog: document.querySelector('#orderDialog'), closeButton: document.querySelector('#orderClose'), form: document.querySelector('#orderForm'), discordInput: document.querySelector('#orderDiscordUsername'), summary: document.querySelector('#orderSummary'), submitButton: document.querySelector('#orderSubmit'), notify });
+      const orderCtrl = bindOrderUI({ 
+        cartButton: document.querySelector('#cartButton'), 
+        cartCount, 
+        dialog: document.querySelector('#orderDialog'), 
+        closeButton: document.querySelector('#orderClose'), 
+        form: document.querySelector('#orderForm'), 
+        discordInput: document.querySelector('#orderDiscordUsername'), 
+        summary: document.querySelector('#orderSummary'), 
+        submitButton: document.querySelector('#orderSubmit'), 
+        notify,
+        onRequireLogin: () => document.querySelector('#accountButton')?.click()
+      });
+
+      bindLaunchPromoWidget({
+        widget: document.querySelector('#launchPromoWidget'),
+        closeBtn: document.querySelector('#launchPromoCloseBtn'),
+        pill: document.querySelector('#launchPromoPill'),
+        copyBtn: document.querySelector('#launchPromoCopyBtn'),
+        applyBtn: document.querySelector('#launchPromoApplyBtn'),
+        onApplyCoupon: (code) => {
+          orderCtrl.applyCoupon(code);
+        },
+        notify
+      });
       bindCommunityStats({ countElement: document.querySelector('#discordActiveCount'), statusElement: document.querySelector('#discordActiveStatus') });
 
       bindSupportUI({

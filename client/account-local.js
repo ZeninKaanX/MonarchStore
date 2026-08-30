@@ -131,6 +131,7 @@ export async function createLocalAccount(storage, username, password, discordUse
     email: email.trim().toLowerCase(),
     emailVerified: false,
     avatarUrl: DEFAULT_AVATARS[0].url,
+    usedCoupons: [],
     createdAt: new Date().toISOString()
   };
 

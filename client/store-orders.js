@@ -77,13 +77,59 @@ export function bindCommunityStats ({ countElement, statusElement }) {
   return stop
 }
 
-function renderCart (cart, summary, submitButton) {
+export function validateCouponCode (code) {
+  const cleanCode = (code || '').trim().toUpperCase()
+  if (cleanCode !== 'MONARCH25') {
+    return { valid: false, message: 'Geçersiz kupon kodu.' }
+  }
+
+  // 1. Check if user is logged in
+  const sessionRaw = localStorage.getItem('monarch_session_v1')
+  const session = sessionRaw ? JSON.parse(sessionRaw) : null
+  if (!session || !session.username) {
+    return {
+      valid: false,
+      message: 'Kuponu kullanabilmek için lütfen önce giriş yapın veya kayıt olun.',
+      requireLogin: true
+    }
+  }
+
+  // 2. Check if user already used this one-time coupon
+  const username = session.username.toLowerCase()
+  const usedLocalKey = `monarch_used_coupons_${username}`
+  const usedList = JSON.parse(localStorage.getItem(usedLocalKey) || '[]')
+
+  const accountsRaw = localStorage.getItem('monarch_accounts_v1') || '[]'
+  const accounts = JSON.parse(accountsRaw)
+  const userAcc = accounts.find(a => (a.username || '').toLowerCase() === username)
+  const accUsed = userAcc?.usedCoupons || []
+
+  if (usedList.includes('MONARCH25') || accUsed.includes('MONARCH25')) {
+    return {
+      valid: false,
+      message: 'Bu indirim kodu hesabınız tarafından daha önce kullanılmıştır (Hesap başına tek kullanımlık).'
+    }
+  }
+
+  return {
+    valid: true,
+    code: 'MONARCH25',
+    rate: 0.25,
+    name: 'Açılışa Özel %25 İndirim'
+  }
+}
+
+function renderCart (cart, summary, submitButton, appliedCoupon = null, couponError = null) {
   const items = formatCart(cart)
   if (!items.length) {
     summary.innerHTML = '<p class="cart-empty-msg" style="text-align: center; color: var(--muted); padding: 14px 0; margin: 0;">Sepetinizde ürün bulunmuyor.</p>'
     submitButton.disabled = true
     return
   }
+
+  const subtotal = getCartTotalTl(items)
+  const discountTl = appliedCoupon ? Math.round(subtotal * appliedCoupon.rate) : 0
+  const finalTotal = Math.max(0, subtotal - discountTl)
 
   summary.innerHTML = `
     <ul class="cart-items-list">
@@ -105,26 +151,66 @@ function renderCart (cart, summary, submitButton) {
         </li>
       `).join('')}
     </ul>
+
+    <!-- Kupon Giriş Alanı -->
+    <div class="cart-coupon-box" style="margin: 14px 0 10px; padding: 10px 12px; background: #070d14; border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 4px;">
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <input type="text" id="cartCouponInput" placeholder="İndirim Kuponu (örn: MONARCH25)" value="${appliedCoupon ? appliedCoupon.code : ''}" ${appliedCoupon ? 'disabled' : ''} style="flex: 1; min-height: 34px; padding: 0 10px; font-size: 11.5px; font-family: 'Space Mono', monospace; text-transform: uppercase; background: #0b1522; border: 1px solid #1e293b; color: #f8fafc; border-radius: 3px;" />
+        ${appliedCoupon ? `
+          <button type="button" class="cart-btn-coupon-remove" data-action="remove_coupon" style="min-height: 34px; padding: 0 12px; background: #ef4444; color: #fff; border: 0; font-size: 11px; font-weight: 700; border-radius: 3px; cursor: pointer;">Kaldır</button>
+        ` : `
+          <button type="button" class="cart-btn-coupon-apply" data-action="apply_coupon" style="min-height: 34px; padding: 0 14px; background: #0284c7; color: #fff; border: 0; font-size: 11px; font-weight: 700; border-radius: 3px; cursor: pointer;">Uygula</button>
+        `}
+      </div>
+      ${appliedCoupon ? `
+        <div style="margin-top: 6px; font-size: 11px; color: #4ade80; font-family: 'Space Mono', monospace; display: flex; align-items: center; justify-content: space-between;">
+          <span>Açılışa Özel %25 İndirim Aktif!</span>
+          <b>-%${appliedCoupon.rate * 100}</b>
+        </div>
+      ` : ''}
+      ${couponError ? `
+        <div style="margin-top: 6px; font-size: 11px; color: #f87171; font-family: 'Space Mono', monospace;">${escapeHtml(couponError)}</div>
+      ` : ''}
+    </div>
+
     <div class="order-total-bar">
       <button type="button" class="cart-btn-clear" data-action="clear" title="Tüm sepeti temizle">Sepeti Temizle</button>
-      <div class="order-total-sum">
-        <span>Talep toplamı:</span>
-        <b>${getCartTotalTl(items)} TL</b>
+      <div class="order-total-sum" style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px;">
+        ${appliedCoupon ? `
+          <div style="font-size: 11px; color: var(--muted); font-family: 'Space Mono', monospace;">Ara Toplam: <s>${subtotal} TL</s></div>
+          <div style="font-size: 11px; color: #4ade80; font-family: 'Space Mono', monospace;">Açılış İndirimi (%25): -${discountTl} TL</div>
+          <div style="font-size: 13px; color: var(--text); font-family: 'Space Mono', monospace; margin-top: 2px;">Toplam Tutar: <b style="font-size: 16px; color: #34d399;">${finalTotal} TL</b></div>
+        ` : `
+          <span>Talep toplamı: <b>${subtotal} TL</b></span>
+        `}
       </div>
     </div>
   `
   submitButton.disabled = false
 }
 
-export function bindOrderUI ({ cartButton, cartCount, dialog, closeButton, form, discordInput, summary, submitButton, notify }) {
+export function bindOrderUI ({ cartButton, cartCount, dialog, closeButton, form, discordInput, summary, submitButton, notify, onRequireLogin }) {
   const cart = []
+  let appliedCoupon = null
+  let couponError = null
+
   const update = () => {
     const items = summarizeCart(cart)
     cart.splice(0, cart.length, ...items)
     cartCount.textContent = String(items.reduce((count, item) => count + item.quantity, 0))
-    renderCart(cart, summary, submitButton)
+    renderCart(cart, summary, submitButton, appliedCoupon, couponError)
   }
-  const open = () => {
+
+  const open = (prefillCoupon = null) => {
+    if (prefillCoupon && !appliedCoupon) {
+      const res = validateCouponCode(prefillCoupon)
+      if (res.valid) {
+        appliedCoupon = res
+        couponError = null
+      } else {
+        couponError = res.message
+      }
+    }
     update()
     if (!cart.length) return notify('Sepetin boş', 'Önce bir ürünü sepete ekle.')
     dialog.showModal()
@@ -160,8 +246,37 @@ export function bindOrderUI ({ cartButton, cartCount, dialog, closeButton, form,
       }
     } else if (action === 'clear') {
       cart.splice(0, cart.length)
+      appliedCoupon = null
+      couponError = null
       update()
       notify('Sepet Temizlendi', 'Sepetinizdeki tüm ürünler boşaltıldı.')
+    } else if (action === 'apply_coupon') {
+      const input = summary.querySelector('#cartCouponInput')
+      const val = (input?.value || '').trim()
+      if (!val) {
+        couponError = 'Lütfen bir kupon kodu yazın.'
+        update()
+        return
+      }
+      const res = validateCouponCode(val)
+      console.log('[COUPON DEBUG] val:', val, 'res:', res)
+      if (res.valid) {
+        appliedCoupon = res
+        couponError = null
+        notify('Kupon Uygulandı', '%25 Açılış indirimi sepete uygulandı!')
+      } else {
+        couponError = res.message
+        notify('Kupon Hatası', res.message)
+        if (res.requireLogin && typeof onRequireLogin === 'function') {
+          onRequireLogin()
+        }
+      }
+      update()
+    } else if (action === 'remove_coupon') {
+      appliedCoupon = null
+      couponError = null
+      notify('Kupon Kaldırıldı', 'İndirim kuponu iptal edildi.')
+      update()
     }
   })
 
@@ -176,11 +291,13 @@ export function bindOrderUI ({ cartButton, cartCount, dialog, closeButton, form,
       notify('Sepete eklendi', `${PRODUCT_CATALOG[sku].name} talep listene eklendi.`)
     })
   })
-  cartButton.addEventListener('click', open)
+
+  cartButton.addEventListener('click', () => open())
   closeButton.addEventListener('click', () => dialog.close())
   dialog.addEventListener('click', (event) => {
     if (event.target === dialog) dialog.close()
   })
+
   form.addEventListener('submit', async (event) => {
     event.preventDefault()
     const discordUsername = normalizeDiscordUsername(discordInput.value)
@@ -204,25 +321,76 @@ export function bindOrderUI ({ cartButton, cartCount, dialog, closeButton, form,
       return
     }
 
+    // Re-verify coupon before submitting if coupon is active
+    if (appliedCoupon) {
+      const verifyRes = validateCouponCode(appliedCoupon.code)
+      if (!verifyRes.valid) {
+        notify('Kupon Geçersiz', verifyRes.message)
+        appliedCoupon = null
+        update()
+        return
+      }
+    }
+
     submitButton.disabled = true
     submitButton.textContent = 'Talep gönderiliyor…'
     try {
       const supabase = getSupabase()
       const user = await ensureVisitor(true)
-      const items = summarizeCart(cart)
+      const rawItems = summarizeCart(cart)
+      const subtotal = getCartTotalTl(rawItems)
+      const discountTl = appliedCoupon ? Math.round(subtotal * appliedCoupon.rate) : 0
+      const finalTotal = Math.max(0, subtotal - discountTl)
+
+      const finalItems = formatCart(cart)
+      if (appliedCoupon && discountTl > 0) {
+        finalItems.push({
+          sku: 'coupon_monarch25',
+          name: `Açılışa Özel %25 İndirim (${appliedCoupon.code})`,
+          quantity: 1,
+          unitPriceTl: -discountTl,
+          lineTotalTl: -discountTl,
+          discount_tl: discountTl,
+          coupon_code: appliedCoupon.code
+        })
+      }
+
+      const session = JSON.parse(localStorage.getItem('monarch_session_v1') || '{}')
+
       const { data, error } = await supabase.from('order_requests').insert({
         visitor_id: user.id,
         discord_username: discordUsername,
-        items,
-        total_tl: getCartTotalTl(items),
+        items: finalItems,
+        total_tl: finalTotal,
         status: 'pending_validation'
       }).select('order_code').single()
+
       if (error) {
         if (error.code === '23505') throw new Error('Zaten işlenmekte olan bir talebin var. Discord ticket kanalını kontrol et.')
         throw new Error('Talep şu an gönderilemedi. Birkaç dakika sonra tekrar dene.')
       }
+
+      // Mark coupon as used for this registered user
+      if (appliedCoupon && session?.username) {
+        const norm = session.username.toLowerCase()
+        const usedKey = `monarch_used_coupons_${norm}`
+        const uList = JSON.parse(localStorage.getItem(usedKey) || '[]')
+        if (!uList.includes(appliedCoupon.code)) uList.push(appliedCoupon.code)
+        localStorage.setItem(usedKey, JSON.stringify(uList))
+
+        const accounts = JSON.parse(localStorage.getItem('monarch_accounts_v1') || '[]')
+        const acc = accounts.find(a => (a.username || '').toLowerCase() === norm)
+        if (acc) {
+          acc.usedCoupons = acc.usedCoupons || []
+          if (!acc.usedCoupons.includes(appliedCoupon.code)) acc.usedCoupons.push(appliedCoupon.code)
+          localStorage.setItem('monarch_accounts_v1', JSON.stringify(accounts))
+        }
+      }
+
       localStorage.setItem('monarch_last_order_time', Date.now().toString())
       cart.splice(0, cart.length)
+      appliedCoupon = null
+      couponError = null
       update()
       dialog.close()
       form.reset()
@@ -234,7 +402,65 @@ export function bindOrderUI ({ cartButton, cartCount, dialog, closeButton, form,
       submitButton.disabled = false
     }
   })
+
   update()
+  return { open, applyCoupon: (code) => open(code) }
+}
+
+export function bindLaunchPromoWidget ({ widget, closeBtn, pill, copyBtn, applyBtn, onApplyCoupon, notify }) {
+  if (!widget) return
+
+  // Copy coupon code
+  if (copyBtn) {
+    copyBtn.addEventListener('click', async () => {
+      const code = 'MONARCH25'
+      try {
+        await navigator.clipboard.writeText(code)
+        copyBtn.textContent = 'Kopyalandı!'
+        copyBtn.style.background = '#10b981'
+        notify('Kupon Kopyalandı', 'MONARCH25 panoya kopyalandı.')
+        setTimeout(() => {
+          copyBtn.textContent = 'Kopyala'
+          copyBtn.style.background = ''
+        }, 2200)
+      } catch {
+        notify('Kupon Kodu', 'MONARCH25 kodunu sepette kullanabilirsiniz.')
+      }
+    })
+  }
+
+  // Close / Minimize widget
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      widget.classList.add('minimized')
+      if (pill) pill.style.display = 'inline-flex'
+      sessionStorage.setItem('monarch_promo_minimized', 'true')
+    })
+  }
+
+  // Restore widget from pill
+  if (pill) {
+    pill.addEventListener('click', () => {
+      widget.classList.remove('minimized')
+      pill.style.display = 'none'
+      sessionStorage.removeItem('monarch_promo_minimized')
+    })
+  }
+
+  // Quick Apply to Cart
+  if (applyBtn) {
+    applyBtn.addEventListener('click', () => {
+      if (typeof onApplyCoupon === 'function') {
+        onApplyCoupon('MONARCH25')
+      }
+    })
+  }
+
+  // Check if previously minimized
+  if (sessionStorage.getItem('monarch_promo_minimized') === 'true') {
+    widget.classList.add('minimized')
+    if (pill) pill.style.display = 'inline-flex'
+  }
 }
 
 export async function fetchUserSupportTickets () {

@@ -287,6 +287,50 @@ export function bindOrderUI ({ cartButton, cartCount, dialog, closeButton, form,
     }
   })
 
+  // Soğuk Savaş Temalı Taktiksel Sepete Ekleme Animasyonu
+  function triggerTacticalCartAnimation(button, sku) {
+    if (!button) return
+    const cartBtn = document.querySelector('#cartButton')
+
+    // 1. Buton Durumu & Glow
+    const origText = button.textContent
+    button.classList.add('tactical-added')
+    button.textContent = '[ + EKLENDİ ]'
+
+    setTimeout(() => {
+      button.classList.remove('tactical-added')
+      button.textContent = origText
+    }, 900)
+
+    // 2. Taktiksel Hedef Parçacığı (Fly to Cart)
+    if (cartBtn) {
+      const btnRect = button.getBoundingClientRect()
+      const cartRect = cartBtn.getBoundingClientRect()
+
+      const particle = document.createElement('div')
+      particle.className = 'tactical-cart-particle'
+      particle.textContent = `+1 // ${PRODUCT_CATALOG[sku]?.name || 'ENVANTER'}`
+      particle.style.left = `${btnRect.left + btnRect.width / 2}px`
+      particle.style.top = `${btnRect.top + btnRect.height / 2}px`
+      particle.style.transform = 'translate(-50%, -50%) scale(1)'
+      document.body.appendChild(particle)
+
+      requestAnimationFrame(() => {
+        const targetX = cartRect.left + cartRect.width / 2 - (btnRect.left + btnRect.width / 2)
+        const targetY = cartRect.top + cartRect.height / 2 - (btnRect.top + btnRect.height / 2)
+        particle.style.transform = `translate(${targetX}px, ${targetY}px) scale(0.35)`
+        particle.style.opacity = '0'
+      })
+
+      setTimeout(() => {
+        particle.remove()
+        cartBtn.classList.remove('cart-pulse-active')
+        void cartBtn.offsetWidth // trigger reflow
+        cartBtn.classList.add('cart-pulse-active')
+      }, 650)
+    }
+  }
+
   document.addEventListener('click', (event) => {
     const button = event.target.closest('[data-add-to-cart]')
     if (!button) return
@@ -296,7 +340,8 @@ export function bindOrderUI ({ cartButton, cartCount, dialog, closeButton, form,
     if (existing) existing.quantity = Math.min(10, existing.quantity + 1)
     else cart.push({ sku, quantity: 1 })
     update()
-    notify('Sepete eklendi', `${PRODUCT_CATALOG[sku].name} talep listene eklendi.`)
+    triggerTacticalCartAnimation(button, sku)
+    notify('Envantere Eklendi', `${PRODUCT_CATALOG[sku].name} talep listene eklendi.`)
   })
 
   cartButton.addEventListener('click', () => open())
@@ -455,6 +500,17 @@ export function bindLaunchPromoWidget ({ widget, closeBtn, pill, copyBtn, applyB
   // Quick Apply to Cart
   if (applyBtn) {
     applyBtn.addEventListener('click', () => {
+      const sessRaw = localStorage.getItem('monarch_session_v1')
+      const localSess = sessRaw ? JSON.parse(sessRaw) : null
+      if (!localSess || !localSess.username) {
+        notify('Giriş Yapmalısınız', 'Kupon kodunu kullanabilmek için lütfen önce giriş yapın veya kayıt olun.')
+        const accountDialog = document.querySelector('#accountDialog')
+        if (accountDialog) {
+          accountDialog.showModal()
+        }
+        return
+      }
+
       if (typeof onApplyCoupon === 'function') {
         onApplyCoupon('Try2PhutHon!')
       }

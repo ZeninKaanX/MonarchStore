@@ -287,16 +287,16 @@ export function bindOrderUI ({ cartButton, cartCount, dialog, closeButton, form,
     }
   })
 
-  document.querySelectorAll('[data-add-to-cart]').forEach((button) => {
-    button.addEventListener('click', () => {
-      const sku = button.dataset.addToCart
-      if (!PRODUCT_CATALOG[sku]) return
-      const existing = cart.find((item) => item.sku === sku)
-      if (existing) existing.quantity = Math.min(10, existing.quantity + 1)
-      else cart.push({ sku, quantity: 1 })
-      update()
-      notify('Sepete eklendi', `${PRODUCT_CATALOG[sku].name} talep listene eklendi.`)
-    })
+  document.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-add-to-cart]')
+    if (!button) return
+    const sku = button.dataset.addToCart
+    if (!PRODUCT_CATALOG[sku]) return
+    const existing = cart.find((item) => item.sku === sku)
+    if (existing) existing.quantity = Math.min(10, existing.quantity + 1)
+    else cart.push({ sku, quantity: 1 })
+    update()
+    notify('Sepete eklendi', `${PRODUCT_CATALOG[sku].name} talep listene eklendi.`)
   })
 
   cartButton.addEventListener('click', () => open())

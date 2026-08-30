@@ -938,6 +938,24 @@ export function bindLocalAccountUI({
     }
   });
 
+  initInactivityTracker(storage, () => {
+    updateHeader();
+    dialog.close();
+    notify("Oturum Zaman Aşımı", "10 dakika boyunca herhangi bir işlem yapılmadığı için güvenlik gereği oturumunuz kapatıldı.");
+  });
+
+  // If redirected from admin timeout
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('timeout') === '1') {
+      notify("Oturum Zaman Aşımı", "10 dakika hareketsizlik nedeniyle oturumunuz kapatıldı.");
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  } catch {}
+
+  updateHeader();
+}
+
 // ==========================================
 // 10 DAKİKA HAREKETSİZLİK OTOMATİK ÇIKIŞ (10-MIN INACTIVITY TIMEOUT)
 // ==========================================
@@ -978,22 +996,4 @@ export function initInactivityTracker(storage = window.localStorage, onTimeout =
       window.removeEventListener(evt, recordActivity);
     });
   };
-}
-
-  initInactivityTracker(storage, () => {
-    updateHeader();
-    dialog.close();
-    notify("Oturum Zaman Aşımı", "10 dakika boyunca herhangi bir işlem yapılmadığı için güvenlik gereği oturumunuz kapatıldı.");
-  });
-
-  // If redirected from admin timeout
-  try {
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('timeout') === '1') {
-      notify("Oturum Zaman Aşımı", "10 dakika hareketsizlik nedeniyle oturumunuz kapatıldı.");
-      window.history.replaceState({}, document.title, window.location.pathname);
-    }
-  } catch {}
-
-  updateHeader();
 }

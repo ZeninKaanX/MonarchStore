@@ -938,5 +938,62 @@ export function bindLocalAccountUI({
     }
   });
 
+// ==========================================
+// 10 DAKİKA HAREKETSİZLİK OTOMATİK ÇIKIŞ (10-MIN INACTIVITY TIMEOUT)
+// ==========================================
+const INACTIVITY_TIMEOUT_MS = 10 * 60 * 1000; // 10 dakika
+
+export function initInactivityTracker(storage = window.localStorage, onTimeout = null) {
+  let lastRecorded = Date.now();
+  storage.setItem('monarch_last_activity', String(Date.now()));
+
+  const recordActivity = () => {
+    const now = Date.now();
+    if (now - lastRecorded > 2000) {
+      lastRecorded = now;
+      storage.setItem('monarch_last_activity', String(now));
+    }
+  };
+
+  ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll', 'click'].forEach(evt => {
+    window.addEventListener(evt, recordActivity, { passive: true });
+  });
+
+  const checkInterval = setInterval(() => {
+    const session = getLocalSession(storage);
+    if (!session) return;
+
+    const lastAct = Number(storage.getItem('monarch_last_activity') || Date.now());
+    if (Date.now() - lastAct >= INACTIVITY_TIMEOUT_MS) {
+      signOutLocalAccount(storage);
+      if (typeof onTimeout === 'function') {
+        onTimeout();
+      }
+    }
+  }, 5000);
+
+  return () => {
+    clearInterval(checkInterval);
+    ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll', 'click'].forEach(evt => {
+      window.removeEventListener(evt, recordActivity);
+    });
+  };
+}
+
+  initInactivityTracker(storage, () => {
+    updateHeader();
+    dialog.close();
+    notify("Oturum Zaman Aşımı", "10 dakika boyunca herhangi bir işlem yapılmadığı için güvenlik gereği oturumunuz kapatıldı.");
+  });
+
+  // If redirected from admin timeout
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('timeout') === '1') {
+      notify("Oturum Zaman Aşımı", "10 dakika hareketsizlik nedeniyle oturumunuz kapatıldı.");
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  } catch {}
+
   updateHeader();
 }

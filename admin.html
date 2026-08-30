@@ -704,6 +704,9 @@
           </div>
 
           <button type="submit" id="loginSubmitBtn" class="btn-submit">Giris Yap</button>
+          <a href="index.html" class="btn-return-store" style="display: flex; align-items: center; justify-content: center; min-height: 38px; margin-top: 10px; background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.25); color: #38bdf8; font: 700 11.5px var(--font-mono); border-radius: 4px; text-decoration: none; transition: all 0.15s; text-transform: uppercase;">
+            ← Magazaya / Anasayfaya Don
+          </a>
         </form>
       </div>
     </div>
@@ -1215,8 +1218,35 @@
 
     document.querySelector('#dashLogoutBtn').addEventListener('click', () => {
       clearAdminSession();
-      location.reload();
+      window.location.href = 'index.html';
     });
+
+    // 10 Dakika Hareketsizlik Otomatik Cikis (Admin Dashboard)
+    const INACTIVITY_LIMIT_MS = 10 * 60 * 1000;
+    let lastAdminActivity = Date.now();
+
+    const recordActivity = () => {
+      const now = Date.now();
+      if (now - lastAdminActivity > 2000) {
+        lastAdminActivity = now;
+        localStorage.setItem('monarch_last_activity', String(now));
+      }
+    };
+    ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll', 'click'].forEach(evt => {
+      window.addEventListener(evt, recordActivity, { passive: true });
+    });
+
+    const checkInactivity = () => {
+      const session = getAdminSession();
+      if (!session) return;
+      const last = Number(localStorage.getItem('monarch_last_activity') || Date.now());
+      if (Date.now() - last >= INACTIVITY_LIMIT_MS) {
+        clearAdminSession();
+        window.location.href = 'index.html?timeout=1';
+      }
+    };
+    checkInactivity();
+    setInterval(checkInactivity, 5000);
 
     // Sipariş Listesi & Tablo
     let allOrders = [];

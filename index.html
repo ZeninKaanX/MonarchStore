@@ -112,14 +112,18 @@
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
     <link rel="dns-prefetch" href="https://aipnaodheezawsezrjpz.supabase.co" />
     
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript>
+      <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+    </noscript>
     <script>try { document.documentElement.dataset.theme = localStorage.getItem('monarch-theme') === 'dark' ? 'dark' : 'light'; } catch { document.documentElement.dataset.theme = 'light'; }</script>
     <style>
       :root { --ink: #171b23; --muted: #687283; --paper: #f7f8fb; --line: #e6e9ee; --blue: #3e83b8; --blue-dark: #286791; --white: #ffffff; --green: #5e9c70; --amber: #d97706; --shadow: 0 14px 35px rgba(23, 27, 35, 0.08); }
       :root[data-theme="dark"] { --ink: #edf4fb; --muted: #aab9c8; --paper: #0a111b; --line: #283848; --blue: #69b2e9; --blue-dark: #3d91d1; --white: #111c28; --green: #8ccf9b; --amber: #f59e0b; --shadow: 0 16px 38px rgba(0, 0, 0, .28); color-scheme: dark; }
       * { box-sizing: border-box; }
-      html { scroll-behavior: smooth; }
-      body { margin: 0; color: var(--ink); background: linear-gradient(180deg, #f7f8fb 0%, #f2f4f7 100%); font-family: Manrope, sans-serif; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
+      html { scroll-behavior: smooth; overflow-x: hidden; width: 100%; max-width: 100vw; }
+      body { margin: 0; overflow-x: hidden; width: 100%; max-width: 100vw; color: var(--ink); background: linear-gradient(180deg, #f7f8fb 0%, #f2f4f7 100%); font-family: Manrope, sans-serif; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
       a { color: inherit; text-decoration: none; }
       button { font: inherit; cursor: pointer; }
       .container { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
@@ -207,7 +211,7 @@
       .button.secondary:hover { border-color: #fff; background: rgba(8,18,27,.66); }
       .robot-panel { position: relative; min-height: 365px; overflow: hidden; border: 1px solid rgba(220,234,244,.5); background: #0b1724; box-shadow: 0 18px 42px rgba(0,0,0,.18); border-radius: 4px; }
       .robot-panel::before { content: ""; position: absolute; z-index: 1; inset: 0; pointer-events: none; background: linear-gradient(0deg, rgba(7,14,22,.74), transparent 44%), repeating-linear-gradient(0deg, transparent 0, transparent 5px, rgba(214,235,247,.04) 6px); }
-      .anime-hero-still, .anime-hero-video { position: absolute; z-index: 0; inset: -4%; width: 108%; height: 108%; transform-origin: center; }
+      .anime-hero-still, .anime-hero-video { position: absolute; z-index: 0; inset: 0; width: 100%; height: 100%; transform-origin: center; }
       .anime-hero-still { background: url("images/hero-whitehair.webp") 72% center/cover no-repeat; animation: anime-hero-drift 12s ease-in-out infinite alternate; }
       .anime-hero-video { display: block; object-fit: cover; object-position: 72% center; animation: anime-hero-drift 12s ease-in-out infinite alternate; }
       @keyframes anime-hero-drift { from { transform: scale(1.01) translate3d(0, 0, 0); } to { transform: scale(1.055) translate3d(-1%, .5%, 0); } }
@@ -844,16 +848,17 @@
         width: 24px;
         height: 24px;
         border-radius: 4px;
-        background: rgba(0, 0, 0, 0.65);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        color: #94a3b8;
-        font-size: 15px;
+        background: rgba(0, 0, 0, 0.75);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        color: #f1f5f9;
+        font-size: 16px;
         line-height: 1;
         display: grid;
         place-items: center;
         cursor: pointer;
         transition: all 0.15s;
-        z-index: 5;
+        z-index: 25;
+        pointer-events: auto;
       }
       .launch-promo-close:hover {
         background: #ef4444;
@@ -1274,18 +1279,35 @@
           height: 28px; 
         }
 
-        /* Floating Promo Widget on Mobile */
+        /* Floating Promo Widget on Mobile (Ultra-Compact) */
         .launch-promo-widget { 
           bottom: 12px; 
           right: 12px; 
-          left: 12px; 
-          width: auto; 
+          left: auto; 
+          width: 195px; 
           max-width: calc(100vw - 24px); 
-          border-radius: 8px; 
+          border-radius: 7px; 
+          box-shadow: 0 10px 25px rgba(0,0,0,0.85); 
         }
-        .launch-promo-media { height: 95px; }
-        .launch-promo-body { padding: 10px 12px; }
-        .launch-promo-pill { bottom: 12px; right: 12px; }
+        .launch-promo-media { height: 52px; }
+        .launch-promo-body { padding: 6px 8px 8px; }
+        .launch-promo-title { 
+          font-size: 10.5px; 
+          margin-bottom: 2px; 
+          white-space: nowrap; 
+          overflow: hidden; 
+          text-overflow: ellipsis; 
+          font-weight: 700; 
+        }
+        .launch-promo-desc { display: none; }
+        .launch-promo-code-wrap { margin-bottom: 5px; gap: 4px; }
+        .launch-promo-code-box { padding: 3px 5px; }
+        .launch-promo-code-label { font-size: 8px; }
+        .launch-promo-code-box strong { font-size: 9.5px; }
+        .launch-promo-btn-copy { padding: 0 5px; height: 22px; font-size: 8.5px; }
+        .launch-promo-btn-apply { min-height: 26px; font-size: 9.5px; padding: 0 6px; }
+        .launch-promo-close { width: 18px; height: 18px; font-size: 12px; top: 3px; right: 3px; }
+        .launch-promo-pill { bottom: 12px; right: 12px; padding: 6px 10px; font-size: 10px; gap: 5px; border-radius: 16px; }
 
         /* Toast on Mobile */
         .toast { 
@@ -1560,7 +1582,7 @@
     <!-- Açılışa Özel %25 İndirim Panosu (Floating Launch Promo Widget) -->
     <aside class="launch-promo-widget" id="launchPromoWidget" aria-label="Açılışa Özel %25 İndirim">
       <div class="launch-promo-media">
-        <img src="video/anime.gif" onerror="this.onerror=null; this.src='video/аниме.gif';" alt="Açılışa Özel İndirim" class="launch-promo-gif" loading="eager" />
+        <img src="video/anime.webp" onerror="this.onerror=null; this.src='video/anime.gif';" alt="Açılışa Özel İndirim" class="launch-promo-gif" loading="lazy" decoding="async" />
         <button type="button" class="launch-promo-close" id="launchPromoCloseBtn" title="Panoyu Kapat" aria-label="Kapat">×</button>
       </div>
       <div class="launch-promo-body">
@@ -2050,10 +2072,10 @@
       </div>
     </dialog>
 
-    <script type="module" src="./theme-toggle.js?v=20260830_mobile_v22"></script>
+    <script type="module" src="./theme-toggle.js?v=20260830_fast_v23"></script>
     <script type="module">
-      import { bindLocalAccountUI } from './account-local.js?v=20260830_mobile_v22';
-      import { bindOrderUI, bindSupportUI, bindCommunityStats, bindLaunchPromoWidget } from './store-orders.js?v=20260830_mobile_v22';
+      import { bindLocalAccountUI } from './account-local.js?v=20260830_fast_v23';
+      import { bindOrderUI, bindSupportUI, bindCommunityStats, bindLaunchPromoWidget } from './store-orders.js?v=20260830_fast_v23';
 
       const cartCount = document.querySelector('#cartCount');
       const toast = document.querySelector('#toast');

@@ -83,6 +83,12 @@ export function validateCouponCode (code) {
     return { valid: false, message: 'Geçersiz kupon kodu.' }
   }
 
+  // 1 Ay Süre Kontrolü (30 Eylül 2026 tarihine kadar geçerli)
+  const EXPIRY_TIMESTAMP = new Date('2026-09-30T23:59:59Z').getTime()
+  if (Date.now() > EXPIRY_TIMESTAMP) {
+    return { valid: false, message: 'Bu açılış indirim kodunun 1 aylık geçerlilik süresi sona ermiştir.' }
+  }
+
   // 1. Check if user is logged in
   const sessionRaw = localStorage.getItem('monarch_session_v1')
   const session = sessionRaw ? JSON.parse(sessionRaw) : null

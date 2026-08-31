@@ -1,8 +1,72 @@
-import { sha256, requestAdmin2FA, verifyAdmin2FA, clearAdminSession } from './admin-panel.js';
+import { sha256, hashPasswordSecure, verifyPasswordSecure, requestAdmin2FA, verifyAdmin2FA, clearAdminSession } from './admin-panel.js';
 
 const STORAGE_KEY = "monarch_accounts_v1";
 const SESSION_KEY = "monarch_session_v1";
 const OTP_STORAGE_KEY = "monarch_email_otp_v1";
+const FAILED_ATTEMPTS_KEY = "monarch_login_failed_attempts_v1";
+
+// Bilinen küresel sızıntı listelerindeki zayıf şifrelerin engellenmesi (Anti-Leak Blacklist)
+const COMMON_LEAKED_PASSWORDS = new Set([
+  '123456', '12345678', '123456789', 'password', '12345', 'qwerty', '1234567',
+  '111111', '123123', 'admin', 'admin123', 'minecraft', 'monarch', 'secret',
+  'asdfgh', 'hunter2', 'iloveyou', 'sunucu123', 'oyuncu123'
+]);
+
+export function validatePasswordStrength(password) {
+  if (!password || password.length < 6) {
+    throw new Error("Şifre en az 6 karakter uzunluğunda olmalıdır.");
+  }
+  if (COMMON_LEAKED_PASSWORDS.has(password.toLowerCase())) {
+    throw new Error("Güvenlik Koruması: Bu şifre küresel sızıntı arşivlerinde yer almaktadır. Lütfen tahmin edilemeyecek güvenli bir şifre seçin.");
+  }
+}
+
+// Otomatik Kaba Kuvvet (Brute Force) ve Sorgu Botu Engelleme
+function checkRateLimit(username) {
+  try {
+    const raw = sessionStorage.getItem(FAILED_ATTEMPTS_KEY);
+    const map = raw ? JSON.parse(raw) : {};
+    const norm = (username || '').toLowerCase();
+    const entry = map[norm];
+    if (entry && entry.count >= 5) {
+      const elapsed = Date.now() - entry.lastAttempt;
+      const cooldownMs = 5 * 60 * 1000; // 5 dakika kilit
+      if (elapsed < cooldownMs) {
+        const remainingSec = Math.ceil((cooldownMs - elapsed) / 1000);
+        throw new Error(`Güvenlik Koruması: Çok fazla hatalı giriş denemesi yapıldı. Lütfen ${remainingSec} saniye bekleyin.`);
+      } else {
+        delete map[norm];
+        sessionStorage.setItem(FAILED_ATTEMPTS_KEY, JSON.stringify(map));
+      }
+    }
+  } catch (e) {
+    if (e.message && e.message.startsWith("Güvenlik Koruması")) throw e;
+  }
+}
+
+function recordFailedAttempt(username) {
+  try {
+    const raw = sessionStorage.getItem(FAILED_ATTEMPTS_KEY);
+    const map = raw ? JSON.parse(raw) : {};
+    const norm = (username || '').toLowerCase();
+    const entry = map[norm] || { count: 0, lastAttempt: Date.now() };
+    entry.count += 1;
+    entry.lastAttempt = Date.now();
+    map[norm] = entry;
+    sessionStorage.setItem(FAILED_ATTEMPTS_KEY, JSON.stringify(map));
+  } catch {}
+}
+
+function clearFailedAttempts(username) {
+  try {
+    const raw = sessionStorage.getItem(FAILED_ATTEMPTS_KEY);
+    if (!raw) return;
+    const map = JSON.parse(raw);
+    const norm = (username || '').toLowerCase();
+    delete map[norm];
+    sessionStorage.setItem(FAILED_ATTEMPTS_KEY, JSON.stringify(map));
+  } catch {}
+}
 
 export const DEFAULT_AVATAR_URL = 'images/default-avatar.jpg';
 
@@ -112,9 +176,7 @@ export async function createLocalAccount(storage, username, password, discordUse
   if (normalized.length < 3 || normalized.length > 24) {
     throw new Error("Kullanıcı adı 3 ile 24 karakter arasında olmalıdır.");
   }
-  if (password.length < 6) {
-    throw new Error("Şifre en az 6 karakter olmalıdır.");
-  }
+  validatePasswordStrength(password);
 
   const accounts = loadAccounts(storage);
   const exists = accounts.some(acc => acc.normalized === normalized);
@@ -122,7 +184,7 @@ export async function createLocalAccount(storage, username, password, discordUse
     throw new Error("Bu kullanıcı adı zaten alınmış. Lütfen 'Giriş Yap' sekmesinden giriş yapın.");
   }
 
-  const passwordHash = await sha256(password);
+  const passwordHash = await hashPasswordSecure(password);
   const newAccount = {
     username: username.trim(),
     normalized,
@@ -148,18 +210,30 @@ export async function createLocalAccount(storage, username, password, discordUse
 
 export async function signInLocalAccount(storage, username, password) {
   const normalized = username.trim().toLowerCase();
-  const passwordHash = await sha256(password);
+  checkRateLimit(normalized);
+
   const accounts = loadAccounts(storage);
   const account = accounts.find(
-    candidate => candidate.normalized === normalized && candidate.passwordHash === passwordHash
+    candidate => candidate.normalized === normalized
   );
 
   if (!account) {
-    const exists = accounts.some(candidate => candidate.normalized === normalized);
-    if (!exists) {
-      throw new Error("not_registered");
-    }
+    recordFailedAttempt(normalized);
+    throw new Error("not_registered");
+  }
+
+  const isValid = await verifyPasswordSecure(password, account.passwordHash);
+  if (!isValid) {
+    recordFailedAttempt(normalized);
     throw new Error("Şifre hatalı. Lütfen kontrol edin.");
+  }
+
+  clearFailedAttempts(normalized);
+
+  // Eski (legacy) SHA-256 hash'leri ilk başarılı girişte otomatik olarak Salted PBKDF2'ye yükselt
+  if (!account.passwordHash.startsWith('pbkdf2$')) {
+    account.passwordHash = await hashPasswordSecure(password);
+    saveAccounts(storage, accounts);
   }
 
   if (!account.avatarUrl) {
@@ -205,14 +279,12 @@ export async function updateLocalAccountProfile(storage, username, { avatarUrl, 
     if (!currentPassword) {
       throw new Error("Şifrenizi değiştirmek için lütfen mevcut şifrenizi girin.");
     }
-    const currentHash = await sha256(currentPassword);
-    if (account.passwordHash !== currentHash) {
+    const isCurrentValid = await verifyPasswordSecure(currentPassword, account.passwordHash);
+    if (!isCurrentValid) {
       throw new Error("Mevcut şifreniz hatalı.");
     }
-    if (newPassword.length < 6) {
-      throw new Error("Yeni şifre en az 6 karakter olmalıdır.");
-    }
-    account.passwordHash = await sha256(newPassword);
+    validatePasswordStrength(newPassword);
+    account.passwordHash = await hashPasswordSecure(newPassword);
   }
 
   saveAccounts(storage, accounts);
@@ -288,9 +360,7 @@ export function verifyEmailCode(storage, email, inputCode, username = "") {
 
 // E-Posta Kodu ile Şifre Sıfırlama
 export async function resetPasswordWithEmail(storage, email, inputCode, newPassword) {
-  if (newPassword.length < 6) {
-    throw new Error("Yeni şifre en az 6 karakter olmalıdır.");
-  }
+  validatePasswordStrength(newPassword);
 
   const cleanEmail = (email || '').trim().toLowerCase();
   const accounts = loadAccounts(storage);
@@ -301,7 +371,7 @@ export async function resetPasswordWithEmail(storage, email, inputCode, newPassw
 
   verifyEmailCode(storage, cleanEmail, inputCode, account.username);
 
-  account.passwordHash = await sha256(newPassword);
+  account.passwordHash = await hashPasswordSecure(newPassword);
   saveAccounts(storage, accounts);
 
   saveSession(storage, account.username, {

@@ -26,6 +26,49 @@ export async function sha256 (plainText) {
   return hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
 }
 
+// Military-Grade Cryptographic Salted PBKDF2 Hashing (100,000 Iterations & 16-byte secure random salt)
+export async function hashPasswordSecure (plainText, customSalt = null) {
+  const encoder = new TextEncoder()
+  const salt = customSalt || crypto.getRandomValues(new Uint8Array(16))
+  const saltHex = Array.from(salt).map(b => b.toString(16).padStart(2, '0')).join('')
+  
+  const keyMaterial = await crypto.subtle.importKey(
+    'raw',
+    encoder.encode(plainText),
+    { name: 'PBKDF2' },
+    false,
+    ['deriveBits', 'deriveKey']
+  )
+  
+  const derivedBits = await crypto.subtle.deriveBits(
+    {
+      name: 'PBKDF2',
+      salt: salt,
+      iterations: 100000,
+      hash: 'SHA-256'
+    },
+    keyMaterial,
+    256
+  )
+  
+  const hashHex = Array.from(new Uint8Array(derivedBits)).map(b => b.toString(16).padStart(2, '0')).join('')
+  return `pbkdf2$100000$${saltHex}$${hashHex}`
+}
+
+export async function verifyPasswordSecure (plainText, storedHash) {
+  if (!storedHash) return false
+  if (storedHash.startsWith('pbkdf2$')) {
+    const parts = storedHash.split('$')
+    if (parts.length !== 4) return false
+    const saltHex = parts[2]
+    const salt = new Uint8Array(saltHex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)))
+    const computed = await hashPasswordSecure(plainText, salt)
+    return computed === storedHash
+  }
+  const legacyHash = await sha256(plainText)
+  return legacyHash === storedHash
+}
+
 export function getAdminSession () {
   const token = localStorage.getItem(SESSION_STORAGE_KEY) || sessionStorage.getItem(SESSION_STORAGE_KEY)
   const exp = localStorage.getItem(EXPIRES_STORAGE_KEY) || sessionStorage.getItem(EXPIRES_STORAGE_KEY)
